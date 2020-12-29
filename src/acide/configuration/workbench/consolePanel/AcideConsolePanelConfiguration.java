@@ -147,4 +147,5 @@ public class AcideConsolePanelConfiguration {
 	public void setLineWrapping(boolean lineWrapping) {
 		_lineWrapping = lineWrapping;
 	}
+	
 }

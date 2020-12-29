@@ -838,5 +838,10 @@ public class AcideDebugSQLPanel extends JPanel {
 	public void setDebuging(boolean debuging) {
 		this.debuging = debuging;
 	}
+	
+	public void setBackgroundColor(Color backgroundColor) {
+		this.setBackground(backgroundColor);
+		repaint();
+	}
 
 }

@@ -59,6 +59,7 @@ import acide.gui.menuBar.configurationMenu.lexiconMenu.gui.configurationWindow.A
 import acide.gui.menuBar.configurationMenu.lexiconMenu.gui.defaultLexiconsWindow.AcideDefaultLexiconsWindow;
 import acide.gui.menuBar.configurationMenu.menuMenu.gui.AcideMenuConfigurationWindow;
 import acide.gui.menuBar.configurationMenu.menuMenu.gui.AcideMenuNewConfigurationWindow;
+import acide.gui.menuBar.configurationMenu.themesMenu.gui.themesWindow.AcideThemesConfigurationWindow;
 import acide.gui.menuBar.fileMenu.gui.AcidePrintConfigurationWindow;
 import acide.gui.menuBar.helpMenu.gui.AcideAboutUsWindow;
 import acide.gui.menuBar.projectMenu.gui.compilerWindow.AcideCompilerConfigurationWindow;
@@ -326,6 +327,20 @@ public class AcideGUIFactory {
 	public AcideCompilerConfigurationWindow buildAcideCompilerConfigurationWindow(
 			JFrame parent) {
 		return new AcideCompilerConfigurationWindow(parent);
+	}
+	
+	/**
+	 * Builds the ACIDE - A Configurable IDE theme configuration window.
+	 * 
+	 * @param parent
+	 *            parent window.
+	 * 
+	 * @return the ACIDE - A Configurable IDE theme configuration window.
+	 * @see JFrame
+	 * @see AcideThemesConfigurationWindow
+	 */
+	public AcideThemesConfigurationWindow buildAcideThemeConfigurationWindow(JFrame parent) {
+		return new AcideThemesConfigurationWindow(parent);
 	}
 
 	/**

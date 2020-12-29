@@ -40,6 +40,7 @@
 package acide.gui.debugPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -501,4 +502,16 @@ public class AcideDebugPanel extends JPanel {
 		return _tabbedPane;
 	}
 
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
+		this.setBackground(backgroundColor);
+		this.setForeground(foregroundColor);
+		this._traceDatalogPanel.setBackground(backgroundColor);
+		this._traceDatalogPanel.setForeground(foregroundColor);
+		this._debugSQLPanel.setBackgroundColor(backgroundColor);
+		this._debugSQLPanel.setForeground(foregroundColor);
+		this._traceSQLPanel.setBackground(backgroundColor);
+		this._traceSQLPanel.setForeground(foregroundColor);
+		
+		repaint();
+	}
 }

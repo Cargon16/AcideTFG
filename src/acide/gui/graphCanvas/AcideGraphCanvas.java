@@ -1110,5 +1110,4 @@ public class AcideGraphCanvas extends Canvas {
 		this._zoom = zoom;
 
 	}
-
 }

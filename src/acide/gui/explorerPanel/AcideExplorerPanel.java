@@ -40,6 +40,7 @@
 package acide.gui.explorerPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -539,7 +540,7 @@ public class AcideExplorerPanel extends JPanel {
 			// Gets the node
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(
 					AcideProjectConfiguration.getInstance().getFileAt(index));
-
+			
 			// Checks if the file really exists
 			File file = new File(AcideProjectConfiguration.getInstance()
 					.getFileAt(index).getAbsolutePath());
@@ -711,6 +712,22 @@ public class AcideExplorerPanel extends JPanel {
 	public String getName() {
 		return "AcideExplorerPanel";
 	}
+	
+	public void setBackgroundColor(Color backgroundColor, Color foreGroundColor) {
+		this._tree.setBackground(backgroundColor);
+		this._tree.setForeground(foreGroundColor);
+		((AcideExplorerTreeCellRenderer)this._tree.getCellRenderer()).setForegroundColor(foreGroundColor);
+		repaint();
+	}
+	public Color getBackgroundColor() {
+		return this._tree.getBackground();
+	}
+	
+	public Color getForegroundColor() {
+		return this._tree.getForeground();
+	}
+	
+	
 	
 	
 }

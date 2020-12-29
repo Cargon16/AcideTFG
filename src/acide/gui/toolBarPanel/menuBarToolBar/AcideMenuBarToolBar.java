@@ -39,6 +39,7 @@
  */
 package acide.gui.toolBarPanel.menuBarToolBar;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -1169,4 +1170,5 @@ public class AcideMenuBarToolBar extends ArrayList<Component> {
 							.getLastElementOnFocus());
 		}
 	}
+	
 }

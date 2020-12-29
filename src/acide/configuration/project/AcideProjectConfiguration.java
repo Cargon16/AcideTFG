@@ -254,6 +254,8 @@ public class AcideProjectConfiguration {
 	 * Int that points the position of the next parameter of configuration.
 	 */
 	private int _position;
+	
+	private Color _databasePanelBackgroundColor;
 
 	/**
 	 * Creates a new project configuration.
@@ -1014,6 +1016,7 @@ public class AcideProjectConfiguration {
 						AcideMainWindow.getInstance().getMenu()
 								.getProjectMenu().getSaveProjectMenuItem()
 								.doClick();
+						saveThemesConfiguration();
 					}
 				}
 			} else
@@ -1022,7 +1025,14 @@ public class AcideProjectConfiguration {
 
 		return true;
 	}
-
+	private void saveThemesConfiguration() {
+		AcideResourceManager.getInstance().setProperty("explorerPanel.backgroundColor",Integer.toString(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor().getRGB()));
+		AcideResourceManager.getInstance().setProperty("explorerPanel.foregroundColor",Integer.toString(AcideMainWindow.getInstance().getExplorerPanel().getForegroundColor().getRGB()));
+		AcideResourceManager.getInstance().setProperty("databasePanel.backgroundColor",Integer.toString(AcideMainWindow.getInstance().getDataBasePanel().getBackgroundColor().getRGB()));
+		AcideResourceManager.getInstance().setProperty("databasePanel.foregroundColor",Integer.toString(AcideMainWindow.getInstance().getDataBasePanel().getForegroundColor().getRGB()));
+		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setBackgroundColor(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor());
+		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setForegroundColor(AcideMainWindow.getInstance().getExplorerPanel().getForegroundColor());
+	}
 	/**
 	 * Returns the ACIDE - A Configurable IDE project configuration project
 	 * name.
@@ -1727,6 +1737,7 @@ public class AcideProjectConfiguration {
 	public boolean isDatabasePanelShowed(){
 		return _isDataBasePanelShowed;
 	}
+	
 	
 	/**
 	 * Sets a new value to the ACIDE - A Configurable IDE window configuration

@@ -40,6 +40,7 @@
 package acide.gui.debugPanel.traceSQLPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.FocusAdapter;
@@ -535,6 +536,11 @@ public class AcideTraceSQLPanel extends JPanel {
 	 */
 	public AcideDebugCanvas getDebugSQLCanvas() {
 		return _canvas;
+	}
+	
+	public void changeColor(Color backgroundColor) {
+		this.setBackground(backgroundColor);
+		repaint();
 	}
 
 }

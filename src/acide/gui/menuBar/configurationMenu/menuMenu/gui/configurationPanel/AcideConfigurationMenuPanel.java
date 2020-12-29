@@ -103,6 +103,11 @@ public class AcideConfigurationMenuPanel extends JPanel {
 	 */
 	private JCheckBox _compilerCheckBox;
 	/**
+	 * ACIDE - A Configurable IDE configuration menu panel theme check box.
+	 */
+	private JCheckBox _themeCheckBox;
+	
+	/**
 	 * ACIDE - A Configurable IDE configuration menu panel tabbed pane.
 	 */
 	private JTabbedPane _tabbedPane;
@@ -132,6 +137,9 @@ public class AcideConfigurationMenuPanel extends JPanel {
 
 		// Adds the compiler check box to the panel
 		add(_compilerCheckBox, BorderLayout.NORTH);
+		
+		// Adds the theme check box to the panel
+		add(_themeCheckBox, BorderLayout.SOUTH);
 
 		// Adds the tabbed to the panel
 		add(_tabbedPane, BorderLayout.CENTER);
@@ -158,6 +166,8 @@ public class AcideConfigurationMenuPanel extends JPanel {
 		_compilerCheckBox = new JCheckBox(AcideLanguageManager.getInstance()
 				.getLabels().getString("s240"));
 		
+		// Creates the theme check box
+		_themeCheckBox = new JCheckBox(AcideLanguageManager.getInstance().getLabels().getString("s2380"));
 		// Creates the lexicon menu panel
 		_lexiconMenuPanel = new AcideLexiconMenuPanel();
 
@@ -223,6 +233,10 @@ public class AcideConfigurationMenuPanel extends JPanel {
 		// Updates the compiler check box state
 		_compilerCheckBox.setSelected(AcideMenuConfiguration.getInstance()
 				.getIsDisplayed(AcideConfigurationMenu.COMPILER_NAME));
+		
+		// Updates the theme check box state
+		_themeCheckBox.setSelected(AcideMenuConfiguration.getInstance()
+				.getIsDisplayed(AcideConfigurationMenu.THEME_NAME));
 
 		// Updates the file editor menu panel check boxes state
 		_fileEditorMenuPanel.setCheckBoxesFromMenuItemList();
@@ -262,6 +276,11 @@ public class AcideConfigurationMenuPanel extends JPanel {
 		menuItemList.add(new AcideMenuItemInformation(
 				AcideConfigurationMenu.COMPILER_NAME, _compilerCheckBox
 						.isSelected()));
+		
+		// Adds the theme menu information to the menu item list
+		menuItemList.add(new AcideMenuItemInformation(
+				AcideConfigurationMenu.THEME_NAME, _themeCheckBox
+						.isSelected()));
 
 		// Adds the file editor menu panel components menu information to the
 		// menu item list
@@ -298,6 +317,9 @@ public class AcideConfigurationMenuPanel extends JPanel {
 
 		// Sets the compiler check box as selected
 		_compilerCheckBox.setSelected(true);
+		
+		// Sets the theme check box as selected
+		_themeCheckBox.setSelected(true);
 
 		// Sets the file editor menu panel as not selected
 		_fileEditorMenuPanel.selectAll();
@@ -329,6 +351,9 @@ public class AcideConfigurationMenuPanel extends JPanel {
 
 		// Sets the compiler check box as selected
 		_compilerCheckBox.setSelected(false);
+		
+		// Sets the theme check box as selected
+		_themeCheckBox.setSelected(false);
 
 		// Sets the file editor menu panel as selected
 		_fileEditorMenuPanel.selectNone();

@@ -39,13 +39,21 @@
  */
 package acide.gui.menuBar;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.swing.JComponent;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.MenuElement;
+
+import com.sun.prism.Graphics;
 
 import acide.configuration.icons.AcideMenuIconsConfiguration;
 import acide.configuration.menu.AcideInsertedMenu;
@@ -139,8 +147,8 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private boolean _helpInserted;
 	/**
-	 * ACIDE - A Configurable IDE menu bar flag which indicates if the console
-	 * is focused.
+	 * ACIDE - A Configurable IDE menu bar flag which indicates if the console is
+	 * focused.
 	 */
 	private boolean _isConsoleFocused;
 	/**
@@ -152,6 +160,11 @@ public class AcideMenuBar extends JMenuBar {
 	 * ACIDE - A Configurable IDE array list of inserted objects.
 	 */
 	private ArrayList<AcideMenuObjectConfiguration> _insertedObjects;
+
+	/**
+	 * ACIDE - A Configurable IDE background color
+	 */
+	private Color backgroundColor;
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE menu bar.
@@ -166,6 +179,7 @@ public class AcideMenuBar extends JMenuBar {
 		_viewInserted = false;
 		_configurationInserted = false;
 		_helpInserted = false;
+		backgroundColor = Color.WHITE;
 
 		// Creates the hashmap for inserted menus
 		_insertedMenus = new HashMap<String, AcideInsertedMenu>();
@@ -174,9 +188,7 @@ public class AcideMenuBar extends JMenuBar {
 		_insertedObjects = new ArrayList<AcideMenuObjectConfiguration>();
 
 		// Updates the log
-		AcideLog.getLog()
-				.info(AcideLanguageManager.getInstance().getLabels()
-						.getString("s68"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s68"));
 
 		// Loads the menu configuration
 		loadMenuConfiguration();
@@ -197,9 +209,7 @@ public class AcideMenuBar extends JMenuBar {
 		updateComponentsVisibility();
 
 		// Updates the log
-		AcideLog.getLog()
-				.info(AcideLanguageManager.getInstance().getLabels()
-						.getString("s69"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s69"));
 	}
 
 	/**
@@ -239,9 +249,7 @@ public class AcideMenuBar extends JMenuBar {
 		updateComponentsVisibility();
 
 		// Updates the log
-		AcideLog.getLog()
-				.info(AcideLanguageManager.getInstance().getLabels()
-						.getString("s69"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s69"));
 	}
 
 	/**
@@ -268,43 +276,33 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void buildHelpMenuConfiguration() {
 
-		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(
-				AcideHelpMenu.HELP_MENU_NAME)) {
-			AcideMenuSubmenuConfiguration help = AcideMenuItemsConfiguration
-					.getInstance().getHelpDefaultSubmenu();
+		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(AcideHelpMenu.HELP_MENU_NAME)) {
+			AcideMenuSubmenuConfiguration help = AcideMenuItemsConfiguration.getInstance().getHelpDefaultSubmenu();
 
-			AcideMenuItemConfiguration showHelp = help
-					.getItem(AcideHelpMenu.SHOW_HELP_NAME);
-			showHelp.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideHelpMenu.SHOW_HELP_NAME));
+			AcideMenuItemConfiguration showHelp = help.getItem(AcideHelpMenu.SHOW_HELP_NAME);
+			showHelp.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideHelpMenu.SHOW_HELP_NAME));
 
-			AcideMenuItemConfiguration showAboutUs = help
-					.getItem(AcideHelpMenu.SHOW_ABOUT_US_NAME);
-			showAboutUs.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideHelpMenu.SHOW_ABOUT_US_NAME));
+			AcideMenuItemConfiguration showAboutUs = help.getItem(AcideHelpMenu.SHOW_ABOUT_US_NAME);
+			showAboutUs
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideHelpMenu.SHOW_ABOUT_US_NAME));
 
 		} else {
 
-			AcideMenuSubmenuConfiguration help = AcideMenuItemsConfiguration
-					.getInstance().getSubmenu(AcideHelpMenu.HELP_MENU_NAME);
+			AcideMenuSubmenuConfiguration help = AcideMenuItemsConfiguration.getInstance()
+					.getSubmenu(AcideHelpMenu.HELP_MENU_NAME);
 
 			AcideMenuItemConfiguration showHelp;
 			if (help.hasItem(AcideHelpMenu.SHOW_HELP_NAME)) {
 				showHelp = help.getItem(AcideHelpMenu.SHOW_HELP_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideHelpMenu.SHOW_HELP_NAME, showHelp.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideHelpMenu.HELP_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideHelpMenu.SHOW_HELP_NAME, showHelp.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideHelpMenu.HELP_MENU_NAME).getItemsManager()
 						.onlyOne(AcideHelpMenu.SHOW_HELP_NAME);
 
 			} else {
-				showHelp = new AcideMenuItemConfiguration(
-						AcideHelpMenu.SHOW_HELP_NAME);
+				showHelp = new AcideMenuItemConfiguration(AcideHelpMenu.SHOW_HELP_NAME);
 				showHelp.setImage("./resources/icons/menu/help/help.png");
 				showHelp.setCommand("$SHOW_HELP");
-				showHelp.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideHelpMenu.SHOW_HELP_NAME));
+				showHelp.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideHelpMenu.SHOW_HELP_NAME));
 				help.insertObject(showHelp);
 			}
 			showHelp.setErasable(false);
@@ -314,28 +312,23 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration showAboutUs;
 			if (help.hasItem(AcideHelpMenu.SHOW_ABOUT_US_NAME)) {
 				showAboutUs = help.getItem(AcideHelpMenu.SHOW_ABOUT_US_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideHelpMenu.SHOW_ABOUT_US_NAME,
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideHelpMenu.SHOW_ABOUT_US_NAME,
 						showAboutUs.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideHelpMenu.HELP_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideHelpMenu.HELP_MENU_NAME).getItemsManager()
 						.onlyOne(AcideHelpMenu.SHOW_ABOUT_US_NAME);
 			} else {
-				showAboutUs = new AcideMenuItemConfiguration(
-						AcideHelpMenu.SHOW_ABOUT_US_NAME);
+				showAboutUs = new AcideMenuItemConfiguration(AcideHelpMenu.SHOW_ABOUT_US_NAME);
 				showAboutUs.setImage("./resources/icons/menu/help/aboutUs.png");
 				showAboutUs.setCommand("$SHOW_ABOUT_US");
-				showAboutUs.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideHelpMenu.SHOW_ABOUT_US_NAME));
+				showAboutUs.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideHelpMenu.SHOW_ABOUT_US_NAME));
 				help.insertObject(showAboutUs);
 			}
 			showAboutUs.setErasable(false);
 			showAboutUs.setParameter("None");
 			// showAboutUs.setCommand("");
 
-			AcideMenuItemsConfiguration.getInstance().onlyOne(
-					AcideHelpMenu.HELP_MENU_NAME);
+			AcideMenuItemsConfiguration.getInstance().onlyOne(AcideHelpMenu.HELP_MENU_NAME);
 
 		}
 	}
@@ -345,197 +338,153 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void buildConfigurationMenuConfiguration() {
 
-		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(
-				AcideConfigurationMenu.CONFIGURATION_MENU_NAME)) {
+		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)) {
 
-			AcideMenuSubmenuConfiguration configuration = AcideMenuItemsConfiguration
-					.getInstance().getConfigurationDefaultSubmenu();
+			AcideMenuSubmenuConfiguration configuration = AcideMenuItemsConfiguration.getInstance()
+					.getConfigurationDefaultSubmenu();
 
-			AcideMenuSubmenuConfiguration lexicon = configuration
-					.getSubmenu(AcideConfigurationMenu.LEXICON_NAME);
+			AcideMenuSubmenuConfiguration lexicon = configuration.getSubmenu(AcideConfigurationMenu.LEXICON_NAME);
 
-			AcideMenuItemConfiguration newLexicon = lexicon
-					.getItem(AcideLexiconMenu.NEW_LEXICON_NAME);
-			newLexicon.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME));
+			AcideMenuItemConfiguration newLexicon = lexicon.getItem(AcideLexiconMenu.NEW_LEXICON_NAME);
+			newLexicon
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME));
 
-			AcideMenuItemConfiguration documentLexicon = lexicon
-					.getItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
-			documentLexicon.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideLexiconMenu.DOCUMENT_LEXICON_NAME));
+			AcideMenuItemConfiguration documentLexicon = lexicon.getItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
+			documentLexicon.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.DOCUMENT_LEXICON_NAME));
 
-			AcideMenuItemConfiguration modifyLexicon = lexicon
-					.getItem(AcideLexiconMenu.MODIFY_LEXICON_NAME);
-			modifyLexicon.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideLexiconMenu.MODIFY_LEXICON_NAME));
+			AcideMenuItemConfiguration modifyLexicon = lexicon.getItem(AcideLexiconMenu.MODIFY_LEXICON_NAME);
+			modifyLexicon.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.MODIFY_LEXICON_NAME));
 
-			AcideMenuItemConfiguration defaultLexicon = lexicon
-					.getItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
-			defaultLexicon.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideLexiconMenu.DEFAULT_LEXICONS_NAME));
+			AcideMenuItemConfiguration defaultLexicon = lexicon.getItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
+			defaultLexicon.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.DEFAULT_LEXICONS_NAME));
 
-			AcideMenuSubmenuConfiguration grammar = configuration
-					.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME);
+			AcideMenuSubmenuConfiguration grammar = configuration.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME);
 
-			AcideMenuItemConfiguration newGrammar = grammar
-					.getItem(AcideGrammarMenu.NEW_GRAMMAR_NAME);
-			newGrammar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME));
+			AcideMenuItemConfiguration newGrammar = grammar.getItem(AcideGrammarMenu.NEW_GRAMMAR_NAME);
+			newGrammar
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME));
 
-			AcideMenuItemConfiguration loadGrammar = grammar
-					.getItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
-			loadGrammar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGrammarMenu.LOAD_GRAMMAR_NAME));
+			AcideMenuItemConfiguration loadGrammar = grammar.getItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
+			loadGrammar.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.LOAD_GRAMMAR_NAME));
 
-			AcideMenuItemConfiguration modifyGrammar = grammar
-					.getItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
-			modifyGrammar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGrammarMenu.MODIFY_GRAMMAR_NAME));
+			AcideMenuItemConfiguration modifyGrammar = grammar.getItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
+			modifyGrammar.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.MODIFY_GRAMMAR_NAME));
 
-			AcideMenuItemConfiguration saveGrammar = grammar
-					.getItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
-			saveGrammar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_NAME));
+			AcideMenuItemConfiguration saveGrammar = grammar.getItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
+			saveGrammar.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_NAME));
 
-			AcideMenuItemConfiguration saveGrammarAs = grammar
-					.getItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
-			saveGrammarAs.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME));
+			AcideMenuItemConfiguration saveGrammarAs = grammar.getItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
+			saveGrammarAs.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME));
 
-			AcideMenuItemConfiguration setPaths = grammar
-					.getItem(AcideGrammarMenu.SET_PATHS_NAME);
-			setPaths.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME));
+			AcideMenuItemConfiguration setPaths = grammar.getItem(AcideGrammarMenu.SET_PATHS_NAME);
+			setPaths.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME));
 
 			// AcideMenuItemConfiguration autoAnalysis =
 			// grammar.getItem(AcideGrammarMenu.AUTO_ANALYSIS_NAME);
 			// autoAnalysis.setVisible(AcideMenuConfiguration.getInstance()
 			// .getIsDisplayed(AcideGrammarMenu.AUTO_ANALYSIS_NAME));
 
-			AcideMenuItemConfiguration compiler = configuration
-					.getItem(AcideConfigurationMenu.COMPILER_NAME);
-			compiler.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideConfigurationMenu.COMPILER_NAME));
+			AcideMenuItemConfiguration compiler = configuration.getItem(AcideConfigurationMenu.COMPILER_NAME);
+			compiler.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConfigurationMenu.COMPILER_NAME));
 
 			AcideMenuSubmenuConfiguration fileEditor = configuration
 					.getSubmenu(AcideConfigurationMenu.FILE_EDITOR_NAME);
 
 			AcideMenuItemConfiguration displayOptions = fileEditor
 					.getItem(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME);
-			displayOptions
-					.setVisible(AcideMenuConfiguration
-							.getInstance()
-							.getIsDisplayed(
-									AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME));
+			displayOptions.setVisible(AcideMenuConfiguration.getInstance()
+					.getIsDisplayed(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME));
 
-			AcideMenuItemConfiguration automaticIndent = fileEditor
-					.getItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
-			automaticIndent.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME));
+			AcideMenuItemConfiguration automaticIndent = fileEditor.getItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
+			automaticIndent.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME));
 
-			AcideMenuItemConfiguration lineWrapping = fileEditor
-					.getItem(AcideFileEditorMenu.LINE_WRAPPING_NAME);
-			lineWrapping.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileEditorMenu.LINE_WRAPPING_NAME));
+			AcideMenuItemConfiguration lineWrapping = fileEditor.getItem(AcideFileEditorMenu.LINE_WRAPPING_NAME);
+			lineWrapping.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileEditorMenu.LINE_WRAPPING_NAME));
 
 			AcideMenuItemConfiguration maximumLines = fileEditor
 					.getItem(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
 			maximumLines.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(
-							AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME));
+					.getIsDisplayed(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME));
 
 			AcideMenuItemConfiguration sendConsoleConfirmation = fileEditor
 					.getItem(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
-			sendConsoleConfirmation
-					.setVisible(AcideMenuConfiguration
-							.getInstance()
-							.getIsDisplayed(
-									AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME));
+			sendConsoleConfirmation.setVisible(AcideMenuConfiguration.getInstance()
+					.getIsDisplayed(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME));
 
-			AcideMenuSubmenuConfiguration console = configuration
-					.getSubmenu(AcideConfigurationMenu.CONSOLE_NAME);
+			AcideMenuSubmenuConfiguration console = configuration.getSubmenu(AcideConfigurationMenu.CONSOLE_NAME);
 
-			AcideMenuItemConfiguration configure = console
-					.getItem(AcideConsoleMenu.CONFIGURE_NAME);
-			configure.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME));
+			AcideMenuItemConfiguration configure = console.getItem(AcideConsoleMenu.CONFIGURE_NAME);
+			configure.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME));
 
-			AcideMenuItemConfiguration externalCommand = console
-					.getItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
-			externalCommand.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideConsoleMenu.EXTERNAL_COMMAND_NAME));
+			AcideMenuItemConfiguration externalCommand = console.getItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
+			externalCommand.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.EXTERNAL_COMMAND_NAME));
 
 			AcideMenuItemConfiguration consoleDisplayOptions = console
 					.getItem(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
-			consoleDisplayOptions.setVisible(AcideMenuConfiguration
-					.getInstance().getIsDisplayed(
-							AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME));
+			consoleDisplayOptions.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME));
 
 			AcideMenuItemConfiguration consoleLineWrapping = console
 					.getItem(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
-			consoleLineWrapping.setVisible(AcideMenuConfiguration
-					.getInstance().getIsDisplayed(
-							AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME));
-			
+			consoleLineWrapping.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME));
+
 			AcideMenuItemConfiguration saveContent = console
 					.getItem(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
-			saveContent
-					.setVisible(AcideMenuConfiguration
-							.getInstance()
-							.getIsDisplayed(
-									AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME));
+			saveContent.setVisible(AcideMenuConfiguration.getInstance()
+					.getIsDisplayed(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME));
 
 			AcideMenuItemConfiguration documentConsole = console
 					.getItem(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
 			documentConsole.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(
-							AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME));
+					.getIsDisplayed(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME));
 
-			AcideMenuItemConfiguration searchConsole = console
-					.getItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
-			searchConsole.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideConsoleMenu.SEARCH_CONSOLE_NAME));
+			AcideMenuItemConfiguration searchConsole = console.getItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
+			searchConsole.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.SEARCH_CONSOLE_NAME));
 
-			AcideMenuItemConfiguration closeConsole = console
-					.getItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
-			closeConsole.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideConsoleMenu.CLOSE_CONSOLE_NAME));
+			AcideMenuItemConfiguration closeConsole = console.getItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
+			closeConsole.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CLOSE_CONSOLE_NAME));
 
 			AcideMenuSubmenuConfiguration database = configuration
 					.getSubmenu(AcideConfigurationMenu.DATABASE_PANEL_NAME);
 
-			AcideMenuItemConfiguration des = database
-					.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);
-			des.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(
-					AcideDatabasePanelMenu.DES_PANEL_NAME));
+			AcideMenuItemConfiguration des = database.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);
+			des.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideDatabasePanelMenu.DES_PANEL_NAME));
 
-			AcideMenuItemConfiguration odbc = database
-					.getItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
-			odbc.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideDatabasePanelMenu.ODBC_PANEL_NAME));
-			
-			AcideMenuSubmenuConfiguration graph = configuration
-					.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME);
-			
-			AcideMenuItemConfiguration nodeColor = graph
-					.getItem(AcideGraphPanelMenu.NODE_COLOR_NAME);
-			nodeColor.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
-			
+			AcideMenuItemConfiguration odbc = database.getItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
+			odbc.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideDatabasePanelMenu.ODBC_PANEL_NAME));
+
+			AcideMenuSubmenuConfiguration graph = configuration.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME);
+
+			AcideMenuItemConfiguration nodeColor = graph.getItem(AcideGraphPanelMenu.NODE_COLOR_NAME);
+			nodeColor.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
+
 			AcideMenuSubmenuConfiguration nodeShape = graph
 					.getSubmenu(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_MENU_NAME);
-			AcideMenuItemConfiguration shapeCircle = nodeShape
-					.getItem(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_CIRCLE);
+			AcideMenuItemConfiguration shapeCircle = nodeShape.getItem(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_CIRCLE);
 			shapeCircle.setVisible(AcideMenuConfiguration.getInstance()
 					.getIsDisplayed(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_CIRCLE));
-			
-			AcideMenuItemConfiguration shapeSquare = nodeShape
-					.getItem(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_SQUARE);
+
+			AcideMenuItemConfiguration shapeSquare = nodeShape.getItem(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_SQUARE);
 			shapeSquare.setVisible(AcideMenuConfiguration.getInstance()
 					.getIsDisplayed(AcideGraphPanelNodeShapeMenu.NODE_SHAPE_SQUARE));
-			
-			AcideMenuSubmenuConfiguration arrowColor = graph
-					.getSubmenu(AcideGraphPanelMenu.ARROW_COLOR_NAME);
+
+			AcideMenuSubmenuConfiguration arrowColor = graph.getSubmenu(AcideGraphPanelMenu.ARROW_COLOR_NAME);
 			AcideMenuItemConfiguration colorDirect = arrowColor
 					.getItem(AcideGraphPanelArrowColorMenu.ARROW_COLOR_DIRECT);
 			colorDirect.setVisible(AcideMenuConfiguration.getInstance()
@@ -544,126 +493,91 @@ public class AcideMenuBar extends JMenuBar {
 					.getItem(AcideGraphPanelArrowColorMenu.ARROW_COLOR_INVERSE);
 			colorInverse.setVisible(AcideMenuConfiguration.getInstance()
 					.getIsDisplayed(AcideGraphPanelArrowColorMenu.ARROW_COLOR_DIRECT));
-			
-			AcideMenuSubmenuConfiguration language = configuration
-					.getSubmenu(AcideConfigurationMenu.LANGUAGE_NAME);
 
-			AcideMenuSubmenuConfiguration menu = configuration
-					.getSubmenu(AcideConfigurationMenu.MENU_NAME);
+			AcideMenuSubmenuConfiguration language = configuration.getSubmenu(AcideConfigurationMenu.LANGUAGE_NAME);
 
-			AcideMenuItemConfiguration newMenu = menu
-					.getItem(AcideMenuMenu.NEW_MENU_NAME);
-			newMenu.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideMenuMenu.NEW_MENU_NAME));
+			AcideMenuSubmenuConfiguration menu = configuration.getSubmenu(AcideConfigurationMenu.MENU_NAME);
 
-			AcideMenuItemConfiguration loadMenu = menu
-					.getItem(AcideMenuMenu.LOAD_MENU_NAME);
-			loadMenu.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME));
+			AcideMenuItemConfiguration newMenu = menu.getItem(AcideMenuMenu.NEW_MENU_NAME);
+			newMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.NEW_MENU_NAME));
 
-			AcideMenuItemConfiguration modifyMenu = menu
-					.getItem(AcideMenuMenu.MODIFY_MENU_NAME);
-			modifyMenu.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME));
+			AcideMenuItemConfiguration loadMenu = menu.getItem(AcideMenuMenu.LOAD_MENU_NAME);
+			loadMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME));
 
-			AcideMenuItemConfiguration saveMenu = menu
-					.getItem(AcideMenuMenu.SAVE_MENU_NAME);
-			saveMenu.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME));
+			AcideMenuItemConfiguration modifyMenu = menu.getItem(AcideMenuMenu.MODIFY_MENU_NAME);
+			modifyMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME));
 
-			AcideMenuItemConfiguration saveMenuAs = menu
-					.getItem(AcideMenuMenu.SAVE_MENU_AS_NAME);
-			saveMenuAs.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME));
+			AcideMenuItemConfiguration saveMenu = menu.getItem(AcideMenuMenu.SAVE_MENU_NAME);
+			saveMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME));
 
-			AcideMenuSubmenuConfiguration toolbar = configuration
-					.getSubmenu(AcideConfigurationMenu.TOOLBAR_NAME);
+			AcideMenuItemConfiguration saveMenuAs = menu.getItem(AcideMenuMenu.SAVE_MENU_AS_NAME);
+			saveMenuAs.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME));
 
-			AcideMenuItemConfiguration newToolbar = toolbar
-					.getItem(AcideToolBarMenu.NEW_TOOLBAR_NAME);
-			newToolbar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME));
+			AcideMenuSubmenuConfiguration toolbar = configuration.getSubmenu(AcideConfigurationMenu.TOOLBAR_NAME);
 
-			AcideMenuItemConfiguration loadToolbar = toolbar
-					.getItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
-			loadToolbar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideToolBarMenu.LOAD_TOOLBAR_NAME));
+			AcideMenuItemConfiguration newToolbar = toolbar.getItem(AcideToolBarMenu.NEW_TOOLBAR_NAME);
+			newToolbar
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME));
 
-			AcideMenuItemConfiguration modifyToolbar = toolbar
-					.getItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
-			modifyToolbar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideToolBarMenu.MODIFY_TOOLBAR_NAME));
+			AcideMenuItemConfiguration loadToolbar = toolbar.getItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
+			loadToolbar.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.LOAD_TOOLBAR_NAME));
 
-			AcideMenuItemConfiguration saveToolbar = toolbar
-					.getItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
-			saveToolbar.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_NAME));
+			AcideMenuItemConfiguration modifyToolbar = toolbar.getItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
+			modifyToolbar.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.MODIFY_TOOLBAR_NAME));
 
-			AcideMenuItemConfiguration saveToolbarAs = toolbar
-					.getItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
-			saveToolbarAs.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME));
+			AcideMenuItemConfiguration saveToolbar = toolbar.getItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
+			saveToolbar.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_NAME));
+
+			AcideMenuItemConfiguration saveToolbarAs = toolbar.getItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
+			saveToolbarAs.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME));
 
 		} else {
 
-			AcideMenuSubmenuConfiguration configuration = AcideMenuItemsConfiguration
-					.getInstance().getSubmenu(
-							AcideConfigurationMenu.CONFIGURATION_MENU_NAME);
+			AcideMenuSubmenuConfiguration configuration = AcideMenuItemsConfiguration.getInstance()
+					.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME);
 
 			if (!configuration.hasSubmenu(AcideLexiconMenu.LEXICON_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration lexicon = AcideMenuItemsConfiguration
-						.getInstance().getLexiconDefaultSubmenu();
+				AcideMenuSubmenuConfiguration lexicon = AcideMenuItemsConfiguration.getInstance()
+						.getLexiconDefaultSubmenu();
 
-				AcideMenuItemConfiguration newLexicon = lexicon
-						.getItem(AcideLexiconMenu.NEW_LEXICON_NAME);
-				newLexicon.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME));
+				AcideMenuItemConfiguration newLexicon = lexicon.getItem(AcideLexiconMenu.NEW_LEXICON_NAME);
+				newLexicon.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME));
 
-				AcideMenuItemConfiguration documentLexicon = lexicon
-						.getItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
-				documentLexicon
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideLexiconMenu.DOCUMENT_LEXICON_NAME));
+				AcideMenuItemConfiguration documentLexicon = lexicon.getItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
+				documentLexicon.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.DOCUMENT_LEXICON_NAME));
 
-				AcideMenuItemConfiguration modifyLexicon = lexicon
-						.getItem(AcideLexiconMenu.MODIFY_LEXICON_NAME);
-				modifyLexicon.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideLexiconMenu.MODIFY_LEXICON_NAME));
+				AcideMenuItemConfiguration modifyLexicon = lexicon.getItem(AcideLexiconMenu.MODIFY_LEXICON_NAME);
+				modifyLexicon.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.MODIFY_LEXICON_NAME));
 
-				AcideMenuItemConfiguration defaultLexicon = lexicon
-						.getItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
-				defaultLexicon
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideLexiconMenu.DEFAULT_LEXICONS_NAME));
+				AcideMenuItemConfiguration defaultLexicon = lexicon.getItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
+				defaultLexicon.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.DEFAULT_LEXICONS_NAME));
 
 			} else {
 
-				AcideMenuSubmenuConfiguration lexicon = configuration
-						.getSubmenu(AcideLexiconMenu.LEXICON_MENU_NAME);
+				AcideMenuSubmenuConfiguration lexicon = configuration.getSubmenu(AcideLexiconMenu.LEXICON_MENU_NAME);
 
 				AcideMenuItemConfiguration newLexicon;
 				if (lexicon.hasItem(AcideLexiconMenu.NEW_LEXICON_NAME)) {
-					newLexicon = lexicon
-							.getItem(AcideLexiconMenu.NEW_LEXICON_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideLexiconMenu.NEW_LEXICON_NAME,
+					newLexicon = lexicon.getItem(AcideLexiconMenu.NEW_LEXICON_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME,
 							newLexicon.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME).getItemsManager()
 							.onlyOne(AcideLexiconMenu.NEW_LEXICON_NAME);
 
 				} else {
-					newLexicon = new AcideMenuItemConfiguration(
-							AcideLexiconMenu.NEW_LEXICON_NAME);
-					newLexicon.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME));
+					newLexicon = new AcideMenuItemConfiguration(AcideLexiconMenu.NEW_LEXICON_NAME);
+					newLexicon.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.NEW_LEXICON_NAME));
 					newLexicon.setCommand("$NEW_LEXICON");
 					lexicon.insertObject(newLexicon);
 				}
@@ -673,25 +587,17 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration documentLexicon;
 				if (lexicon.hasItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME)) {
-					documentLexicon = lexicon
-							.getItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideLexiconMenu.DOCUMENT_LEXICON_NAME,
+					documentLexicon = lexicon.getItem(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideLexiconMenu.DOCUMENT_LEXICON_NAME,
 							documentLexicon.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME).getItemsManager()
 							.onlyOne(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
 
 				} else {
-					documentLexicon = new AcideMenuItemConfiguration(
-							AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
-					documentLexicon.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideLexiconMenu.DOCUMENT_LEXICON_NAME));
+					documentLexicon = new AcideMenuItemConfiguration(AcideLexiconMenu.DOCUMENT_LEXICON_NAME);
+					documentLexicon.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideLexiconMenu.DOCUMENT_LEXICON_NAME));
 					documentLexicon.setCommand("$DOCUMENT_LEXICON");
 					lexicon.insertObject(documentLexicon);
 				}
@@ -701,24 +607,16 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration modifyLexicon;
 				if (lexicon.hasItem(AcideLexiconMenu.MODIFY_LEXICON_NAME)) {
-					modifyLexicon = lexicon
-							.getItem(AcideLexiconMenu.MODIFY_LEXICON_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideLexiconMenu.MODIFY_LEXICON_NAME,
+					modifyLexicon = lexicon.getItem(AcideLexiconMenu.MODIFY_LEXICON_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideLexiconMenu.MODIFY_LEXICON_NAME,
 							documentLexicon.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME).getItemsManager()
 							.onlyOne(AcideLexiconMenu.MODIFY_LEXICON_NAME);
 				} else {
-					modifyLexicon = new AcideMenuItemConfiguration(
-							AcideLexiconMenu.MODIFY_LEXICON_NAME);
-					modifyLexicon.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideLexiconMenu.MODIFY_LEXICON_NAME));
+					modifyLexicon = new AcideMenuItemConfiguration(AcideLexiconMenu.MODIFY_LEXICON_NAME);
+					modifyLexicon.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideLexiconMenu.MODIFY_LEXICON_NAME));
 					modifyLexicon.setCommand("$MODIFY_LEXICON");
 					lexicon.insertObject(modifyLexicon);
 				}
@@ -728,24 +626,16 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration defaultLexicon;
 				if (lexicon.hasItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME)) {
-					defaultLexicon = lexicon
-							.getItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideLexiconMenu.DEFAULT_LEXICONS_NAME,
+					defaultLexicon = lexicon.getItem(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideLexiconMenu.DEFAULT_LEXICONS_NAME,
 							defaultLexicon.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.LEXICON_NAME).getItemsManager()
 							.onlyOne(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
 				} else {
-					defaultLexicon = new AcideMenuItemConfiguration(
-							AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
-					defaultLexicon.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideLexiconMenu.DEFAULT_LEXICONS_NAME));
+					defaultLexicon = new AcideMenuItemConfiguration(AcideLexiconMenu.DEFAULT_LEXICONS_NAME);
+					defaultLexicon.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideLexiconMenu.DEFAULT_LEXICONS_NAME));
 					defaultLexicon.setCommand("$DEFAULT_LEXICON");
 					lexicon.insertObject(defaultLexicon);
 				}
@@ -753,49 +643,39 @@ public class AcideMenuBar extends JMenuBar {
 				defaultLexicon.setParameter("None");
 				// defaultLexicon.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.LEXICON_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.LEXICON_NAME);
 
 			}
 
 			if (!configuration.hasSubmenu(AcideGrammarMenu.GRAMMAR_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration grammar = AcideMenuItemsConfiguration
-						.getInstance().getGrammarDefaultSubmenu();
+				AcideMenuSubmenuConfiguration grammar = AcideMenuItemsConfiguration.getInstance()
+						.getGrammarDefaultSubmenu();
 
-				AcideMenuItemConfiguration newGrammar = grammar
-						.getItem(AcideGrammarMenu.NEW_GRAMMAR_NAME);
-				newGrammar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME));
+				AcideMenuItemConfiguration newGrammar = grammar.getItem(AcideGrammarMenu.NEW_GRAMMAR_NAME);
+				newGrammar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME));
 
-				AcideMenuItemConfiguration loadGrammar = grammar
-						.getItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
-				loadGrammar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGrammarMenu.LOAD_GRAMMAR_NAME));
+				AcideMenuItemConfiguration loadGrammar = grammar.getItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
+				loadGrammar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.LOAD_GRAMMAR_NAME));
 
-				AcideMenuItemConfiguration modifyGrammar = grammar
-						.getItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
-				modifyGrammar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGrammarMenu.MODIFY_GRAMMAR_NAME));
+				AcideMenuItemConfiguration modifyGrammar = grammar.getItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
+				modifyGrammar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.MODIFY_GRAMMAR_NAME));
 
-				AcideMenuItemConfiguration saveGrammar = grammar
-						.getItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
-				saveGrammar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_NAME));
+				AcideMenuItemConfiguration saveGrammar = grammar.getItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
+				saveGrammar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_NAME));
 
-				AcideMenuItemConfiguration saveGrammarAs = grammar
-						.getItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
-				saveGrammarAs.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME));
+				AcideMenuItemConfiguration saveGrammarAs = grammar.getItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
+				saveGrammarAs.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME));
 
-				AcideMenuItemConfiguration setPaths = grammar
-						.getItem(AcideGrammarMenu.SET_PATHS_NAME);
-				setPaths.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME));
+				AcideMenuItemConfiguration setPaths = grammar.getItem(AcideGrammarMenu.SET_PATHS_NAME);
+				setPaths.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME));
 
 				// AcideMenuItemConfiguration autoAnaylisis =
 				// grammar.getItem(AcideGrammarMenu.AUTO_ANALYSIS_NAME);
@@ -804,29 +684,21 @@ public class AcideMenuBar extends JMenuBar {
 
 			} else {
 
-				AcideMenuSubmenuConfiguration grammar = configuration
-						.getSubmenu(AcideGrammarMenu.GRAMMAR_MENU_NAME);
+				AcideMenuSubmenuConfiguration grammar = configuration.getSubmenu(AcideGrammarMenu.GRAMMAR_MENU_NAME);
 
 				AcideMenuItemConfiguration newGrammar;
 				if (grammar.hasItem(AcideGrammarMenu.NEW_GRAMMAR_NAME)) {
-					newGrammar = grammar
-							.getItem(AcideGrammarMenu.NEW_GRAMMAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideGrammarMenu.NEW_GRAMMAR_NAME,
+					newGrammar = grammar.getItem(AcideGrammarMenu.NEW_GRAMMAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME,
 							newGrammar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME).getItemsManager()
 							.onlyOne(AcideGrammarMenu.NEW_GRAMMAR_NAME);
 
 				} else {
-					newGrammar = new AcideMenuItemConfiguration(
-							AcideGrammarMenu.NEW_GRAMMAR_NAME);
-					newGrammar.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME));
+					newGrammar = new AcideMenuItemConfiguration(AcideGrammarMenu.NEW_GRAMMAR_NAME);
+					newGrammar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.NEW_GRAMMAR_NAME));
 					newGrammar.setCommand("$NEW_GRAMMAR");
 					grammar.insertObject(newGrammar);
 				}
@@ -836,25 +708,16 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration loadGrammar;
 				if (grammar.hasItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME)) {
-					loadGrammar = grammar
-							.getItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideGrammarMenu.LOAD_GRAMMAR_NAME,
+					loadGrammar = grammar.getItem(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGrammarMenu.LOAD_GRAMMAR_NAME,
 							loadGrammar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME).getItemsManager()
 							.onlyOne(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
 				} else {
-					loadGrammar = new AcideMenuItemConfiguration(
-							AcideGrammarMenu.LOAD_GRAMMAR_NAME);
-					loadGrammar
-							.setVisible(AcideMenuConfiguration.getInstance()
-									.getIsDisplayed(
-											AcideGrammarMenu.LOAD_GRAMMAR_NAME));
+					loadGrammar = new AcideMenuItemConfiguration(AcideGrammarMenu.LOAD_GRAMMAR_NAME);
+					loadGrammar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.LOAD_GRAMMAR_NAME));
 					loadGrammar.setCommand("$LOAD_GRAMMAR");
 					grammar.insertObject(loadGrammar);
 				}
@@ -864,24 +727,16 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration modifyGrammar;
 				if (grammar.hasItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME)) {
-					modifyGrammar = grammar
-							.getItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideGrammarMenu.MODIFY_GRAMMAR_NAME,
+					modifyGrammar = grammar.getItem(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGrammarMenu.MODIFY_GRAMMAR_NAME,
 							modifyGrammar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME).getItemsManager()
 							.onlyOne(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
 				} else {
-					modifyGrammar = new AcideMenuItemConfiguration(
-							AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
-					modifyGrammar.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideGrammarMenu.MODIFY_GRAMMAR_NAME));
+					modifyGrammar = new AcideMenuItemConfiguration(AcideGrammarMenu.MODIFY_GRAMMAR_NAME);
+					modifyGrammar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.MODIFY_GRAMMAR_NAME));
 					modifyGrammar.setCommand("$MODIFY_GRAMMAR");
 					grammar.insertObject(modifyGrammar);
 				}
@@ -891,25 +746,16 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration saveGrammar;
 				if (grammar.hasItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME)) {
-					saveGrammar = grammar
-							.getItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideGrammarMenu.SAVE_GRAMMAR_NAME,
+					saveGrammar = grammar.getItem(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_NAME,
 							saveGrammar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME).getItemsManager()
 							.onlyOne(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
 				} else {
-					saveGrammar = new AcideMenuItemConfiguration(
-							AcideGrammarMenu.SAVE_GRAMMAR_NAME);
-					saveGrammar
-							.setVisible(AcideMenuConfiguration.getInstance()
-									.getIsDisplayed(
-											AcideGrammarMenu.SAVE_GRAMMAR_NAME));
+					saveGrammar = new AcideMenuItemConfiguration(AcideGrammarMenu.SAVE_GRAMMAR_NAME);
+					saveGrammar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_NAME));
 					saveGrammar.setCommand("$SAVE_GRAMMAR");
 					grammar.insertObject(saveGrammar);
 				}
@@ -919,24 +765,16 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration saveGrammarAs;
 				if (grammar.hasItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME)) {
-					saveGrammarAs = grammar
-							.getItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME,
+					saveGrammarAs = grammar.getItem(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME,
 							saveGrammarAs.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME).getItemsManager()
 							.onlyOne(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
 				} else {
-					saveGrammarAs = new AcideMenuItemConfiguration(
-							AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
-					saveGrammarAs.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME));
+					saveGrammarAs = new AcideMenuItemConfiguration(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME);
+					saveGrammarAs.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SAVE_GRAMMAR_AS_NAME));
 					saveGrammarAs.setCommand("$SAVE_GRAMMAR_AS");
 					grammar.insertObject(saveGrammarAs);
 				}
@@ -947,21 +785,15 @@ public class AcideMenuBar extends JMenuBar {
 				AcideMenuItemConfiguration setPaths;
 				if (grammar.hasItem(AcideGrammarMenu.SET_PATHS_NAME)) {
 					setPaths = grammar.getItem(AcideGrammarMenu.SET_PATHS_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideGrammarMenu.SET_PATHS_NAME,
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME,
 							setPaths.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConfigurationMenu.GRAMMAR_NAME).getItemsManager()
 							.onlyOne(AcideGrammarMenu.SET_PATHS_NAME);
 				} else {
-					setPaths = new AcideMenuItemConfiguration(
-							AcideGrammarMenu.SET_PATHS_NAME);
-					setPaths.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME));
+					setPaths = new AcideMenuItemConfiguration(AcideGrammarMenu.SET_PATHS_NAME);
+					setPaths.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGrammarMenu.SET_PATHS_NAME));
 					setPaths.setCommand("$SET_PATHS");
 					grammar.insertObject(setPaths);
 				}
@@ -988,83 +820,58 @@ public class AcideMenuBar extends JMenuBar {
 				// autoAnalysis.setParameter("None");
 				// //autoAnalysis.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.GRAMMAR_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.GRAMMAR_NAME);
 			}
 
 			AcideMenuItemConfiguration compiler;
 			if (configuration.hasItem(AcideConfigurationMenu.COMPILER_NAME)) {
-				compiler = configuration
-						.getItem(AcideConfigurationMenu.COMPILER_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideConfigurationMenu.COMPILER_NAME,
+				compiler = configuration.getItem(AcideConfigurationMenu.COMPILER_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConfigurationMenu.COMPILER_NAME,
 						compiler.isVisible());
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.COMPILER_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.COMPILER_NAME);
 
 			} else {
-				compiler = new AcideMenuItemConfiguration(
-						AcideConfigurationMenu.COMPILER_NAME);
+				compiler = new AcideMenuItemConfiguration(AcideConfigurationMenu.COMPILER_NAME);
 				compiler.setImage("./resources/icons/menu/configuration/compiler.png");
 				compiler.setCommand("$COMPILER");
-				compiler.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideConfigurationMenu.COMPILER_NAME));
+				compiler.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConfigurationMenu.COMPILER_NAME));
 				configuration.insertObject(compiler);
 			}
 			compiler.setErasable(false);
 			compiler.setParameter("None");
 			// compiler.setCommand("");
 
-			if (!configuration
-					.hasSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)) {
+			if (!configuration.hasSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration fileEditor = AcideMenuItemsConfiguration
-						.getInstance().getFileEditorDefaultSubmenu();
+				AcideMenuSubmenuConfiguration fileEditor = AcideMenuItemsConfiguration.getInstance()
+						.getFileEditorDefaultSubmenu();
 
 				AcideMenuItemConfiguration displayOptions = fileEditor
 						.getItem(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME);
-				displayOptions
-						.setVisible(AcideMenuConfiguration
-								.getInstance()
-								.getIsDisplayed(
-										AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME));
+				displayOptions.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME));
 
 				AcideMenuItemConfiguration automaticIndent = fileEditor
 						.getItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
-				automaticIndent.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(
-								AcideFileEditorMenu.AUTOMATIC_INDENT_NAME));
+				automaticIndent.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME));
 
-				AcideMenuItemConfiguration lineWrapping = fileEditor
-						.getItem(AcideFileEditorMenu.LINE_WRAPPING_NAME);
-				lineWrapping
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideFileEditorMenu.LINE_WRAPPING_NAME));
+				AcideMenuItemConfiguration lineWrapping = fileEditor.getItem(AcideFileEditorMenu.LINE_WRAPPING_NAME);
+				lineWrapping.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileEditorMenu.LINE_WRAPPING_NAME));
 
 				AcideMenuItemConfiguration maximumLines = fileEditor
 						.getItem(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
-				maximumLines
-						.setVisible(AcideMenuConfiguration
-								.getInstance()
-								.getIsDisplayed(
-										AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME));
+				maximumLines.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME));
 
 				AcideMenuItemConfiguration sendConfirmation = fileEditor
 						.getItem(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
-				sendConfirmation
-						.setVisible(AcideMenuConfiguration
-								.getInstance()
-								.getIsDisplayed(
-										AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME));
+				sendConfirmation.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME));
 
 			} else {
 
@@ -1072,24 +879,13 @@ public class AcideMenuBar extends JMenuBar {
 						.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME);
 
 				AcideMenuItemConfiguration displayOptions;
-				if (fileEditor
-						.hasItem(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME)) {
-					displayOptions = fileEditor
-							.getItem(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME);
-					AcideMenuConfiguration
-							.getInstance()
-							.setIsDisplayed(
-									AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME,
-									displayOptions.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME);
+				if (fileEditor.hasItem(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME)) {
+					displayOptions = fileEditor.getItem(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(
+							AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME, displayOptions.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).getItemsManager()
+							.onlyOne(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME);
 
 				} else {
 					displayOptions = new AcideMenuItemConfiguration(
@@ -1097,11 +893,8 @@ public class AcideMenuBar extends JMenuBar {
 					displayOptions
 							.setImage("./resources/icons/menu/configuration/fileEditor/fileEditorDisplayOptions.png");
 					displayOptions.setCommand("$FILE_EDITOR_DISPLAY_OPTIONS");
-					displayOptions
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME));
+					displayOptions.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideFileEditorMenu.FILE_EDITOR_DISPLAY_OPTIONS_NAME));
 					fileEditor.insertObject(displayOptions);
 				}
 				displayOptions.setErasable(false);
@@ -1109,30 +902,19 @@ public class AcideMenuBar extends JMenuBar {
 				// displayOptions.setCommand("");
 
 				AcideMenuItemConfiguration automaticIndent;
-				if (fileEditor
-						.hasItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME)) {
-					automaticIndent = fileEditor
-							.getItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideFileEditorMenu.AUTOMATIC_INDENT_NAME,
+				if (fileEditor.hasItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME)) {
+					automaticIndent = fileEditor.getItem(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME,
 							automaticIndent.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
 				} else {
-					automaticIndent = new AcideMenuItemConfiguration(
-							AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
-					automaticIndent
-							.setImage("./resources/icons/menu/configuration/fileEditor/automaticIndent.png");
+					automaticIndent = new AcideMenuItemConfiguration(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME);
+					automaticIndent.setImage("./resources/icons/menu/configuration/fileEditor/automaticIndent.png");
 					automaticIndent.setCommand("$AUTOMATIC_INDENT");
-					automaticIndent.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideFileEditorMenu.AUTOMATIC_INDENT_NAME));
+					automaticIndent.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideFileEditorMenu.AUTOMATIC_INDENT_NAME));
 					fileEditor.insertObject(automaticIndent);
 				}
 				automaticIndent.setErasable(false);
@@ -1141,28 +923,18 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration lineWrapping;
 				if (fileEditor.hasItem(AcideFileEditorMenu.LINE_WRAPPING_NAME)) {
-					lineWrapping = fileEditor
-							.getItem(AcideFileEditorMenu.LINE_WRAPPING_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideFileEditorMenu.LINE_WRAPPING_NAME,
+					lineWrapping = fileEditor.getItem(AcideFileEditorMenu.LINE_WRAPPING_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileEditorMenu.LINE_WRAPPING_NAME,
 							lineWrapping.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideFileEditorMenu.LINE_WRAPPING_NAME);
 				} else {
-					lineWrapping = new AcideMenuItemConfiguration(
-							AcideFileEditorMenu.LINE_WRAPPING_NAME);
-					lineWrapping
-							.setImage("./resources/icons/menu/configuration/fileEditor/lineWrapping.png");
+					lineWrapping = new AcideMenuItemConfiguration(AcideFileEditorMenu.LINE_WRAPPING_NAME);
+					lineWrapping.setImage("./resources/icons/menu/configuration/fileEditor/lineWrapping.png");
 					lineWrapping.setCommand("$LINE_WRAPPING");
-					lineWrapping.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideFileEditorMenu.LINE_WRAPPING_NAME));
+					lineWrapping.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideFileEditorMenu.LINE_WRAPPING_NAME));
 					fileEditor.insertObject(lineWrapping);
 				}
 				lineWrapping.setErasable(false);
@@ -1170,33 +942,19 @@ public class AcideMenuBar extends JMenuBar {
 				// lineWrapping.setCommand("");
 
 				AcideMenuItemConfiguration maximumLines;
-				if (fileEditor
-						.hasItem(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME)) {
-					maximumLines = fileEditor
-							.getItem(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
+				if (fileEditor.hasItem(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME)) {
+					maximumLines = fileEditor.getItem(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
 					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME,
-							maximumLines.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
+							AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME, maximumLines.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).getItemsManager()
+							.onlyOne(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
 				} else {
-					maximumLines = new AcideMenuItemConfiguration(
-							AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
-					maximumLines
-							.setImage("./resources/icons/menu/configuration/fileEditor/maximumLinesToConsole.png");
+					maximumLines = new AcideMenuItemConfiguration(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME);
+					maximumLines.setImage("./resources/icons/menu/configuration/fileEditor/maximumLinesToConsole.png");
 					maximumLines.setCommand("$MAXIMUM_LINES");
-					maximumLines
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME));
+					maximumLines.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideFileEditorMenu.MAXIMUM_LINES_TO_CONSOLE_NAME));
 					fileEditor.insertObject(maximumLines);
 				}
 				maximumLines.setErasable(false);
@@ -1204,132 +962,91 @@ public class AcideMenuBar extends JMenuBar {
 				// maximumLines.setCommand("");
 
 				AcideMenuItemConfiguration sendConfirmation;
-				if (fileEditor
-						.hasItem(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME)) {
-					sendConfirmation = fileEditor
-							.getItem(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
-					AcideMenuConfiguration
-							.getInstance()
-							.setIsDisplayed(
-									AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME,
-									sendConfirmation.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideFileEditorMenu.FILE_EDITOR_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
+				if (fileEditor.hasItem(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME)) {
+					sendConfirmation = fileEditor.getItem(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(
+							AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME, sendConfirmation.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).getItemsManager()
+							.onlyOne(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
 				} else {
 					sendConfirmation = new AcideMenuItemConfiguration(
 							AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME);
 					sendConfirmation
 							.setImage("./resources/icons/menu/configuration/fileEditor/sendToConsoleConfirmation.png");
 					sendConfirmation.setCommand("$SEND_CONSOLE_CONFIRMATION");
-					sendConfirmation
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME));
+					sendConfirmation.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideFileEditorMenu.SEND_TO_CONSOLE_CONFIRMATION_NAME));
 					fileEditor.insertObject(sendConfirmation);
 				}
 				sendConfirmation.setErasable(false);
 				sendConfirmation.setParameter("None");
 				// sendConfirmation.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.FILE_EDITOR_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.FILE_EDITOR_NAME);
 
 			}
 
 			if (!configuration.hasSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration console = AcideMenuItemsConfiguration
-						.getInstance().getConsoleDefaultSubmenu();
+				AcideMenuSubmenuConfiguration console = AcideMenuItemsConfiguration.getInstance()
+						.getConsoleDefaultSubmenu();
 
-				AcideMenuItemConfiguration configure = console
-						.getItem(AcideConsoleMenu.CONFIGURE_NAME);
-				configure.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME));
+				AcideMenuItemConfiguration configure = console.getItem(AcideConsoleMenu.CONFIGURE_NAME);
+				configure.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME));
 
-				AcideMenuItemConfiguration externalCommand = console
-						.getItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
-				externalCommand
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideConsoleMenu.EXTERNAL_COMMAND_NAME));
+				AcideMenuItemConfiguration externalCommand = console.getItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
+				externalCommand.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.EXTERNAL_COMMAND_NAME));
 
 				AcideMenuItemConfiguration consoleDisplayOptions = console
 						.getItem(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
-				consoleDisplayOptions.setVisible(AcideMenuConfiguration
-						.getInstance().getIsDisplayed(
-								AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME));
-				
+				consoleDisplayOptions.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME));
+
 				AcideMenuItemConfiguration consoleLineWrapping = console
 						.getItem(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
-				consoleLineWrapping.setVisible(AcideMenuConfiguration
-						.getInstance().getIsDisplayed(
-								AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME));
+				consoleLineWrapping.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME));
 
 				AcideMenuItemConfiguration saveContent = console
 						.getItem(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
-				saveContent
-						.setVisible(AcideMenuConfiguration
-								.getInstance()
-								.getIsDisplayed(
-										AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME));
+				saveContent.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME));
 
 				AcideMenuItemConfiguration documentConsole = console
 						.getItem(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
-				documentConsole
-						.setVisible(AcideMenuConfiguration
-								.getInstance()
-								.getIsDisplayed(
-										AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME));
+				documentConsole.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME));
 
-				AcideMenuItemConfiguration searchConsole = console
-						.getItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
-				searchConsole.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideConsoleMenu.SEARCH_CONSOLE_NAME));
+				AcideMenuItemConfiguration searchConsole = console.getItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
+				searchConsole.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.SEARCH_CONSOLE_NAME));
 
-				AcideMenuItemConfiguration closeConsole = console
-						.getItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
-				closeConsole.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideConsoleMenu.CLOSE_CONSOLE_NAME));
+				AcideMenuItemConfiguration closeConsole = console.getItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
+				closeConsole.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CLOSE_CONSOLE_NAME));
 
 			} else {
 
-				AcideMenuSubmenuConfiguration console = configuration
-						.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME);
+				AcideMenuSubmenuConfiguration console = configuration.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME);
 
 				AcideMenuItemConfiguration configure;
 				if (console.hasItem(AcideConsoleMenu.CONFIGURE_NAME)) {
-					configure = console
-							.getItem(AcideConsoleMenu.CONFIGURE_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.CONFIGURE_NAME,
+					configure = console.getItem(AcideConsoleMenu.CONFIGURE_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME,
 							configure.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
 							.onlyOne(AcideConsoleMenu.CONFIGURE_NAME);
 				} else {
-					configure = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.CONFIGURE_NAME);
-					configure
-							.setImage("./resources/icons/menu/configuration/console/configure.png");
+					configure = new AcideMenuItemConfiguration(AcideConsoleMenu.CONFIGURE_NAME);
+					configure.setImage("./resources/icons/menu/configuration/console/configure.png");
 					configure.setCommand("$CONFIGURE_CONSOLE");
-					configure.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME));
+					configure.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CONFIGURE_NAME));
 					console.insertObject(configure);
 				}
 				configure.setErasable(false);
@@ -1338,27 +1055,18 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration externalCommand;
 				if (console.hasItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME)) {
-					externalCommand = console
-							.getItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.EXTERNAL_COMMAND_NAME,
+					externalCommand = console.getItem(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.EXTERNAL_COMMAND_NAME,
 							externalCommand.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
 							.onlyOne(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
 				} else {
-					externalCommand = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
-					externalCommand
-							.setImage("./resources/icons/menu/configuration/console/externalCommand.png");
+					externalCommand = new AcideMenuItemConfiguration(AcideConsoleMenu.EXTERNAL_COMMAND_NAME);
+					externalCommand.setImage("./resources/icons/menu/configuration/console/externalCommand.png");
 					externalCommand.setCommand("$EXTERNAL_COMMAND");
-					externalCommand.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideConsoleMenu.EXTERNAL_COMMAND_NAME));
+					externalCommand.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideConsoleMenu.EXTERNAL_COMMAND_NAME));
 					console.insertObject(externalCommand);
 				}
 				externalCommand.setErasable(false);
@@ -1366,67 +1074,41 @@ public class AcideMenuBar extends JMenuBar {
 				// externalCommand.setCommand("");
 
 				AcideMenuItemConfiguration consoleDisplayOptions;
-				if (console
-						.hasItem(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME)) {
-					consoleDisplayOptions = console
-							.getItem(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME,
+				if (console.hasItem(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME)) {
+					consoleDisplayOptions = console.getItem(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME,
 							consoleDisplayOptions.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
+							.onlyOne(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
 				} else {
 					consoleDisplayOptions = new AcideMenuItemConfiguration(
 							AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME);
 					consoleDisplayOptions
 							.setImage("./resources/icons/menu/configuration/console/consoleDisplayOptions.png");
-					consoleDisplayOptions
-							.setCommand("$CONSOLE_DISPLAY_OPTIONS");
-					consoleDisplayOptions
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME));
+					consoleDisplayOptions.setCommand("$CONSOLE_DISPLAY_OPTIONS");
+					consoleDisplayOptions.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideConsoleMenu.CONSOLE_DISPLAY_OPTIONS_NAME));
 					console.insertObject(consoleDisplayOptions);
 				}
 				consoleDisplayOptions.setErasable(false);
 				consoleDisplayOptions.setParameter("None");
 				// consoleDisplayOptions.setCommand("");
-				
+
 				AcideMenuItemConfiguration consoleLineWrapping;
-				if (console
-						.hasItem(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME)) {
-					consoleLineWrapping = console
-							.getItem(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME,
+				if (console.hasItem(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME)) {
+					consoleLineWrapping = console.getItem(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME,
 							consoleLineWrapping.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
+							.onlyOne(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
 				} else {
-					consoleLineWrapping = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
-					consoleLineWrapping
-							.setImage("./resources/icons/menu/configuration/console/lineWrapping.png");
-					consoleLineWrapping
-							.setCommand("$CONSOLE_LINE_WRAPPING");
-					consoleLineWrapping
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME));
+					consoleLineWrapping = new AcideMenuItemConfiguration(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME);
+					consoleLineWrapping.setImage("./resources/icons/menu/configuration/console/lineWrapping.png");
+					consoleLineWrapping.setCommand("$CONSOLE_LINE_WRAPPING");
+					consoleLineWrapping.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideConsoleMenu.CONSOLE_LINE_WRAPPING_NAME));
 					console.insertObject(consoleLineWrapping);
 				}
 				consoleLineWrapping.setErasable(false);
@@ -1434,34 +1116,19 @@ public class AcideMenuBar extends JMenuBar {
 				// consoleLineWrapping.setCommand("");
 
 				AcideMenuItemConfiguration saveContent;
-				if (console
-						.hasItem(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME)) {
-					saveContent = console
-							.getItem(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
-					AcideMenuConfiguration
-							.getInstance()
-							.setIsDisplayed(
-									AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME,
-									saveContent.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
+				if (console.hasItem(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME)) {
+					saveContent = console.getItem(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(
+							AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME, saveContent.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
+							.onlyOne(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
 				} else {
-					saveContent = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
-					saveContent
-							.setImage("./resources/icons/menu/configuration/console/saveContentIntoFile.png");
+					saveContent = new AcideMenuItemConfiguration(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME);
+					saveContent.setImage("./resources/icons/menu/configuration/console/saveContentIntoFile.png");
 					saveContent.setCommand("$SAVE_CONSOLE_CONTENT");
-					saveContent
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME));
+					saveContent.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideConsoleMenu.SAVE_CONSOLE_CONTENT_INTO_FILE_NAME));
 					console.insertObject(saveContent);
 				}
 				saveContent.setErasable(false);
@@ -1469,32 +1136,19 @@ public class AcideMenuBar extends JMenuBar {
 				// saveContent.setCommand("");
 
 				AcideMenuItemConfiguration documentConsole;
-				if (console
-						.hasItem(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME)) {
-					documentConsole = console
-							.getItem(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME,
+				if (console.hasItem(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME)) {
+					documentConsole = console.getItem(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME,
 							documentConsole.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
-							.onlyOne(
-									AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
+							.onlyOne(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
 				} else {
-					documentConsole = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
-					documentConsole
-							.setImage("./resources/icons/menu/configuration/console/documentLexicon.png");
+					documentConsole = new AcideMenuItemConfiguration(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME);
+					documentConsole.setImage("./resources/icons/menu/configuration/console/documentLexicon.png");
 					documentConsole.setCommand("$DOCUMENT_CONSOLE");
-					documentConsole
-							.setVisible(AcideMenuConfiguration
-									.getInstance()
-									.getIsDisplayed(
-											AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME));
+					documentConsole.setVisible(AcideMenuConfiguration.getInstance()
+							.getIsDisplayed(AcideConsoleMenu.DOCUMENT_CONSOLE_LEXICON_NAME));
 					console.insertObject(documentConsole);
 				}
 				documentConsole.setErasable(false);
@@ -1503,27 +1157,18 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration searchConsole;
 				if (console.hasItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME)) {
-					searchConsole = console
-							.getItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.SEARCH_CONSOLE_NAME,
+					searchConsole = console.getItem(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.SEARCH_CONSOLE_NAME,
 							searchConsole.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
 							.onlyOne(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
 				} else {
-					searchConsole = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.SEARCH_CONSOLE_NAME);
-					searchConsole
-							.setImage("./resources/icons/menu/edit/search.png");
+					searchConsole = new AcideMenuItemConfiguration(AcideConsoleMenu.SEARCH_CONSOLE_NAME);
+					searchConsole.setImage("./resources/icons/menu/edit/search.png");
 					searchConsole.setCommand("$SEARCH_CONSOLE");
-					searchConsole.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideConsoleMenu.SEARCH_CONSOLE_NAME));
+					searchConsole.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.SEARCH_CONSOLE_NAME));
 					console.insertObject(searchConsole);
 				}
 				searchConsole.setErasable(false);
@@ -1532,57 +1177,41 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration closeConsole;
 				if (console.hasItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME)) {
-					closeConsole = console
-							.getItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideConsoleMenu.CLOSE_CONSOLE_NAME,
+					closeConsole = console.getItem(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideConsoleMenu.CLOSE_CONSOLE_NAME,
 							closeConsole.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).getItemsManager()
 							.onlyOne(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
 				} else {
-					closeConsole = new AcideMenuItemConfiguration(
-							AcideConsoleMenu.CLOSE_CONSOLE_NAME);
-					closeConsole
-							.setImage("./resources/icons/menu/configuration/console/closeConsole.png");
+					closeConsole = new AcideMenuItemConfiguration(AcideConsoleMenu.CLOSE_CONSOLE_NAME);
+					closeConsole.setImage("./resources/icons/menu/configuration/console/closeConsole.png");
 					closeConsole.setCommand("$CLOSE_CONSOLE");
-					closeConsole.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideConsoleMenu.CLOSE_CONSOLE_NAME));
+					closeConsole.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideConsoleMenu.CLOSE_CONSOLE_NAME));
 					console.insertObject(closeConsole);
 				}
 				closeConsole.setErasable(false);
 				closeConsole.setParameter("None");
 				// closeConsole.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.CONSOLE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.CONSOLE_NAME);
 
 			}
 
-			if (!configuration
-					.hasSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME)) {
+			if (!configuration.hasSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration database = AcideMenuItemsConfiguration
-						.getInstance().getDatabaseDefaultSubmenu();
+				AcideMenuSubmenuConfiguration database = AcideMenuItemsConfiguration.getInstance()
+						.getDatabaseDefaultSubmenu();
 
-				AcideMenuItemConfiguration des = database
-						.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);
-				des.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideDatabasePanelMenu.DES_PANEL_NAME));
+				AcideMenuItemConfiguration des = database.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);
+				des.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideDatabasePanelMenu.DES_PANEL_NAME));
 
-				AcideMenuItemConfiguration odbc = database
-						.getItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
-				odbc.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideDatabasePanelMenu.ODBC_PANEL_NAME));
+				AcideMenuItemConfiguration odbc = database.getItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
+				odbc.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideDatabasePanelMenu.ODBC_PANEL_NAME));
 
 			} else {
 
@@ -1591,27 +1220,18 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration des;
 				if (database.hasItem(AcideDatabasePanelMenu.DES_PANEL_NAME)) {
-					des = database
-							.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideDatabasePanelMenu.DES_PANEL_NAME,
+					des = database.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideDatabasePanelMenu.DES_PANEL_NAME,
 							des.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideDatabasePanelMenu.DATABASE_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME).getItemsManager()
 							.onlyOne(AcideDatabasePanelMenu.DES_PANEL_NAME);
 				} else {
-					des = new AcideMenuItemConfiguration(
-							AcideDatabasePanelMenu.DES_PANEL_NAME);
-					//des.setImage("./resources/icons/menu/configuration/databasePanel/des.png");
+					des = new AcideMenuItemConfiguration(AcideDatabasePanelMenu.DES_PANEL_NAME);
+					// des.setImage("./resources/icons/menu/configuration/databasePanel/des.png");
 					des.setCommand("$DES_PANEL");
-					des.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(
-									AcideDatabasePanelMenu.DES_PANEL_NAME));
+					des.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideDatabasePanelMenu.DES_PANEL_NAME));
 					database.insertObject(des);
 				}
 				des.setErasable(false);
@@ -1620,188 +1240,132 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration odbc;
 				if (database.hasItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME)) {
-					odbc = database
-							.getItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideDatabasePanelMenu.ODBC_PANEL_NAME,
+					odbc = database.getItem(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideDatabasePanelMenu.ODBC_PANEL_NAME,
 							odbc.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(
-									AcideDatabasePanelMenu.DATABASE_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME).getItemsManager()
 							.onlyOne(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
 				} else {
-					odbc = new AcideMenuItemConfiguration(
-							AcideDatabasePanelMenu.ODBC_PANEL_NAME);
-					//odbc.setImage("./resources/icons/menu/configuration/databasePanel/odbc.png");
+					odbc = new AcideMenuItemConfiguration(AcideDatabasePanelMenu.ODBC_PANEL_NAME);
+					// odbc.setImage("./resources/icons/menu/configuration/databasePanel/odbc.png");
 					odbc.setCommand("$ODBC_PANEL");
 					odbc.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(
-									AcideDatabasePanelMenu.ODBC_PANEL_NAME));
+							.getIsDisplayed(AcideDatabasePanelMenu.ODBC_PANEL_NAME));
 					database.insertObject(odbc);
 				}
 				odbc.setErasable(false);
 				odbc.setParameter("None");
 				// odbc.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.DATABASE_PANEL_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.DATABASE_PANEL_NAME);
 
 			}
-			//TODO Juan
-			if(!configuration.hasSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME)){
-				AcideMenuSubmenuConfiguration graph = AcideMenuItemsConfiguration
-						.getInstance().getGraphDefaultSubmenu();
-				
-				AcideMenuItemConfiguration nodeColor = graph
-						.getItem(AcideGraphPanelMenu.NODE_COLOR_NAME);
-				nodeColor.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
-				
-				AcideMenuSubmenuConfiguration nodeShape = AcideMenuItemsConfiguration
-						.getInstance().getNodeShapeDefaultSubmenu();
-				nodeShape.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGraphPanelMenu.NODE_SHAPE_NAME));
-				
-				AcideMenuSubmenuConfiguration arrowColor = AcideMenuItemsConfiguration
-						.getInstance().getArrowColorDefaultSubmenu();
-				arrowColor.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideGraphPanelMenu.ARROW_COLOR_NAME));
-				
-			}else{
-				AcideMenuSubmenuConfiguration graph = configuration
-						.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME);
-				
-				AcideMenuItemsConfiguration
-				.getInstance()
-				.getSubmenu(
-						AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideGraphPanelMenu.GRAPH_MENU_NAME);
-				
+			// TODO Juan
+			if (!configuration.hasSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME)) {
+				AcideMenuSubmenuConfiguration graph = AcideMenuItemsConfiguration.getInstance()
+						.getGraphDefaultSubmenu();
+
+				AcideMenuItemConfiguration nodeColor = graph.getItem(AcideGraphPanelMenu.NODE_COLOR_NAME);
+				nodeColor.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
+
+				AcideMenuSubmenuConfiguration nodeShape = AcideMenuItemsConfiguration.getInstance()
+						.getNodeShapeDefaultSubmenu();
+				nodeShape.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGraphPanelMenu.NODE_SHAPE_NAME));
+
+				AcideMenuSubmenuConfiguration arrowColor = AcideMenuItemsConfiguration.getInstance()
+						.getArrowColorDefaultSubmenu();
+				arrowColor.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGraphPanelMenu.ARROW_COLOR_NAME));
+
+			} else {
+				AcideMenuSubmenuConfiguration graph = configuration.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME);
+
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideGraphPanelMenu.GRAPH_MENU_NAME);
+
 				AcideMenuItemConfiguration nodeColor;
-				if(graph.hasItem(AcideGraphPanelMenu.NODE_COLOR_NAME)){
-					nodeColor = graph
-							.getItem(AcideGraphPanelMenu.NODE_COLOR_NAME);
-					nodeColor.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
-					AcideMenuConfiguration.getInstance()
-					.setIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME,
+				if (graph.hasItem(AcideGraphPanelMenu.NODE_COLOR_NAME)) {
+					nodeColor = graph.getItem(AcideGraphPanelMenu.NODE_COLOR_NAME);
+					nodeColor.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME,
 							nodeColor.isVisible());
-					AcideMenuItemsConfiguration
-					.getInstance()
-					.getSubmenu(
-							AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-					.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME)
-					.getItemsManager()
-					.onlyOne(AcideGraphPanelMenu.NODE_COLOR_NAME);
-				}else{
-					nodeColor = new AcideMenuItemConfiguration(
-							AcideGraphPanelMenu.NODE_COLOR_NAME);
-					nodeColor.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME).getItemsManager()
+							.onlyOne(AcideGraphPanelMenu.NODE_COLOR_NAME);
+				} else {
+					nodeColor = new AcideMenuItemConfiguration(AcideGraphPanelMenu.NODE_COLOR_NAME);
+					nodeColor.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideGraphPanelMenu.NODE_COLOR_NAME));
 					graph.insertObject(nodeColor);
-					AcideMenuItemsConfiguration
-					.getInstance()
-					.getSubmenu(
-							AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-					.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME)
-					.getItemsManager()
-					.onlyOne(AcideGraphPanelMenu.NODE_COLOR_NAME);
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME).getItemsManager()
+							.onlyOne(AcideGraphPanelMenu.NODE_COLOR_NAME);
 				}
 				nodeColor.setErasable(false);
 				nodeColor.setParameter("None");
-				
-	
+
 			}
-			
-			
-			AcideMenuItemsConfiguration
-			.getInstance()
-			.getSubmenu(
-					AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-			.getItemsManager()
-			.onlyOne(AcideConfigurationMenu.GRAPH_PANEL_NAME);
+
+			AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+					.getItemsManager().onlyOne(AcideConfigurationMenu.GRAPH_PANEL_NAME);
 
 			if (!configuration.hasSubmenu(AcideLanguageMenu.LANGUAGE_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration language = AcideMenuItemsConfiguration
-						.getInstance().getLanguageDefaultSubmenu();
+				AcideMenuSubmenuConfiguration language = AcideMenuItemsConfiguration.getInstance()
+						.getLanguageDefaultSubmenu();
 
 			} else {
 
-				AcideMenuSubmenuConfiguration language = configuration
-						.getSubmenu(AcideLanguageMenu.LANGUAGE_MENU_NAME);
+				AcideMenuSubmenuConfiguration language = configuration.getSubmenu(AcideLanguageMenu.LANGUAGE_MENU_NAME);
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.LANGUAGE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.LANGUAGE_NAME);
 
 			}
 
 			if (!configuration.hasSubmenu(AcideMenuMenu.MENU_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration menu = AcideMenuItemsConfiguration
-						.getInstance().getMenuDefaultSubmenu();
+				AcideMenuSubmenuConfiguration menu = AcideMenuItemsConfiguration.getInstance().getMenuDefaultSubmenu();
 
-				AcideMenuItemConfiguration newMenu = menu
-						.getItem(AcideMenuMenu.NEW_MENU_NAME);
-				newMenu.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideMenuMenu.NEW_MENU_NAME));
+				AcideMenuItemConfiguration newMenu = menu.getItem(AcideMenuMenu.NEW_MENU_NAME);
+				newMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.NEW_MENU_NAME));
 
-				AcideMenuItemConfiguration loadMenu = menu
-						.getItem(AcideMenuMenu.LOAD_MENU_NAME);
-				loadMenu.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME));
+				AcideMenuItemConfiguration loadMenu = menu.getItem(AcideMenuMenu.LOAD_MENU_NAME);
+				loadMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME));
 
-				AcideMenuItemConfiguration modifyMenu = menu
-						.getItem(AcideMenuMenu.MODIFY_MENU_NAME);
-				modifyMenu.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME));
+				AcideMenuItemConfiguration modifyMenu = menu.getItem(AcideMenuMenu.MODIFY_MENU_NAME);
+				modifyMenu.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME));
 
-				AcideMenuItemConfiguration saveMenu = menu
-						.getItem(AcideMenuMenu.SAVE_MENU_NAME);
-				saveMenu.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME));
+				AcideMenuItemConfiguration saveMenu = menu.getItem(AcideMenuMenu.SAVE_MENU_NAME);
+				saveMenu.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME));
 
-				AcideMenuItemConfiguration saveMenuAs = menu
-						.getItem(AcideMenuMenu.SAVE_MENU_AS_NAME);
-				saveMenuAs.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME));
+				AcideMenuItemConfiguration saveMenuAs = menu.getItem(AcideMenuMenu.SAVE_MENU_AS_NAME);
+				saveMenuAs.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME));
 
 			} else {
 
-				AcideMenuSubmenuConfiguration menu = configuration
-						.getSubmenu(AcideMenuMenu.MENU_MENU_NAME);
+				AcideMenuSubmenuConfiguration menu = configuration.getSubmenu(AcideMenuMenu.MENU_MENU_NAME);
 
 				AcideMenuItemConfiguration newMenu;
 				if (menu.hasItem(AcideMenuMenu.NEW_MENU_NAME)) {
 					newMenu = menu.getItem(AcideMenuMenu.NEW_MENU_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideMenuMenu.NEW_MENU_NAME, newMenu.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME)
-							.getItemsManager()
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideMenuMenu.NEW_MENU_NAME,
+							newMenu.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME).getItemsManager()
 							.onlyOne(AcideMenuMenu.NEW_MENU_NAME);
 				} else {
-					newMenu = new AcideMenuItemConfiguration(
-							AcideMenuMenu.NEW_MENU_NAME);
+					newMenu = new AcideMenuItemConfiguration(AcideMenuMenu.NEW_MENU_NAME);
 					newMenu.setCommand("$NEW_MENU");
-					newMenu.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideMenuMenu.NEW_MENU_NAME));
+					newMenu.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.NEW_MENU_NAME));
 					menu.insertObject(newMenu);
 				}
 				newMenu.setErasable(false);
@@ -1811,21 +1375,16 @@ public class AcideMenuBar extends JMenuBar {
 				AcideMenuItemConfiguration loadMenu;
 				if (menu.hasItem(AcideMenuMenu.LOAD_MENU_NAME)) {
 					loadMenu = menu.getItem(AcideMenuMenu.LOAD_MENU_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideMenuMenu.LOAD_MENU_NAME, loadMenu.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME)
-							.getItemsManager()
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME,
+							loadMenu.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME).getItemsManager()
 							.onlyOne(AcideMenuMenu.LOAD_MENU_NAME);
 				} else {
-					loadMenu = new AcideMenuItemConfiguration(
-							AcideMenuMenu.LOAD_MENU_NAME);
+					loadMenu = new AcideMenuItemConfiguration(AcideMenuMenu.LOAD_MENU_NAME);
 					loadMenu.setCommand("$LOAD_MENU");
-					loadMenu.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME));
+					loadMenu.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.LOAD_MENU_NAME));
 					menu.insertObject(loadMenu);
 				}
 				loadMenu.setErasable(false);
@@ -1835,22 +1394,16 @@ public class AcideMenuBar extends JMenuBar {
 				AcideMenuItemConfiguration modifyMenu;
 				if (menu.hasItem(AcideMenuMenu.MODIFY_MENU_NAME)) {
 					modifyMenu = menu.getItem(AcideMenuMenu.MODIFY_MENU_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideMenuMenu.MODIFY_MENU_NAME,
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME,
 							modifyMenu.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME).getItemsManager()
 							.onlyOne(AcideMenuMenu.MODIFY_MENU_NAME);
 				} else {
-					modifyMenu = new AcideMenuItemConfiguration(
-							AcideMenuMenu.MODIFY_MENU_NAME);
+					modifyMenu = new AcideMenuItemConfiguration(AcideMenuMenu.MODIFY_MENU_NAME);
 					modifyMenu.setCommand("$MODIFY_MENU");
-					modifyMenu.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME));
+					modifyMenu.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.MODIFY_MENU_NAME));
 					menu.insertObject(modifyMenu);
 				}
 				modifyMenu.setErasable(false);
@@ -1860,21 +1413,16 @@ public class AcideMenuBar extends JMenuBar {
 				AcideMenuItemConfiguration saveMenu;
 				if (menu.hasItem(AcideMenuMenu.SAVE_MENU_NAME)) {
 					saveMenu = menu.getItem(AcideMenuMenu.SAVE_MENU_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideMenuMenu.SAVE_MENU_NAME, saveMenu.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME)
-							.getItemsManager()
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME,
+							saveMenu.isVisible());
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME).getItemsManager()
 							.onlyOne(AcideMenuMenu.SAVE_MENU_NAME);
 				} else {
-					saveMenu = new AcideMenuItemConfiguration(
-							AcideMenuMenu.SAVE_MENU_NAME);
+					saveMenu = new AcideMenuItemConfiguration(AcideMenuMenu.SAVE_MENU_NAME);
 					saveMenu.setCommand("$SAVE_MENU");
-					saveMenu.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME));
+					saveMenu.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.SAVE_MENU_NAME));
 					menu.insertObject(saveMenu);
 				}
 				saveMenu.setErasable(false);
@@ -1884,93 +1432,70 @@ public class AcideMenuBar extends JMenuBar {
 				AcideMenuItemConfiguration saveMenuAs;
 				if (menu.hasItem(AcideMenuMenu.SAVE_MENU_AS_NAME)) {
 					saveMenuAs = menu.getItem(AcideMenuMenu.SAVE_MENU_AS_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideMenuMenu.SAVE_MENU_AS_NAME,
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME,
 							saveMenuAs.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideMenuMenu.MENU_MENU_NAME).getItemsManager()
 							.onlyOne(AcideMenuMenu.SAVE_MENU_AS_NAME);
 				} else {
-					saveMenuAs = new AcideMenuItemConfiguration(
-							AcideMenuMenu.SAVE_MENU_AS_NAME);
+					saveMenuAs = new AcideMenuItemConfiguration(AcideMenuMenu.SAVE_MENU_AS_NAME);
 					saveMenuAs.setCommand("$SAVE_MENU_AS");
-					saveMenuAs.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME));
+					saveMenuAs.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideMenuMenu.SAVE_MENU_AS_NAME));
 					menu.insertObject(saveMenuAs);
 				}
 				saveMenuAs.setErasable(false);
 				saveMenuAs.setParameter("None");
 				// saveMenuAs.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.MENU_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.MENU_NAME);
 
 			}
 
 			if (!configuration.hasSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME)) {
 
-				AcideMenuSubmenuConfiguration toolbar = AcideMenuItemsConfiguration
-						.getInstance().getToolbarDefaultSubmenu();
+				AcideMenuSubmenuConfiguration toolbar = AcideMenuItemsConfiguration.getInstance()
+						.getToolbarDefaultSubmenu();
 
-				AcideMenuItemConfiguration newToolbar = toolbar
-						.getItem(AcideToolBarMenu.NEW_TOOLBAR_NAME);
-				newToolbar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME));
+				AcideMenuItemConfiguration newToolbar = toolbar.getItem(AcideToolBarMenu.NEW_TOOLBAR_NAME);
+				newToolbar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME));
 
-				AcideMenuItemConfiguration loadToolbar = toolbar
-						.getItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
-				loadToolbar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideToolBarMenu.LOAD_TOOLBAR_NAME));
+				AcideMenuItemConfiguration loadToolbar = toolbar.getItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
+				loadToolbar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.LOAD_TOOLBAR_NAME));
 
-				AcideMenuItemConfiguration modifyToolbar = toolbar
-						.getItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
-				modifyToolbar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideToolBarMenu.MODIFY_TOOLBAR_NAME));
+				AcideMenuItemConfiguration modifyToolbar = toolbar.getItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
+				modifyToolbar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.MODIFY_TOOLBAR_NAME));
 
-				AcideMenuItemConfiguration saveToolbar = toolbar
-						.getItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
-				saveToolbar.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_NAME));
+				AcideMenuItemConfiguration saveToolbar = toolbar.getItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
+				saveToolbar.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_NAME));
 
-				AcideMenuItemConfiguration saveToolbarAs = toolbar
-						.getItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
-				saveToolbarAs.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME));
+				AcideMenuItemConfiguration saveToolbarAs = toolbar.getItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
+				saveToolbarAs.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME));
 
 			} else {
 
-				AcideMenuSubmenuConfiguration toolbar = configuration
-						.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME);
+				AcideMenuSubmenuConfiguration toolbar = configuration.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME);
 
 				AcideMenuItemConfiguration newToolbar;
 				if (toolbar.hasItem(AcideToolBarMenu.NEW_TOOLBAR_NAME)) {
-					newToolbar = toolbar
-							.getItem(AcideToolBarMenu.NEW_TOOLBAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideToolBarMenu.NEW_TOOLBAR_NAME,
+					newToolbar = toolbar.getItem(AcideToolBarMenu.NEW_TOOLBAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME,
 							newToolbar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideToolBarMenu.NEW_TOOLBAR_NAME);
 
 				} else {
-					newToolbar = new AcideMenuItemConfiguration(
-							AcideToolBarMenu.NEW_TOOLBAR_NAME);
+					newToolbar = new AcideMenuItemConfiguration(AcideToolBarMenu.NEW_TOOLBAR_NAME);
 					newToolbar.setCommand("$NEW_TOOLBAR");
-					newToolbar.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME));
+					newToolbar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.NEW_TOOLBAR_NAME));
 					toolbar.insertObject(newToolbar);
 				}
 				newToolbar.setErasable(false);
@@ -1979,26 +1504,17 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration loadToolbar;
 				if (toolbar.hasItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME)) {
-					loadToolbar = toolbar
-							.getItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideToolBarMenu.LOAD_TOOLBAR_NAME,
+					loadToolbar = toolbar.getItem(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideToolBarMenu.LOAD_TOOLBAR_NAME,
 							loadToolbar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
 				} else {
-					loadToolbar = new AcideMenuItemConfiguration(
-							AcideToolBarMenu.LOAD_TOOLBAR_NAME);
+					loadToolbar = new AcideMenuItemConfiguration(AcideToolBarMenu.LOAD_TOOLBAR_NAME);
 					loadToolbar.setCommand("$LOAD_TOOLBAR");
-					loadToolbar
-							.setVisible(AcideMenuConfiguration.getInstance()
-									.getIsDisplayed(
-											AcideToolBarMenu.LOAD_TOOLBAR_NAME));
+					loadToolbar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.LOAD_TOOLBAR_NAME));
 					toolbar.insertObject(loadToolbar);
 				}
 				loadToolbar.setErasable(false);
@@ -2007,25 +1523,17 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration modifyToolbar;
 				if (toolbar.hasItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME)) {
-					modifyToolbar = toolbar
-							.getItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideToolBarMenu.MODIFY_TOOLBAR_NAME,
+					modifyToolbar = toolbar.getItem(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideToolBarMenu.MODIFY_TOOLBAR_NAME,
 							modifyToolbar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
 				} else {
-					modifyToolbar = new AcideMenuItemConfiguration(
-							AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
+					modifyToolbar = new AcideMenuItemConfiguration(AcideToolBarMenu.MODIFY_TOOLBAR_NAME);
 					modifyToolbar.setCommand("$MODIFY_TOOLBAR");
-					modifyToolbar.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideToolBarMenu.MODIFY_TOOLBAR_NAME));
+					modifyToolbar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.MODIFY_TOOLBAR_NAME));
 					toolbar.insertObject(modifyToolbar);
 				}
 				modifyToolbar.setErasable(false);
@@ -2034,26 +1542,17 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration saveToolbar;
 				if (toolbar.hasItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME)) {
-					saveToolbar = toolbar
-							.getItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideToolBarMenu.SAVE_TOOLBAR_NAME,
+					saveToolbar = toolbar.getItem(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_NAME,
 							saveToolbar.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
 				} else {
-					saveToolbar = new AcideMenuItemConfiguration(
-							AcideToolBarMenu.SAVE_TOOLBAR_NAME);
+					saveToolbar = new AcideMenuItemConfiguration(AcideToolBarMenu.SAVE_TOOLBAR_NAME);
 					saveToolbar.setCommand("$SAVE_TOOLBAR");
-					saveToolbar
-							.setVisible(AcideMenuConfiguration.getInstance()
-									.getIsDisplayed(
-											AcideToolBarMenu.SAVE_TOOLBAR_NAME));
+					saveToolbar.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_NAME));
 					toolbar.insertObject(saveToolbar);
 				}
 				saveToolbar.setErasable(false);
@@ -2062,42 +1561,29 @@ public class AcideMenuBar extends JMenuBar {
 
 				AcideMenuItemConfiguration saveToolbarAs;
 				if (toolbar.hasItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME)) {
-					saveToolbarAs = toolbar
-							.getItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
-					AcideMenuConfiguration.getInstance().setIsDisplayed(
-							AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME,
+					saveToolbarAs = toolbar.getItem(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
+					AcideMenuConfiguration.getInstance().setIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME,
 							saveToolbarAs.isVisible());
-					AcideMenuItemsConfiguration
-							.getInstance()
-							.getSubmenu(
-									AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME)
-							.getItemsManager()
+					AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+							.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME).getItemsManager()
 							.onlyOne(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
 				} else {
-					saveToolbarAs = new AcideMenuItemConfiguration(
-							AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
+					saveToolbarAs = new AcideMenuItemConfiguration(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME);
 					saveToolbarAs.setCommand("$SAVE_TOOLBAR_AS");
-					saveToolbarAs.setVisible(AcideMenuConfiguration
-							.getInstance().getIsDisplayed(
-									AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME));
+					saveToolbarAs.setVisible(
+							AcideMenuConfiguration.getInstance().getIsDisplayed(AcideToolBarMenu.SAVE_TOOLBAR_AS_NAME));
 					toolbar.insertObject(saveToolbarAs);
 				}
 				saveToolbarAs.setErasable(false);
 				saveToolbarAs.setParameter("None");
 				// saveToolbarAs.setCommand("");
 
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideConfigurationMenu.TOOLBAR_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+						.getItemsManager().onlyOne(AcideConfigurationMenu.TOOLBAR_NAME);
 
 			}
 
-			AcideMenuItemsConfiguration.getInstance().onlyOne(
-					AcideConfigurationMenu.CONFIGURATION_MENU_NAME);
+			AcideMenuItemsConfiguration.getInstance().onlyOne(AcideConfigurationMenu.CONFIGURATION_MENU_NAME);
 		}
 
 	}
@@ -2107,68 +1593,56 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void buildViewMenuConfiguration() {
 
-		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(
-				AcideViewMenu.VIEW_MENU_NAME)) {
-			
-			AcideMenuSubmenuConfiguration view = AcideMenuItemsConfiguration
-					.getInstance().getViewDefaultSubmenu();
+		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(AcideViewMenu.VIEW_MENU_NAME)) {
 
-			AcideMenuItemConfiguration showLog = view
-					.getItem(AcideViewMenu.SHOW_LOG_TAB_NAME);
-			showLog.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideViewMenu.SHOW_LOG_TAB_NAME));
+			AcideMenuSubmenuConfiguration view = AcideMenuItemsConfiguration.getInstance().getViewDefaultSubmenu();
 
-			AcideMenuItemConfiguration showExplorer = view
-					.getItem(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
-			showExplorer.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME));
+			AcideMenuItemConfiguration showLog = view.getItem(AcideViewMenu.SHOW_LOG_TAB_NAME);
+			showLog.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_LOG_TAB_NAME));
 
-			AcideMenuItemConfiguration showConsole = view
-					.getItem(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
-			showConsole.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME));
+			AcideMenuItemConfiguration showExplorer = view.getItem(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
+			showExplorer.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME));
 
-			AcideMenuItemConfiguration showDatabase = view
-					.getItem(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
-			showDatabase.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME));
+			AcideMenuItemConfiguration showConsole = view.getItem(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
+			showConsole.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME));
 
-			AcideMenuItemConfiguration showGraph = view
-					.getItem(AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
-			showGraph.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideViewMenu.SHOW_GRAPH_PANEL_NAME));
-			
-			AcideMenuItemConfiguration showDebug= view
-					.getItem(AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
-			showDebug.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideViewMenu.SHOW_DEBUG_PANEL_NAME));
-			
-			AcideMenuItemConfiguration showAssertedDatabase= view
+			AcideMenuItemConfiguration showDatabase = view.getItem(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
+			showDatabase.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME));
+
+			AcideMenuItemConfiguration showGraph = view.getItem(AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
+			showGraph.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_GRAPH_PANEL_NAME));
+
+			AcideMenuItemConfiguration showDebug = view.getItem(AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
+			showDebug.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_DEBUG_PANEL_NAME));
+
+			AcideMenuItemConfiguration showAssertedDatabase = view
 					.getItem(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME);
 			showAssertedDatabase.setVisible(AcideMenuConfiguration.getInstance()
 					.getIsDisplayed(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME));
 
 		} else {
 
-			AcideMenuSubmenuConfiguration view = AcideMenuItemsConfiguration
-					.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME);
+			AcideMenuSubmenuConfiguration view = AcideMenuItemsConfiguration.getInstance()
+					.getSubmenu(AcideViewMenu.VIEW_MENU_NAME);
 
 			AcideMenuItemConfiguration showLog;
 			if (view.hasItem(AcideViewMenu.SHOW_LOG_TAB_NAME)) {
 				showLog = view.getItem(AcideViewMenu.SHOW_LOG_TAB_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_LOG_TAB_NAME, showLog.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_LOG_TAB_NAME,
+						showLog.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_LOG_TAB_NAME);
 			} else {
-				showLog = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_LOG_TAB_NAME);
+				showLog = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_LOG_TAB_NAME);
 				showLog.setImage("./resources/icons/menu/view/showLogTab.png");
 				showLog.setCommand("$SHOW_LOG_TAB");
-				showLog.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideViewMenu.SHOW_LOG_TAB_NAME));
+				showLog.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_LOG_TAB_NAME));
 				view.insertObject(showLog);
 			}
 			showLog.setErasable(false);
@@ -2177,26 +1651,18 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration showExplorer;
 			if (view.hasItem(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME)) {
-				showExplorer = view
-						.getItem(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_EXPLORER_PANEL_NAME,
+				showExplorer = view.getItem(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME,
 						showExplorer.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
 
 			} else {
-				showExplorer = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
-				showExplorer
-						.setImage("./resources/icons/menu/view/showExplorerPanel.png");
+				showExplorer = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME);
+				showExplorer.setImage("./resources/icons/menu/view/showExplorerPanel.png");
 				showExplorer.setCommand("$SHOW_EXPLORER_PANEL");
-				showExplorer
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideViewMenu.SHOW_EXPLORER_PANEL_NAME));
+				showExplorer.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_EXPLORER_PANEL_NAME));
 				view.insertObject(showExplorer);
 			}
 			showExplorer.setErasable(false);
@@ -2205,23 +1671,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration showConsole;
 			if (view.hasItem(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME)) {
-				showConsole = view
-						.getItem(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_CONSOLE_PANEL_NAME,
+				showConsole = view.getItem(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME,
 						showConsole.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
 			} else {
-				showConsole = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
-				showConsole
-						.setImage("./resources/icons/menu/view/showConsolePanel.png");
+				showConsole = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME);
+				showConsole.setImage("./resources/icons/menu/view/showConsolePanel.png");
 				showConsole.setCommand("$SHOW_CONSOLE_PANEL");
-				showConsole.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME));
+				showConsole.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_CONSOLE_PANEL_NAME));
 				view.insertObject(showConsole);
 			}
 			showConsole.setErasable(false);
@@ -2230,26 +1690,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration showDatabase;
 			if (view.hasItem(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME)) {
-				showDatabase = view
-						.getItem(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME,
+				showDatabase = view.getItem(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME,
 						showDatabase.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
 			} else {
-				showDatabase = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
-				showDatabase
-						.setImage("./resources/icons/menu/view/showDataBasePanel.png");
+				showDatabase = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME);
+				showDatabase.setImage("./resources/icons/menu/view/showDataBasePanel.png");
 				showDatabase.setCommand("$SHOW_DATABASE_PANEL");
-				showDatabase
-						.setVisible(AcideMenuConfiguration
-								.getInstance()
-								.getIsDisplayed(
-										AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME));
+				showDatabase.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_DATA_BASE_PANEL_NAME));
 				view.insertObject(showDatabase);
 			}
 			showDatabase.setErasable(false);
@@ -2258,85 +1709,65 @@ public class AcideMenuBar extends JMenuBar {
 
 //			AcideMenuItemsConfiguration.getInstance().onlyOne(
 //					AcideViewMenu.VIEW_MENU_NAME);
-			
+
 			AcideMenuItemConfiguration showGraph;
 			if (view.hasItem(AcideViewMenu.SHOW_GRAPH_PANEL_NAME)) {
-				showGraph = view
-						.getItem(AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_GRAPH_PANEL_NAME,
+				showGraph = view.getItem(AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_GRAPH_PANEL_NAME,
 						showGraph.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
 			} else {
-				showGraph = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
-				showGraph
-						.setImage("./resources/icons/menu/view/showGraphPanel.png");
+				showGraph = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_GRAPH_PANEL_NAME);
+				showGraph.setImage("./resources/icons/menu/view/showGraphPanel.png");
 				showGraph.setCommand("$SHOW_GRAPH_PANEL");
-				showGraph.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(AcideViewMenu.SHOW_GRAPH_PANEL_NAME));
+				showGraph.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_GRAPH_PANEL_NAME));
 				view.insertObject(showGraph);
 			}
 			showGraph.setErasable(false);
 			showGraph.setParameter("None");
 			// showGraphbase.setCommand("");
-			
+
 			AcideMenuItemConfiguration showDebug;
 			if (view.hasItem(AcideViewMenu.SHOW_DEBUG_PANEL_NAME)) {
-				showDebug = view
-						.getItem(AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_DEBUG_PANEL_NAME,
+				showDebug = view.getItem(AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_DEBUG_PANEL_NAME,
 						showDebug.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
 			} else {
-				showDebug = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
-				showDebug
-						.setImage("./resources/icons/menu/view/showDebugPanel.png");
+				showDebug = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_DEBUG_PANEL_NAME);
+				showDebug.setImage("./resources/icons/menu/view/showDebugPanel.png");
 				showDebug.setCommand("$SHOW_DEBUG_PANEL");
-				showDebug.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(AcideViewMenu.SHOW_DEBUG_PANEL_NAME));
+				showDebug.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideViewMenu.SHOW_DEBUG_PANEL_NAME));
 				view.insertObject(showDebug);
 			}
 			showDebug.setErasable(false);
 			showDebug.setParameter("None");
 			// showDebug.setCommand("");
 
-			
 			AcideMenuItemConfiguration showAssertedDatabase;
 			if (view.hasItem(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME)) {
-				showAssertedDatabase = view
-						.getItem(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME,
+				showAssertedDatabase = view.getItem(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME,
 						showAssertedDatabase.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideViewMenu.VIEW_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).getItemsManager()
 						.onlyOne(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME);
 			} else {
-				showAssertedDatabase = new AcideMenuItemConfiguration(
-						AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME);
-				showAssertedDatabase
-						.setImage("./resources/icons/menu/view/showAssertedDatabasePanel.png");
+				showAssertedDatabase = new AcideMenuItemConfiguration(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME);
+				showAssertedDatabase.setImage("./resources/icons/menu/view/showAssertedDatabasePanel.png");
 				showAssertedDatabase.setCommand("$SHOW_ASSERTED_DATABASE_PANEL");
 				showAssertedDatabase.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME));
+						.getIsDisplayed(AcideViewMenu.SHOW_ASSERTED_DATABASE_PANEL_NAME));
 				view.insertObject(showAssertedDatabase);
 			}
 			showAssertedDatabase.setErasable(false);
 			showAssertedDatabase.setParameter("None");
 			// showAssertedDatabase.setCommand("");
-			
-			AcideMenuItemsConfiguration.getInstance().onlyOne(
-					AcideViewMenu.VIEW_MENU_NAME);
+
+			AcideMenuItemsConfiguration.getInstance().onlyOne(AcideViewMenu.VIEW_MENU_NAME);
 
 		}
 
@@ -2347,136 +1778,102 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void buildProjectMenuConfiguration() {
 
-		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(
-				AcideProjectMenu.PROJECT_MENU_NAME)) {
-			AcideMenuSubmenuConfiguration project = AcideMenuItemsConfiguration
-					.getInstance().getProjectDefaultSubmenu();
+		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)) {
+			AcideMenuSubmenuConfiguration project = AcideMenuItemsConfiguration.getInstance()
+					.getProjectDefaultSubmenu();
 
-			AcideMenuItemConfiguration newProject = project
-					.getItem(AcideProjectMenu.NEW_PROJECT_NAME);
-			newProject.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.NEW_PROJECT_NAME));
+			AcideMenuItemConfiguration newProject = project.getItem(AcideProjectMenu.NEW_PROJECT_NAME);
+			newProject
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.NEW_PROJECT_NAME));
 
-			AcideMenuItemConfiguration openProject = project
-					.getItem(AcideProjectMenu.OPEN_PROJECT_NAME);
-			openProject.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.OPEN_PROJECT_NAME));
+			AcideMenuItemConfiguration openProject = project.getItem(AcideProjectMenu.OPEN_PROJECT_NAME);
+			openProject.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.OPEN_PROJECT_NAME));
 
 			AcideMenuSubmenuConfiguration openRecentProjects = project
 					.getSubmenu(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
-			openRecentProjects
-					.setVisible(AcideMenuConfiguration.getInstance()
-							.getIsDisplayed(
-									AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME));
+			openRecentProjects.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME));
 
-			AcideMenuItemConfiguration closeProject = project
-					.getItem(AcideProjectMenu.CLOSE_PROJECT_NAME);
-			closeProject.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.CLOSE_PROJECT_NAME));
+			AcideMenuItemConfiguration closeProject = project.getItem(AcideProjectMenu.CLOSE_PROJECT_NAME);
+			closeProject.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.CLOSE_PROJECT_NAME));
 
-			AcideMenuItemConfiguration saveProject = project
-					.getItem(AcideProjectMenu.SAVE_PROJECT_NAME);
-			saveProject.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_NAME));
+			AcideMenuItemConfiguration saveProject = project.getItem(AcideProjectMenu.SAVE_PROJECT_NAME);
+			saveProject.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_NAME));
 
-			AcideMenuItemConfiguration saveProjectAs = project
-					.getItem(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
-			saveProjectAs.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_AS_NAME));
+			AcideMenuItemConfiguration saveProjectAs = project.getItem(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
+			saveProjectAs.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_AS_NAME));
 
-			AcideMenuItemConfiguration addOpenedFiles = project
-					.getItem(AcideProjectMenu.ADD_OPENED_FILES_NAME);
-			addOpenedFiles.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.ADD_OPENED_FILES_NAME));
+			AcideMenuItemConfiguration addOpenedFiles = project.getItem(AcideProjectMenu.ADD_OPENED_FILES_NAME);
+			addOpenedFiles.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.ADD_OPENED_FILES_NAME));
 
-			AcideMenuItemConfiguration newProjectFile = project
-					.getItem(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
-			newProjectFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.NEW_PROJECT_FILE_NAME));
+			AcideMenuItemConfiguration newProjectFile = project.getItem(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
+			newProjectFile.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.NEW_PROJECT_FILE_NAME));
 
-			AcideMenuItemConfiguration addFile = project
-					.getItem(AcideProjectMenu.ADD_FILE_NAME);
-			addFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.ADD_FILE_NAME));
+			AcideMenuItemConfiguration addFile = project.getItem(AcideProjectMenu.ADD_FILE_NAME);
+			addFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.ADD_FILE_NAME));
 
-			AcideMenuItemConfiguration removeFile = project
-					.getItem(AcideProjectMenu.REMOVE_FILE_NAME);
-			removeFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.REMOVE_FILE_NAME));
+			AcideMenuItemConfiguration removeFile = project.getItem(AcideProjectMenu.REMOVE_FILE_NAME);
+			removeFile
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.REMOVE_FILE_NAME));
 
-			AcideMenuItemConfiguration deleteFile = project
-					.getItem(AcideProjectMenu.DELETE_FILE_NAME);
-			deleteFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.DELETE_FILE_NAME));
+			AcideMenuItemConfiguration deleteFile = project.getItem(AcideProjectMenu.DELETE_FILE_NAME);
+			deleteFile
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.DELETE_FILE_NAME));
 
-			AcideMenuItemConfiguration addFolder = project
-					.getItem(AcideProjectMenu.ADD_FOLDER_NAME);
-			addFolder.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.ADD_FOLDER_NAME));
+			AcideMenuItemConfiguration addFolder = project.getItem(AcideProjectMenu.ADD_FOLDER_NAME);
+			addFolder.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.ADD_FOLDER_NAME));
 
-			AcideMenuItemConfiguration removeFolder = project
-					.getItem(AcideProjectMenu.REMOVE_FOLDER_NAME);
-			removeFolder.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.REMOVE_FOLDER_NAME));
+			AcideMenuItemConfiguration removeFolder = project.getItem(AcideProjectMenu.REMOVE_FOLDER_NAME);
+			removeFolder.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.REMOVE_FOLDER_NAME));
 
-			AcideMenuItemConfiguration compile = project
-					.getItem(AcideProjectMenu.COMPILE_NAME);
-			compile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.COMPILE_NAME));
+			AcideMenuItemConfiguration compile = project.getItem(AcideProjectMenu.COMPILE_NAME);
+			compile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.COMPILE_NAME));
 
-			AcideMenuItemConfiguration execute = project
-					.getItem(AcideProjectMenu.EXECUTE_NAME);
-			execute.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.EXECUTE_NAME));
+			AcideMenuItemConfiguration execute = project.getItem(AcideProjectMenu.EXECUTE_NAME);
+			execute.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.EXECUTE_NAME));
 
-			AcideMenuItemConfiguration setCompilable = project
-					.getItem(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
-			setCompilable.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.SET_COMPILABLE_FILE_NAME));
+			AcideMenuItemConfiguration setCompilable = project.getItem(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
+			setCompilable.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SET_COMPILABLE_FILE_NAME));
 
-			AcideMenuItemConfiguration unsetCompilable = project
-					.getItem(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
-			unsetCompilable
-					.setVisible(AcideMenuConfiguration
-							.getInstance()
-							.getIsDisplayed(
-									AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME));
+			AcideMenuItemConfiguration unsetCompilable = project.getItem(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
+			unsetCompilable.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME));
 
-			AcideMenuItemConfiguration setMain = project
-					.getItem(AcideProjectMenu.SET_MAIN_FILE_NAME);
-			setMain.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.SET_MAIN_FILE_NAME));
+			AcideMenuItemConfiguration setMain = project.getItem(AcideProjectMenu.SET_MAIN_FILE_NAME);
+			setMain.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SET_MAIN_FILE_NAME));
 
-			AcideMenuItemConfiguration unsetMain = project
-					.getItem(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
-			unsetMain.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideProjectMenu.UNSET_MAIN_FILE_NAME));
+			AcideMenuItemConfiguration unsetMain = project.getItem(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
+			unsetMain.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.UNSET_MAIN_FILE_NAME));
 
 		} else {
 
-			AcideMenuSubmenuConfiguration project = AcideMenuItemsConfiguration
-					.getInstance().getSubmenu(
-							AcideProjectMenu.PROJECT_MENU_NAME);
+			AcideMenuSubmenuConfiguration project = AcideMenuItemsConfiguration.getInstance()
+					.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME);
 
 			AcideMenuItemConfiguration newProject;
 			if (project.hasItem(AcideProjectMenu.NEW_PROJECT_NAME)) {
 				newProject = project.getItem(AcideProjectMenu.NEW_PROJECT_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.NEW_PROJECT_NAME,
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.NEW_PROJECT_NAME,
 						newProject.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.NEW_PROJECT_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.NEW_PROJECT_NAME);
 
 			} else {
-				newProject = new AcideMenuItemConfiguration(
-						AcideProjectMenu.NEW_PROJECT_NAME);
-				newProject
-						.setImage("./resources/icons/menu/project/newProject.png");
+				newProject = new AcideMenuItemConfiguration(AcideProjectMenu.NEW_PROJECT_NAME);
+				newProject.setImage("./resources/icons/menu/project/newProject.png");
 				newProject.setCommand("$NEW_PROJECT");
-				newProject.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.NEW_PROJECT_NAME));
+				newProject.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.NEW_PROJECT_NAME));
 				project.insertObject(newProject);
 			}
 			newProject.setErasable(false);
@@ -2485,24 +1882,18 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration openProject;
 			if (project.hasItem(AcideProjectMenu.OPEN_PROJECT_NAME)) {
-				openProject = project
-						.getItem(AcideProjectMenu.OPEN_PROJECT_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.OPEN_PROJECT_NAME,
+				openProject = project.getItem(AcideProjectMenu.OPEN_PROJECT_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.OPEN_PROJECT_NAME,
 						openProject.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.OPEN_PROJECT_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.OPEN_PROJECT_NAME);
 
 			} else {
-				openProject = new AcideMenuItemConfiguration(
-						AcideProjectMenu.OPEN_PROJECT_NAME);
-				openProject
-						.setImage("./resources/icons/menu/project/openProject.png");
+				openProject = new AcideMenuItemConfiguration(AcideProjectMenu.OPEN_PROJECT_NAME);
+				openProject.setImage("./resources/icons/menu/project/openProject.png");
 				openProject.setCommand("$OPEN_PROJECT");
-				openProject.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.OPEN_PROJECT_NAME));
+				openProject.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.OPEN_PROJECT_NAME));
 				project.insertObject(openProject);
 			}
 			openProject.setErasable(false);
@@ -2511,44 +1902,32 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuSubmenuConfiguration openRecentProjects;
 			if (project.hasSubmenu(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME)) {
-				openRecentProjects = project
-						.getSubmenu(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME,
+				openRecentProjects = project.getSubmenu(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME,
 						openRecentProjects.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
 			} else {
-				openRecentProjects = new AcideMenuSubmenuConfiguration(
-						AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
-				openRecentProjects.setVisible(AcideMenuConfiguration
-						.getInstance().getIsDisplayed(
-								AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME));
+				openRecentProjects = new AcideMenuSubmenuConfiguration(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME);
+				openRecentProjects.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideProjectMenu.OPEN_RECENT_PROJECTS_NAME));
 				project.insertObject(openRecentProjects);
 			}
 			openRecentProjects.setErasable(false);
 
 			AcideMenuItemConfiguration closeProject;
 			if (project.hasItem(AcideProjectMenu.CLOSE_PROJECT_NAME)) {
-				closeProject = project
-						.getItem(AcideProjectMenu.CLOSE_PROJECT_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.CLOSE_PROJECT_NAME,
+				closeProject = project.getItem(AcideProjectMenu.CLOSE_PROJECT_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.CLOSE_PROJECT_NAME,
 						closeProject.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.CLOSE_PROJECT_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.CLOSE_PROJECT_NAME);
 			} else {
-				closeProject = new AcideMenuItemConfiguration(
-						AcideProjectMenu.CLOSE_PROJECT_NAME);
-				closeProject
-						.setImage("./resources/icons/menu/project/closeProject.png");
+				closeProject = new AcideMenuItemConfiguration(AcideProjectMenu.CLOSE_PROJECT_NAME);
+				closeProject.setImage("./resources/icons/menu/project/closeProject.png");
 				closeProject.setCommand("$CLOSE_PROJECT");
-				closeProject.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.CLOSE_PROJECT_NAME));
+				closeProject.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.CLOSE_PROJECT_NAME));
 				project.insertObject(closeProject);
 			}
 			closeProject.setErasable(false);
@@ -2557,23 +1936,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration saveProject;
 			if (project.hasItem(AcideProjectMenu.SAVE_PROJECT_NAME)) {
-				saveProject = project
-						.getItem(AcideProjectMenu.SAVE_PROJECT_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.SAVE_PROJECT_NAME,
+				saveProject = project.getItem(AcideProjectMenu.SAVE_PROJECT_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.SAVE_PROJECT_NAME,
 						saveProject.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.SAVE_PROJECT_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.SAVE_PROJECT_NAME);
 			} else {
-				saveProject = new AcideMenuItemConfiguration(
-						AcideProjectMenu.SAVE_PROJECT_NAME);
-				saveProject
-						.setImage("./resources/icons/menu/project/saveProject.png");
+				saveProject = new AcideMenuItemConfiguration(AcideProjectMenu.SAVE_PROJECT_NAME);
+				saveProject.setImage("./resources/icons/menu/project/saveProject.png");
 				saveProject.setCommand("$SAVE_PROJECT");
-				saveProject.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_NAME));
+				saveProject.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_NAME));
 				project.insertObject(saveProject);
 			}
 			saveProject.setErasable(false);
@@ -2582,23 +1955,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration saveProjectAs;
 			if (project.hasItem(AcideProjectMenu.SAVE_PROJECT_AS_NAME)) {
-				saveProjectAs = project
-						.getItem(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.SAVE_PROJECT_AS_NAME,
+				saveProjectAs = project.getItem(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.SAVE_PROJECT_AS_NAME,
 						saveProjectAs.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
 			} else {
-				saveProjectAs = new AcideMenuItemConfiguration(
-						AcideProjectMenu.SAVE_PROJECT_AS_NAME);
-				saveProjectAs
-						.setImage("./resources/icons/menu/project/saveProjectAs.png");
+				saveProjectAs = new AcideMenuItemConfiguration(AcideProjectMenu.SAVE_PROJECT_AS_NAME);
+				saveProjectAs.setImage("./resources/icons/menu/project/saveProjectAs.png");
 				saveProjectAs.setCommand("$SAVE_PROJECT_AS");
-				saveProjectAs.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_AS_NAME));
+				saveProjectAs.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SAVE_PROJECT_AS_NAME));
 				project.insertObject(saveProjectAs);
 			}
 			saveProjectAs.setErasable(false);
@@ -2607,25 +1974,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration addOpenedFiles;
 			if (project.hasItem(AcideProjectMenu.ADD_OPENED_FILES_NAME)) {
-				addOpenedFiles = project
-						.getItem(AcideProjectMenu.ADD_OPENED_FILES_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.ADD_OPENED_FILES_NAME,
+				addOpenedFiles = project.getItem(AcideProjectMenu.ADD_OPENED_FILES_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.ADD_OPENED_FILES_NAME,
 						addOpenedFiles.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.ADD_OPENED_FILES_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.ADD_OPENED_FILES_NAME);
 			} else {
-				addOpenedFiles = new AcideMenuItemConfiguration(
-						AcideProjectMenu.ADD_OPENED_FILES_NAME);
-				addOpenedFiles
-						.setImage("./resources/icons/menu/project/addOpenedFiles.png");
+				addOpenedFiles = new AcideMenuItemConfiguration(AcideProjectMenu.ADD_OPENED_FILES_NAME);
+				addOpenedFiles.setImage("./resources/icons/menu/project/addOpenedFiles.png");
 				addOpenedFiles.setCommand("$ADD_OPENED_FILES");
-				addOpenedFiles
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideProjectMenu.ADD_OPENED_FILES_NAME));
+				addOpenedFiles.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.ADD_OPENED_FILES_NAME));
 				project.insertObject(addOpenedFiles);
 			}
 			addOpenedFiles.setErasable(false);
@@ -2634,25 +1993,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration newProjectFile;
 			if (project.hasItem(AcideProjectMenu.NEW_PROJECT_FILE_NAME)) {
-				newProjectFile = project
-						.getItem(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.NEW_PROJECT_FILE_NAME,
+				newProjectFile = project.getItem(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.NEW_PROJECT_FILE_NAME,
 						newProjectFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
 			} else {
-				newProjectFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.NEW_PROJECT_FILE_NAME);
-				newProjectFile
-						.setImage("./resources/icons/menu/project/newFile.png");
+				newProjectFile = new AcideMenuItemConfiguration(AcideProjectMenu.NEW_PROJECT_FILE_NAME);
+				newProjectFile.setImage("./resources/icons/menu/project/newFile.png");
 				newProjectFile.setCommand("$NEW_PROJECT_FILE");
-				newProjectFile
-						.setVisible(AcideMenuConfiguration.getInstance()
-								.getIsDisplayed(
-										AcideProjectMenu.NEW_PROJECT_FILE_NAME));
+				newProjectFile.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.NEW_PROJECT_FILE_NAME));
 				project.insertObject(newProjectFile);
 			}
 			newProjectFile.setErasable(false);
@@ -2662,19 +2013,15 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration addFile;
 			if (project.hasItem(AcideProjectMenu.ADD_FILE_NAME)) {
 				addFile = project.getItem(AcideProjectMenu.ADD_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.ADD_FILE_NAME, addFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.ADD_FILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.ADD_FILE_NAME,
+						addFile.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.ADD_FILE_NAME);
 			} else {
-				addFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.ADD_FILE_NAME);
+				addFile = new AcideMenuItemConfiguration(AcideProjectMenu.ADD_FILE_NAME);
 				addFile.setImage("./resources/icons/menu/project/addFile.png");
 				addFile.setCommand("$ADD_FILE");
-				addFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.ADD_FILE_NAME));
+				addFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.ADD_FILE_NAME));
 				project.insertObject(addFile);
 			}
 			addFile.setErasable(false);
@@ -2684,21 +2031,16 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration removeFile;
 			if (project.hasItem(AcideProjectMenu.REMOVE_FILE_NAME)) {
 				removeFile = project.getItem(AcideProjectMenu.REMOVE_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.REMOVE_FILE_NAME,
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.REMOVE_FILE_NAME,
 						removeFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.REMOVE_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.REMOVE_FILE_NAME);
 			} else {
-				removeFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.REMOVE_FILE_NAME);
-				removeFile
-						.setImage("./resources/icons/menu/project/removeFile.png");
+				removeFile = new AcideMenuItemConfiguration(AcideProjectMenu.REMOVE_FILE_NAME);
+				removeFile.setImage("./resources/icons/menu/project/removeFile.png");
 				removeFile.setCommand("$REMOVE_FILE");
-				removeFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.REMOVE_FILE_NAME));
+				removeFile.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.REMOVE_FILE_NAME));
 				project.insertObject(removeFile);
 			}
 			removeFile.setErasable(false);
@@ -2708,21 +2050,16 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration deleteFile;
 			if (project.hasItem(AcideProjectMenu.DELETE_FILE_NAME)) {
 				deleteFile = project.getItem(AcideProjectMenu.DELETE_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.DELETE_FILE_NAME,
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.DELETE_FILE_NAME,
 						deleteFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.DELETE_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.DELETE_FILE_NAME);
 			} else {
-				deleteFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.DELETE_FILE_NAME);
-				deleteFile
-						.setImage("./resources/icons/menu/project/deleteFile.png");
+				deleteFile = new AcideMenuItemConfiguration(AcideProjectMenu.DELETE_FILE_NAME);
+				deleteFile.setImage("./resources/icons/menu/project/deleteFile.png");
 				deleteFile.setCommand("$DELETE_FILE");
-				deleteFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.DELETE_FILE_NAME));
+				deleteFile.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.DELETE_FILE_NAME));
 				project.insertObject(deleteFile);
 			}
 			deleteFile.setErasable(false);
@@ -2732,21 +2069,16 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration addFolder;
 			if (project.hasItem(AcideProjectMenu.ADD_FOLDER_NAME)) {
 				addFolder = project.getItem(AcideProjectMenu.ADD_FOLDER_NAME);
-				AcideMenuConfiguration.getInstance()
-						.setIsDisplayed(AcideProjectMenu.ADD_FOLDER_NAME,
-								addFolder.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.ADD_FOLDER_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.ADD_FOLDER_NAME,
+						addFolder.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.ADD_FOLDER_NAME);
 			} else {
-				addFolder = new AcideMenuItemConfiguration(
-						AcideProjectMenu.ADD_FOLDER_NAME);
-				addFolder
-						.setImage("./resources/icons/menu/project/addFolder.png");
+				addFolder = new AcideMenuItemConfiguration(AcideProjectMenu.ADD_FOLDER_NAME);
+				addFolder.setImage("./resources/icons/menu/project/addFolder.png");
 				addFolder.setCommand("$ADD_FOLDER");
-				addFolder.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.ADD_FOLDER_NAME));
+				addFolder.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.ADD_FOLDER_NAME));
 				project.insertObject(addFolder);
 			}
 			addFolder.setErasable(false);
@@ -2755,23 +2087,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration removeFolder;
 			if (project.hasItem(AcideProjectMenu.REMOVE_FOLDER_NAME)) {
-				removeFolder = project
-						.getItem(AcideProjectMenu.REMOVE_FOLDER_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.REMOVE_FOLDER_NAME,
+				removeFolder = project.getItem(AcideProjectMenu.REMOVE_FOLDER_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.REMOVE_FOLDER_NAME,
 						removeFolder.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.REMOVE_FOLDER_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.REMOVE_FOLDER_NAME);
 			} else {
-				removeFolder = new AcideMenuItemConfiguration(
-						AcideProjectMenu.REMOVE_FOLDER_NAME);
-				removeFolder
-						.setImage("./resources/icons/menu/project/removeFolder.png");
+				removeFolder = new AcideMenuItemConfiguration(AcideProjectMenu.REMOVE_FOLDER_NAME);
+				removeFolder.setImage("./resources/icons/menu/project/removeFolder.png");
 				removeFolder.setCommand("$REMOVE_FOLDER");
-				removeFolder.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.REMOVE_FOLDER_NAME));
+				removeFolder.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.REMOVE_FOLDER_NAME));
 				project.insertObject(removeFolder);
 			}
 			removeFolder.setErasable(false);
@@ -2781,19 +2107,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration compile;
 			if (project.hasItem(AcideProjectMenu.COMPILE_NAME)) {
 				compile = project.getItem(AcideProjectMenu.COMPILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.COMPILE_NAME, compile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.COMPILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.COMPILE_NAME, compile.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.COMPILE_NAME);
 			} else {
-				compile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.COMPILE_NAME);
+				compile = new AcideMenuItemConfiguration(AcideProjectMenu.COMPILE_NAME);
 				compile.setImage("./resources/icons/menu/project/compile.png");
 				compile.setCommand("$COMPILE");
-				compile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.COMPILE_NAME));
+				compile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.COMPILE_NAME));
 				project.insertObject(compile);
 			}
 			compile.setErasable(false);
@@ -2803,19 +2124,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration execute;
 			if (project.hasItem(AcideProjectMenu.EXECUTE_NAME)) {
 				execute = project.getItem(AcideProjectMenu.EXECUTE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.EXECUTE_NAME, execute.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.EXECUTE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.EXECUTE_NAME, execute.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.EXECUTE_NAME);
 			} else {
-				execute = new AcideMenuItemConfiguration(
-						AcideProjectMenu.EXECUTE_NAME);
+				execute = new AcideMenuItemConfiguration(AcideProjectMenu.EXECUTE_NAME);
 				execute.setImage("./resources/icons/menu/project/execute.png");
 				execute.setCommand("$EXECUTE");
-				execute.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.EXECUTE_NAME));
+				execute.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.EXECUTE_NAME));
 				project.insertObject(execute);
 			}
 			execute.setErasable(false);
@@ -2824,24 +2140,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration setCompilableFile;
 			if (project.hasItem(AcideProjectMenu.SET_COMPILABLE_FILE_NAME)) {
-				setCompilableFile = project
-						.getItem(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.SET_COMPILABLE_FILE_NAME,
+				setCompilableFile = project.getItem(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.SET_COMPILABLE_FILE_NAME,
 						setCompilableFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
 			} else {
-				setCompilableFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
-				setCompilableFile
-						.setImage("./resources/icons/menu/project/setCompilable.png");
+				setCompilableFile = new AcideMenuItemConfiguration(AcideProjectMenu.SET_COMPILABLE_FILE_NAME);
+				setCompilableFile.setImage("./resources/icons/menu/project/setCompilable.png");
 				setCompilableFile.setCommand("$SET_COMPILABLE_FILE");
-				setCompilableFile.setVisible(AcideMenuConfiguration
-						.getInstance().getIsDisplayed(
-								AcideProjectMenu.SET_COMPILABLE_FILE_NAME));
+				setCompilableFile.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SET_COMPILABLE_FILE_NAME));
 				project.insertObject(setCompilableFile);
 			}
 			setCompilableFile.setErasable(false);
@@ -2850,24 +2159,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration unsetCompilableFile;
 			if (project.hasItem(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME)) {
-				unsetCompilableFile = project
-						.getItem(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME,
+				unsetCompilableFile = project.getItem(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME,
 						unsetCompilableFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
 			} else {
-				unsetCompilableFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
-				unsetCompilableFile
-						.setImage("./resources/icons/menu/project/unsetCompilable.png");
+				unsetCompilableFile = new AcideMenuItemConfiguration(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME);
+				unsetCompilableFile.setImage("./resources/icons/menu/project/unsetCompilable.png");
 				unsetCompilableFile.setCommand("$UNSET_COMPILABLE_FILE");
-				unsetCompilableFile.setVisible(AcideMenuConfiguration
-						.getInstance().getIsDisplayed(
-								AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME));
+				unsetCompilableFile.setVisible(AcideMenuConfiguration.getInstance()
+						.getIsDisplayed(AcideProjectMenu.UNSET_COMPILABLE_FILE_NAME));
 				project.insertObject(unsetCompilableFile);
 			}
 			unsetCompilableFile.setErasable(false);
@@ -2876,23 +2178,17 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration setMainFile;
 			if (project.hasItem(AcideProjectMenu.SET_MAIN_FILE_NAME)) {
-				setMainFile = project
-						.getItem(AcideProjectMenu.SET_MAIN_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.SET_MAIN_FILE_NAME,
+				setMainFile = project.getItem(AcideProjectMenu.SET_MAIN_FILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.SET_MAIN_FILE_NAME,
 						setMainFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.SET_MAIN_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.SET_MAIN_FILE_NAME);
 			} else {
-				setMainFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.SET_MAIN_FILE_NAME);
-				setMainFile
-						.setImage("./resources/icons/menu/project/setMain.png");
+				setMainFile = new AcideMenuItemConfiguration(AcideProjectMenu.SET_MAIN_FILE_NAME);
+				setMainFile.setImage("./resources/icons/menu/project/setMain.png");
 				setMainFile.setCommand("$SET_MAIN_FILE");
-				setMainFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.SET_MAIN_FILE_NAME));
+				setMainFile.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.SET_MAIN_FILE_NAME));
 				project.insertObject(setMainFile);
 			}
 			setMainFile.setErasable(false);
@@ -2901,31 +2197,24 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration unsetMainFile;
 			if (project.hasItem(AcideProjectMenu.UNSET_MAIN_FILE_NAME)) {
-				unsetMainFile = project
-						.getItem(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideProjectMenu.UNSET_MAIN_FILE_NAME,
+				unsetMainFile = project.getItem(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideProjectMenu.UNSET_MAIN_FILE_NAME,
 						unsetMainFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
-						.getItemsManager()
-						.onlyOne(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME)
+						.getItemsManager().onlyOne(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
 			} else {
-				unsetMainFile = new AcideMenuItemConfiguration(
-						AcideProjectMenu.UNSET_MAIN_FILE_NAME);
-				unsetMainFile
-						.setImage("./resources/icons/menu/project/unsetMain.png");
+				unsetMainFile = new AcideMenuItemConfiguration(AcideProjectMenu.UNSET_MAIN_FILE_NAME);
+				unsetMainFile.setImage("./resources/icons/menu/project/unsetMain.png");
 				unsetMainFile.setCommand("$UNSET_MAIN_FILE");
-				unsetMainFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideProjectMenu.UNSET_MAIN_FILE_NAME));
+				unsetMainFile.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideProjectMenu.UNSET_MAIN_FILE_NAME));
 				project.insertObject(unsetMainFile);
 			}
 			unsetMainFile.setErasable(false);
 			unsetMainFile.setParameter("None");
 			// unsetMainFile.setCommand("");
 
-			AcideMenuItemsConfiguration.getInstance().onlyOne(
-					AcideProjectMenu.PROJECT_MENU_NAME);
+			AcideMenuItemsConfiguration.getInstance().onlyOne(AcideProjectMenu.PROJECT_MENU_NAME);
 
 		}
 
@@ -2935,76 +2224,53 @@ public class AcideMenuBar extends JMenuBar {
 	 * Checks that the edit menu configuration has the correct format
 	 */
 	private void buildEditMenuConfiguration() {
-		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(
-				AcideEditMenu.EDIT_MENU_NAME)) {
-			AcideMenuSubmenuConfiguration edit = AcideMenuItemsConfiguration
-					.getInstance().getEditDefaultSubmenu();
+		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(AcideEditMenu.EDIT_MENU_NAME)) {
+			AcideMenuSubmenuConfiguration edit = AcideMenuItemsConfiguration.getInstance().getEditDefaultSubmenu();
 
-			AcideMenuItemConfiguration undo = edit
-					.getItem(AcideEditMenu.UNDO_NAME);
-			undo.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.UNDO_NAME));
+			AcideMenuItemConfiguration undo = edit.getItem(AcideEditMenu.UNDO_NAME);
+			undo.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.UNDO_NAME));
 
-			AcideMenuItemConfiguration redo = edit
-					.getItem(AcideEditMenu.REDO_NAME);
-			redo.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.REDO_NAME));
+			AcideMenuItemConfiguration redo = edit.getItem(AcideEditMenu.REDO_NAME);
+			redo.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.REDO_NAME));
 
-			AcideMenuItemConfiguration copy = edit
-					.getItem(AcideEditMenu.COPY_NAME);
-			copy.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.COPY_NAME));
+			AcideMenuItemConfiguration copy = edit.getItem(AcideEditMenu.COPY_NAME);
+			copy.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.COPY_NAME));
 
-			AcideMenuItemConfiguration paste = edit
-					.getItem(AcideEditMenu.PASTE_NAME);
-			paste.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.PASTE_NAME));
+			AcideMenuItemConfiguration paste = edit.getItem(AcideEditMenu.PASTE_NAME);
+			paste.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.PASTE_NAME));
 
-			AcideMenuItemConfiguration cut = edit
-					.getItem(AcideEditMenu.CUT_NAME);
-			cut.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(
-					AcideEditMenu.CUT_NAME));
+			AcideMenuItemConfiguration cut = edit.getItem(AcideEditMenu.CUT_NAME);
+			cut.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.CUT_NAME));
 
-			AcideMenuItemConfiguration selectAll = edit
-					.getItem(AcideEditMenu.SELECT_ALL_NAME);
-			selectAll.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.SELECT_ALL_NAME));
+			AcideMenuItemConfiguration selectAll = edit.getItem(AcideEditMenu.SELECT_ALL_NAME);
+			selectAll.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.SELECT_ALL_NAME));
 
-			AcideMenuItemConfiguration goToLine = edit
-					.getItem(AcideEditMenu.GO_TO_LINE_NAME);
-			goToLine.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.GO_TO_LINE_NAME));
+			AcideMenuItemConfiguration goToLine = edit.getItem(AcideEditMenu.GO_TO_LINE_NAME);
+			goToLine.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.GO_TO_LINE_NAME));
 
-			AcideMenuItemConfiguration search = edit
-					.getItem(AcideEditMenu.SEARCH_NAME);
-			search.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.SEARCH_NAME));
+			AcideMenuItemConfiguration search = edit.getItem(AcideEditMenu.SEARCH_NAME);
+			search.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.SEARCH_NAME));
 
-			AcideMenuItemConfiguration replace = edit
-					.getItem(AcideEditMenu.REPLACE_NAME);
-			replace.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideEditMenu.REPLACE_NAME));
+			AcideMenuItemConfiguration replace = edit.getItem(AcideEditMenu.REPLACE_NAME);
+			replace.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.REPLACE_NAME));
 
 		} else {
 
-			AcideMenuSubmenuConfiguration edit = AcideMenuItemsConfiguration
-					.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME);
+			AcideMenuSubmenuConfiguration edit = AcideMenuItemsConfiguration.getInstance()
+					.getSubmenu(AcideEditMenu.EDIT_MENU_NAME);
 
 			AcideMenuItemConfiguration undo;
 			if (edit.hasItem(AcideEditMenu.UNDO_NAME)) {
 				undo = edit.getItem(AcideEditMenu.UNDO_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.UNDO_NAME, undo.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.UNDO_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.UNDO_NAME, undo.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.UNDO_NAME);
 
 			} else {
 				undo = new AcideMenuItemConfiguration(AcideEditMenu.UNDO_NAME);
 				undo.setImage("./resources/icons/menu/edit/undo.png");
 				undo.setCommand("$UNDO");
-				undo.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.UNDO_NAME));
+				undo.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.UNDO_NAME));
 				edit.insertObject(undo);
 			}
 			undo.setErasable(false);
@@ -3014,18 +2280,15 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration redo;
 			if (edit.hasItem(AcideEditMenu.REDO_NAME)) {
 				redo = edit.getItem(AcideEditMenu.REDO_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.REDO_NAME, redo.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.REDO_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.REDO_NAME, redo.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.REDO_NAME);
 
 			} else {
 				redo = new AcideMenuItemConfiguration(AcideEditMenu.REDO_NAME);
 				redo.setImage("./resources/icons/menu/edit/redo.png");
 				redo.setCommand("$REDO");
-				redo.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.REDO_NAME));
+				redo.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.REDO_NAME));
 				edit.insertObject(redo);
 			}
 			redo.setErasable(false);
@@ -3035,18 +2298,15 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration copy;
 			if (edit.hasItem(AcideEditMenu.COPY_NAME)) {
 				copy = edit.getItem(AcideEditMenu.COPY_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.COPY_NAME, copy.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.COPY_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.COPY_NAME, copy.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.COPY_NAME);
 
 			} else {
 				copy = new AcideMenuItemConfiguration(AcideEditMenu.COPY_NAME);
 				copy.setImage("./resources/icons/menu/edit/copy.png");
 				copy.setCommand("$COPY");
-				copy.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.COPY_NAME));
+				copy.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.COPY_NAME));
 				edit.insertObject(copy);
 			}
 			copy.setErasable(false);
@@ -3056,17 +2316,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration paste;
 			if (edit.hasItem(AcideEditMenu.PASTE_NAME)) {
 				paste = edit.getItem(AcideEditMenu.PASTE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.PASTE_NAME, paste.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.PASTE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.PASTE_NAME, paste.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.PASTE_NAME);
 			} else {
 				paste = new AcideMenuItemConfiguration(AcideEditMenu.PASTE_NAME);
 				paste.setImage("./resources/icons/menu/edit/paste.png");
 				paste.setCommand("$PASTE");
-				paste.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.PASTE_NAME));
+				paste.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.PASTE_NAME));
 				edit.insertObject(paste);
 			}
 			paste.setErasable(false);
@@ -3076,17 +2333,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration cut;
 			if (edit.hasItem(AcideEditMenu.CUT_NAME)) {
 				cut = edit.getItem(AcideEditMenu.CUT_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.CUT_NAME, cut.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.CUT_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.CUT_NAME, cut.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.CUT_NAME);
 			} else {
 				cut = new AcideMenuItemConfiguration(AcideEditMenu.CUT_NAME);
 				cut.setImage("./resources/icons/menu/edit/cut.png");
 				cut.setCommand("%CUT");
-				cut.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.CUT_NAME));
+				cut.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.CUT_NAME));
 				edit.insertObject(cut);
 			}
 			cut.setErasable(false);
@@ -3096,19 +2350,16 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration selectAll;
 			if (edit.hasItem(AcideEditMenu.SELECT_ALL_NAME)) {
 				selectAll = edit.getItem(AcideEditMenu.SELECT_ALL_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.SELECT_ALL_NAME, selectAll.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.SELECT_ALL_NAME,
+						selectAll.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
 						.onlyOne(AcideEditMenu.SELECT_ALL_NAME);
 			} else {
-				selectAll = new AcideMenuItemConfiguration(
-						AcideEditMenu.SELECT_ALL_NAME);
+				selectAll = new AcideMenuItemConfiguration(AcideEditMenu.SELECT_ALL_NAME);
 				selectAll.setImage("./resources/icons/menu/edit/selectAll.png");
 				selectAll.setCommand("$SELECT_ALL");
-				selectAll.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.SELECT_ALL_NAME));
+				selectAll
+						.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.SELECT_ALL_NAME));
 				edit.insertObject(selectAll);
 			}
 			selectAll.setErasable(false);
@@ -3118,19 +2369,15 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration goToLine;
 			if (edit.hasItem(AcideEditMenu.GO_TO_LINE_NAME)) {
 				goToLine = edit.getItem(AcideEditMenu.GO_TO_LINE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.GO_TO_LINE_NAME, goToLine.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.GO_TO_LINE_NAME,
+						goToLine.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
 						.onlyOne(AcideEditMenu.GO_TO_LINE_NAME);
 			} else {
-				goToLine = new AcideMenuItemConfiguration(
-						AcideEditMenu.GO_TO_LINE_NAME);
+				goToLine = new AcideMenuItemConfiguration(AcideEditMenu.GO_TO_LINE_NAME);
 				goToLine.setImage("./resources/icons/menu/edit/goToLine.png");
 				goToLine.setCommand("$GO_TO_LINE");
-				goToLine.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.GO_TO_LINE_NAME));
+				goToLine.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.GO_TO_LINE_NAME));
 				edit.insertObject(goToLine);
 			}
 			goToLine.setErasable(false);
@@ -3140,18 +2387,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration search;
 			if (edit.hasItem(AcideEditMenu.SEARCH_NAME)) {
 				search = edit.getItem(AcideEditMenu.SEARCH_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.SEARCH_NAME, search.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.SEARCH_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.SEARCH_NAME, search.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.SEARCH_NAME);
 			} else {
-				search = new AcideMenuItemConfiguration(
-						AcideEditMenu.SEARCH_NAME);
+				search = new AcideMenuItemConfiguration(AcideEditMenu.SEARCH_NAME);
 				search.setImage("./resources/icons/menu/edit/search.png");
 				search.setCommand("$SEARCH");
-				search.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.SEARCH_NAME));
+				search.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.SEARCH_NAME));
 				edit.insertObject(search);
 			}
 			search.setErasable(false);
@@ -3161,26 +2404,21 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration replace;
 			if (edit.hasItem(AcideEditMenu.REPLACE_NAME)) {
 				replace = edit.getItem(AcideEditMenu.REPLACE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideEditMenu.REPLACE_NAME, replace.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideEditMenu.EDIT_MENU_NAME)
-						.getItemsManager().onlyOne(AcideEditMenu.REPLACE_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideEditMenu.REPLACE_NAME, replace.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getItemsManager()
+						.onlyOne(AcideEditMenu.REPLACE_NAME);
 			} else {
-				replace = new AcideMenuItemConfiguration(
-						AcideEditMenu.REPLACE_NAME);
+				replace = new AcideMenuItemConfiguration(AcideEditMenu.REPLACE_NAME);
 				replace.setImage("./resources/icons/menu/edit/replace.png");
 				replace.setCommand("$REPLACE");
-				replace.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideEditMenu.REPLACE_NAME));
+				replace.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideEditMenu.REPLACE_NAME));
 				edit.insertObject(replace);
 			}
 			replace.setErasable(false);
 			replace.setParameter("None");
 			// replace.setCommand("");
 
-			AcideMenuItemsConfiguration.getInstance().onlyOne(
-					AcideEditMenu.EDIT_MENU_NAME);
+			AcideMenuItemsConfiguration.getInstance().onlyOne(AcideEditMenu.EDIT_MENU_NAME);
 		}
 
 	}
@@ -3190,91 +2428,67 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void buildFileMenuConfiguration() {
 
-		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(
-				AcideFileMenu.FILE_MENU_NAME)) {
-			AcideMenuSubmenuConfiguration file = AcideMenuItemsConfiguration
-					.getInstance().getFileDefaultSubmenu();
+		if (!AcideMenuItemsConfiguration.getInstance().hasSubmenu(AcideFileMenu.FILE_MENU_NAME)) {
+			AcideMenuSubmenuConfiguration file = AcideMenuItemsConfiguration.getInstance().getFileDefaultSubmenu();
 
-			AcideMenuItemConfiguration newFile = file
-					.getItem(AcideFileMenu.NEW_FILE_NAME);
-			newFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.NEW_FILE_NAME));
+			AcideMenuItemConfiguration newFile = file.getItem(AcideFileMenu.NEW_FILE_NAME);
+			newFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.NEW_FILE_NAME));
 
-			AcideMenuItemConfiguration openFile = file
-					.getItem(AcideFileMenu.OPEN_FILE_NAME);
-			openFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.OPEN_FILE_NAME));
+			AcideMenuItemConfiguration openFile = file.getItem(AcideFileMenu.OPEN_FILE_NAME);
+			openFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.OPEN_FILE_NAME));
 
-			AcideMenuSubmenuConfiguration openRecentFiles = file
-					.getSubmenu(AcideFileMenu.OPEN_RECENT_FILES_NAME);
-			openRecentFiles.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.OPEN_RECENT_FILES_NAME));
+			AcideMenuSubmenuConfiguration openRecentFiles = file.getSubmenu(AcideFileMenu.OPEN_RECENT_FILES_NAME);
+			openRecentFiles.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.OPEN_RECENT_FILES_NAME));
 
-			AcideMenuItemConfiguration openAllFiles = file
-					.getItem(AcideFileMenu.OPEN_ALL_FILES_NAME);
-			openAllFiles.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.OPEN_ALL_FILES_NAME));
+			AcideMenuItemConfiguration openAllFiles = file.getItem(AcideFileMenu.OPEN_ALL_FILES_NAME);
+			openAllFiles
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.OPEN_ALL_FILES_NAME));
 
-			AcideMenuItemConfiguration closeFile = file
-					.getItem(AcideFileMenu.CLOSE_FILE_NAME);
-			closeFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.CLOSE_FILE_NAME));
+			AcideMenuItemConfiguration closeFile = file.getItem(AcideFileMenu.CLOSE_FILE_NAME);
+			closeFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.CLOSE_FILE_NAME));
 
-			AcideMenuItemConfiguration closeAllFiles = file
-					.getItem(AcideFileMenu.CLOSE_ALL_FILES_NAME);
-			closeAllFiles.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.CLOSE_ALL_FILES_NAME));
+			AcideMenuItemConfiguration closeAllFiles = file.getItem(AcideFileMenu.CLOSE_ALL_FILES_NAME);
+			closeAllFiles.setVisible(
+					AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.CLOSE_ALL_FILES_NAME));
 
-			AcideMenuItemConfiguration saveFile = file
-					.getItem(AcideFileMenu.SAVE_FILE_NAME);
-			saveFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.SAVE_FILE_NAME));
+			AcideMenuItemConfiguration saveFile = file.getItem(AcideFileMenu.SAVE_FILE_NAME);
+			saveFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.SAVE_FILE_NAME));
 
-			AcideMenuItemConfiguration saveFileAs = file
-					.getItem(AcideFileMenu.SAVE_FILE_AS_NAME);
-			saveFileAs.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.SAVE_FILE_AS_NAME));
+			AcideMenuItemConfiguration saveFileAs = file.getItem(AcideFileMenu.SAVE_FILE_AS_NAME);
+			saveFileAs.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.SAVE_FILE_AS_NAME));
 
-			AcideMenuItemConfiguration saveAllFiles = file
-					.getItem(AcideFileMenu.SAVE_ALL_FILES_NAME);
-			saveAllFiles.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.SAVE_ALL_FILES_NAME));
+			AcideMenuItemConfiguration saveAllFiles = file.getItem(AcideFileMenu.SAVE_ALL_FILES_NAME);
+			saveAllFiles
+					.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.SAVE_ALL_FILES_NAME));
 
-			AcideMenuItemConfiguration printFile = file
-					.getItem(AcideFileMenu.PRINT_FILE_NAME);
-			printFile.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.PRINT_FILE_NAME));
+			AcideMenuItemConfiguration printFile = file.getItem(AcideFileMenu.PRINT_FILE_NAME);
+			printFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.PRINT_FILE_NAME));
 
-			AcideMenuItemConfiguration exit = file
-					.getItem(AcideFileMenu.EXIT_NAME);
-			exit.setVisible(AcideMenuConfiguration.getInstance()
-					.getIsDisplayed(AcideFileMenu.EXIT_NAME));
+			AcideMenuItemConfiguration exit = file.getItem(AcideFileMenu.EXIT_NAME);
+			exit.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.EXIT_NAME));
 
 			// Insert file submenu configuration to the manager
 			AcideMenuItemsConfiguration.getInstance().insertObject(file);
 
 		} else {
 
-			AcideMenuSubmenuConfiguration file = AcideMenuItemsConfiguration
-					.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME);
+			AcideMenuSubmenuConfiguration file = AcideMenuItemsConfiguration.getInstance()
+					.getSubmenu(AcideFileMenu.FILE_MENU_NAME);
 
 			AcideMenuItemConfiguration newFile;
 			if (file.hasItem(AcideFileMenu.NEW_FILE_NAME)) {
 				newFile = file.getItem(AcideFileMenu.NEW_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.NEW_FILE_NAME, newFile.isVisible());
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.NEW_FILE_NAME, newFile.isVisible());
 
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager().onlyOne(AcideFileMenu.NEW_FILE_NAME);
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
+						.onlyOne(AcideFileMenu.NEW_FILE_NAME);
 
 			} else {
-				newFile = new AcideMenuItemConfiguration(
-						AcideFileMenu.NEW_FILE_NAME);
+				newFile = new AcideMenuItemConfiguration(AcideFileMenu.NEW_FILE_NAME);
 				newFile.setImage("./resources/icons/menu/file/newFile.png");
 				newFile.setCommand("$NEW_FILE");
-				newFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.NEW_FILE_NAME));
+				newFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.NEW_FILE_NAME));
 				file.insertObject(newFile);
 			}
 			newFile.setErasable(false);
@@ -3284,19 +2498,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration openFile;
 			if (file.hasItem(AcideFileMenu.OPEN_FILE_NAME)) {
 				openFile = file.getItem(AcideFileMenu.OPEN_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.OPEN_FILE_NAME, openFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.OPEN_FILE_NAME, openFile.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.OPEN_FILE_NAME);
 			} else {
-				openFile = new AcideMenuItemConfiguration(
-						AcideFileMenu.OPEN_FILE_NAME);
+				openFile = new AcideMenuItemConfiguration(AcideFileMenu.OPEN_FILE_NAME);
 				openFile.setImage("./resources/icons/menu/file/openFile.png");
 				openFile.setCommand("$OPEN_FILE");
-				openFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.OPEN_FILE_NAME));
+				openFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.OPEN_FILE_NAME));
 				file.insertObject(openFile);
 			}
 			openFile.setErasable(false);
@@ -3305,21 +2514,16 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuSubmenuConfiguration openRecentFiles;
 			if (file.hasSubmenu(AcideFileMenu.OPEN_RECENT_FILES_NAME)) {
-				openRecentFiles = file
-						.getSubmenu(AcideFileMenu.OPEN_RECENT_FILES_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.OPEN_RECENT_FILES_NAME,
+				openRecentFiles = file.getSubmenu(AcideFileMenu.OPEN_RECENT_FILES_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.OPEN_RECENT_FILES_NAME,
 						openRecentFiles.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.OPEN_RECENT_FILES_NAME);
 
 			} else {
-				openRecentFiles = new AcideMenuSubmenuConfiguration(
-						AcideFileMenu.OPEN_RECENT_FILES_NAME);
-				openRecentFiles.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.OPEN_RECENT_FILES_NAME));
+				openRecentFiles = new AcideMenuSubmenuConfiguration(AcideFileMenu.OPEN_RECENT_FILES_NAME);
+				openRecentFiles.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.OPEN_RECENT_FILES_NAME));
 				file.insertObject(openRecentFiles);
 			}
 			openRecentFiles.setErasable(false);
@@ -3327,22 +2531,17 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration openAllFiles;
 			if (file.hasItem(AcideFileMenu.OPEN_ALL_FILES_NAME)) {
 				openAllFiles = file.getItem(AcideFileMenu.OPEN_ALL_FILES_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.OPEN_ALL_FILES_NAME,
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.OPEN_ALL_FILES_NAME,
 						openAllFiles.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.OPEN_ALL_FILES_NAME);
 
 			} else {
-				openAllFiles = new AcideMenuItemConfiguration(
-						AcideFileMenu.OPEN_ALL_FILES_NAME);
-				openAllFiles
-						.setImage("./resources/icons/menu/file/openAllFiles.png");
+				openAllFiles = new AcideMenuItemConfiguration(AcideFileMenu.OPEN_ALL_FILES_NAME);
+				openAllFiles.setImage("./resources/icons/menu/file/openAllFiles.png");
 				openAllFiles.setCommand("$OPEN_ALL_FILES");
-				openAllFiles.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.OPEN_ALL_FILES_NAME));
+				openAllFiles.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.OPEN_ALL_FILES_NAME));
 				file.insertObject(openAllFiles);
 			}
 			openAllFiles.setErasable(false);
@@ -3352,20 +2551,17 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration closeFile;
 			if (file.hasItem(AcideFileMenu.CLOSE_FILE_NAME)) {
 				closeFile = file.getItem(AcideFileMenu.CLOSE_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.CLOSE_FILE_NAME, closeFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.CLOSE_FILE_NAME,
+						closeFile.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.CLOSE_FILE_NAME);
 
 			} else {
-				closeFile = new AcideMenuItemConfiguration(
-						AcideFileMenu.CLOSE_FILE_NAME);
+				closeFile = new AcideMenuItemConfiguration(AcideFileMenu.CLOSE_FILE_NAME);
 				closeFile.setImage("./resources/icons/menu/file/closeFile.png");
 				closeFile.setCommand("$CLOSE_FILE");
-				closeFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.CLOSE_FILE_NAME));
+				closeFile
+						.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.CLOSE_FILE_NAME));
 				file.insertObject(closeFile);
 			}
 			closeFile.setErasable(false);
@@ -3374,24 +2570,18 @@ public class AcideMenuBar extends JMenuBar {
 
 			AcideMenuItemConfiguration closeAllFiles;
 			if (file.hasItem(AcideFileMenu.CLOSE_ALL_FILES_NAME)) {
-				closeAllFiles = file
-						.getItem(AcideFileMenu.CLOSE_ALL_FILES_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.CLOSE_ALL_FILES_NAME,
+				closeAllFiles = file.getItem(AcideFileMenu.CLOSE_ALL_FILES_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.CLOSE_ALL_FILES_NAME,
 						closeAllFiles.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.CLOSE_ALL_FILES_NAME);
 
 			} else {
-				closeAllFiles = new AcideMenuItemConfiguration(
-						AcideFileMenu.CLOSE_ALL_FILES_NAME);
-				closeAllFiles
-						.setImage("./resources/icons/menu/file/closeAllFiles.png");
+				closeAllFiles = new AcideMenuItemConfiguration(AcideFileMenu.CLOSE_ALL_FILES_NAME);
+				closeAllFiles.setImage("./resources/icons/menu/file/closeAllFiles.png");
 				closeAllFiles.setCommand("$CLOSE_ALL_FILES");
-				closeAllFiles.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.CLOSE_ALL_FILES_NAME));
+				closeAllFiles.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.CLOSE_ALL_FILES_NAME));
 				file.insertObject(closeAllFiles);
 			}
 			closeAllFiles.setErasable(false);
@@ -3401,19 +2591,14 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration saveFile;
 			if (file.hasItem(AcideFileMenu.SAVE_FILE_NAME)) {
 				saveFile = file.getItem(AcideFileMenu.SAVE_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.SAVE_FILE_NAME, saveFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.SAVE_FILE_NAME, saveFile.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.SAVE_FILE_NAME);
 			} else {
-				saveFile = new AcideMenuItemConfiguration(
-						AcideFileMenu.SAVE_FILE_NAME);
+				saveFile = new AcideMenuItemConfiguration(AcideFileMenu.SAVE_FILE_NAME);
 				saveFile.setImage("./resources/icons/menu/file/saveFile.png");
 				saveFile.setCommand("$SAVE_FILE");
-				saveFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.SAVE_FILE_NAME));
+				saveFile.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.SAVE_FILE_NAME));
 				file.insertObject(saveFile);
 			}
 			saveFile.setErasable(false);
@@ -3423,21 +2608,16 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration saveFileAs;
 			if (file.hasItem(AcideFileMenu.SAVE_FILE_AS_NAME)) {
 				saveFileAs = file.getItem(AcideFileMenu.SAVE_FILE_AS_NAME);
-				AcideMenuConfiguration.getInstance()
-						.setIsDisplayed(AcideFileMenu.SAVE_FILE_AS_NAME,
-								saveFileAs.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.SAVE_FILE_AS_NAME,
+						saveFileAs.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.SAVE_FILE_AS_NAME);
 			} else {
-				saveFileAs = new AcideMenuItemConfiguration(
-						AcideFileMenu.SAVE_FILE_AS_NAME);
-				saveFileAs
-						.setImage("./resources/icons/menu/file/saveFileAs.png");
+				saveFileAs = new AcideMenuItemConfiguration(AcideFileMenu.SAVE_FILE_AS_NAME);
+				saveFileAs.setImage("./resources/icons/menu/file/saveFileAs.png");
 				saveFileAs.setCommand("$SAVE_FILE_AS");
-				saveFileAs.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.SAVE_FILE_AS_NAME));
+				saveFileAs.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.SAVE_FILE_AS_NAME));
 				file.insertObject(saveFileAs);
 			}
 			saveFileAs.setErasable(false);
@@ -3447,21 +2627,16 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration saveAllFiles;
 			if (file.hasItem(AcideFileMenu.SAVE_ALL_FILES_NAME)) {
 				saveAllFiles = file.getItem(AcideFileMenu.SAVE_ALL_FILES_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.SAVE_ALL_FILES_NAME,
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.SAVE_ALL_FILES_NAME,
 						saveAllFiles.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.SAVE_ALL_FILES_NAME);
 			} else {
-				saveAllFiles = new AcideMenuItemConfiguration(
-						AcideFileMenu.SAVE_ALL_FILES_NAME);
-				saveAllFiles
-						.setImage("./resources/icons/menu/file/saveAllFiles.png");
+				saveAllFiles = new AcideMenuItemConfiguration(AcideFileMenu.SAVE_ALL_FILES_NAME);
+				saveAllFiles.setImage("./resources/icons/menu/file/saveAllFiles.png");
 				saveAllFiles.setCommand("$SAVE_ALL_FILES");
-				saveAllFiles.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.SAVE_ALL_FILES_NAME));
+				saveAllFiles.setVisible(
+						AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.SAVE_ALL_FILES_NAME));
 				file.insertObject(saveAllFiles);
 			}
 			saveAllFiles.setErasable(false);
@@ -3471,20 +2646,17 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration printFile;
 			if (file.hasItem(AcideFileMenu.PRINT_FILE_NAME)) {
 				printFile = file.getItem(AcideFileMenu.PRINT_FILE_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.PRINT_FILE_NAME, printFile.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager()
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.PRINT_FILE_NAME,
+						printFile.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
 						.onlyOne(AcideFileMenu.PRINT_FILE_NAME);
 
 			} else {
-				printFile = new AcideMenuItemConfiguration(
-						AcideFileMenu.PRINT_FILE_NAME);
+				printFile = new AcideMenuItemConfiguration(AcideFileMenu.PRINT_FILE_NAME);
 				printFile.setImage("./resources/icons/menu/file/printFile.png");
 				printFile.setCommand("$PRINT_FILE");
-				printFile.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.PRINT_FILE_NAME));
+				printFile
+						.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.PRINT_FILE_NAME));
 				file.insertObject(printFile);
 			}
 			printFile.setErasable(false);
@@ -3494,26 +2666,22 @@ public class AcideMenuBar extends JMenuBar {
 			AcideMenuItemConfiguration exit;
 			if (file.hasItem(AcideFileMenu.EXIT_NAME)) {
 				exit = file.getItem(AcideFileMenu.EXIT_NAME);
-				AcideMenuConfiguration.getInstance().setIsDisplayed(
-						AcideFileMenu.EXIT_NAME, exit.isVisible());
-				AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(AcideFileMenu.FILE_MENU_NAME)
-						.getItemsManager().onlyOne(AcideFileMenu.EXIT_NAME);
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideFileMenu.EXIT_NAME, exit.isVisible());
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).getItemsManager()
+						.onlyOne(AcideFileMenu.EXIT_NAME);
 
 			} else {
 				exit = new AcideMenuItemConfiguration(AcideFileMenu.EXIT_NAME);
 				exit.setImage("./resources/icons/menu/file/exit.png");
 				exit.setCommand("$EXIT_FILE");
-				exit.setVisible(AcideMenuConfiguration.getInstance()
-						.getIsDisplayed(AcideFileMenu.EXIT_NAME));
+				exit.setVisible(AcideMenuConfiguration.getInstance().getIsDisplayed(AcideFileMenu.EXIT_NAME));
 				file.insertObject(exit);
 			}
 			exit.setErasable(false);
 			exit.setParameter("None");
 			// exit.setCommand("");
 
-			AcideMenuItemsConfiguration.getInstance().onlyOne(
-					AcideFileMenu.FILE_MENU_NAME);
+			AcideMenuItemsConfiguration.getInstance().onlyOne(AcideFileMenu.FILE_MENU_NAME);
 		}
 	}
 
@@ -3522,12 +2690,10 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void addComponents() {
 
-		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().managerIterator();
+		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().managerIterator();
 
 		while (it.hasNext()) {
-			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it
-					.next();
+			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it.next();
 			String name = ob.getName();
 			if (name.equals(AcideFileMenu.FILE_MENU_NAME)) {
 				// Adds the file menu to the menu
@@ -3545,8 +2711,7 @@ public class AcideMenuBar extends JMenuBar {
 				// Adds the view menu to the menu
 				add(_viewMenu);
 				_viewInserted = true;
-			} else if (name
-					.equals(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)) {
+			} else if (name.equals(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)) {
 				// Adds the configuration menu to the menu
 				add(_configurationMenu);
 				_configurationInserted = true;
@@ -3583,20 +2748,17 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	private void buildComponents() {
 
-		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().managerIterator();
+		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().managerIterator();
 
 		while (it.hasNext()) {
-			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it
-					.next();
+			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it.next();
 			String name = ob.getName();
 			if (isOriginal(name)) {
 				_insertedObjects.add(ob);
 				AcideMenuItemsConfiguration.getInstance().onlyOne(name);
 				if (ob.isSubmenu()) {
 					AcideMenuSubmenuConfiguration obSubmenu = (AcideMenuSubmenuConfiguration) ob;
-					_insertedMenus.put(ob.getName(), new AcideInsertedMenu(
-							obSubmenu));
+					_insertedMenus.put(ob.getName(), new AcideInsertedMenu(obSubmenu));
 				}
 				// else {
 				// AcideMenuItemConfiguration obItem =
@@ -3645,49 +2807,43 @@ public class AcideMenuBar extends JMenuBar {
 	}
 
 	/**
-	 * Sets the text of the ACIDE - A Configurable IDE menu bar components with
-	 * the labels in the selected language to display.
+	 * Sets the text of the ACIDE - A Configurable IDE menu bar components with the
+	 * labels in the selected language to display.
 	 */
 	public void setTextOfMenuComponents() {
 
 		// Sets the file menu text
-		_fileMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s1"));
+		_fileMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s1"));
 
 		// Sets the file menu items text
 		_fileMenu.setTextOfMenuComponents();
 
 		// Sets the edit menu text
-		_editMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s2"));
+		_editMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s2"));
 
 		// Sets the edit menu items text
 		_editMenu.setTextOfMenuComponents();
 
 		// Sets the project menu text
-		_projectMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s3"));
+		_projectMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s3"));
 
 		// Sets the project menu items text
 		_projectMenu.setTextOfMenuComponents();
 
 		// Sets the view menu text
-		_viewMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s4"));
+		_viewMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s4"));
 
 		// Sets the view menu items text
 		_viewMenu.setTextOfMenuComponents();
 
 		// Sets the configuration menu text
-		_configurationMenu.setText(AcideLanguageManager.getInstance()
-				.getLabels().getString("s5"));
+		_configurationMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s5"));
 
 		// Sets the configuration menu items text
 		_configurationMenu.setTextOfMenuComponents();
 
 		// Sets the help menu text
-		_helpMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s7"));
+		_helpMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s7"));
 
 		// Sets the help menu items text
 		_helpMenu.setTextOfMenuComponents();
@@ -3707,8 +2863,8 @@ public class AcideMenuBar extends JMenuBar {
 
 	/**
 	 * <p>
-	 * Configures the ACIDE - A Configurable IDE menu bar enabling or disabling
-	 * its menu items.
+	 * Configures the ACIDE - A Configurable IDE menu bar enabling or disabling its
+	 * menu items.
 	 * </p>
 	 * <p>
 	 * It is called by the {@link AcideFileEditorManagerChangeListener}.
@@ -3726,21 +2882,18 @@ public class AcideMenuBar extends JMenuBar {
 		AcideMainWindow.getInstance().getMenu().getProjectMenu().configure();
 
 		// Configures the file editor menu
-		AcideMainWindow.getInstance().getMenu().getConfigurationMenu()
-				.getFileEditorMenu().configure();
+		AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getFileEditorMenu().configure();
 
 		// Configures the lexicon menu
-		AcideMainWindow.getInstance().getMenu().getConfigurationMenu()
-				.getLexiconMenu().configure();
+		AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getLexiconMenu().configure();
 
 		// Configures the grammar menu
-		AcideMainWindow.getInstance().getMenu().getConfigurationMenu()
-				.getGrammarMenu().configure();
+		AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getGrammarMenu().configure();
 	}
 
 	/**
-	 * Updates the ACIDE - A Configurable IDE menu bar components visibility
-	 * with the menu configuration.
+	 * Updates the ACIDE - A Configurable IDE menu bar components visibility with
+	 * the menu configuration.
 	 */
 	public void updateComponentsVisibility() {
 
@@ -3748,29 +2901,29 @@ public class AcideMenuBar extends JMenuBar {
 		_fileMenu.updateComponentsVisibiliy();
 
 		// Sets the file menu as visible or not visible
-		_fileMenu.setVisible(AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(AcideFileMenu.FILE_MENU_NAME).isVisible());
+		_fileMenu.setVisible(
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideFileMenu.FILE_MENU_NAME).isVisible());
 
 		// Builds the edit menu
 		_editMenu.updateComponentsVisibility();
 
 		// Sets the edit menu as visible or not visible
-		_editMenu.setVisible(AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(AcideEditMenu.EDIT_MENU_NAME).isVisible());
+		_editMenu.setVisible(
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideEditMenu.EDIT_MENU_NAME).isVisible());
 
 		// Builds the project menu
 		_projectMenu.updateComponentsVisibility();
 
 		// Sets the project menu as visible or not visible
-		_projectMenu.setVisible(AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME).isVisible());
+		_projectMenu.setVisible(
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideProjectMenu.PROJECT_MENU_NAME).isVisible());
 
 		// Builds the view menu
 		_viewMenu.updateComponentsVisibility();
 
 		// Sets the view menu as visible or not visible
-		_viewMenu.setVisible(AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(AcideViewMenu.VIEW_MENU_NAME).isVisible());
+		_viewMenu.setVisible(
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideViewMenu.VIEW_MENU_NAME).isVisible());
 
 		// Builds the configuration menu
 		_configurationMenu.updateComponentsVisibility();
@@ -3782,8 +2935,8 @@ public class AcideMenuBar extends JMenuBar {
 		_helpMenu.updateComponentsVisibility();
 
 		// Sets the help menu as visible or not visible
-		_helpMenu.setVisible(AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(AcideHelpMenu.HELP_MENU_NAME).isVisible());
+		_helpMenu.setVisible(
+				AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideHelpMenu.HELP_MENU_NAME).isVisible());
 
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
 		while (it.hasNext()) {
@@ -3811,32 +2964,23 @@ public class AcideMenuBar extends JMenuBar {
 		try {
 
 			// Gets the ACIDE - A Configurable IDE current menu configuration
-			currentMenuConfiguration = AcideResourceManager.getInstance()
-					.getProperty("currentMenuConfiguration");
+			currentMenuConfiguration = AcideResourceManager.getInstance().getProperty("currentMenuConfiguration");
 
 			// Sets the new menu item list
-			AcideMenuConfiguration.getInstance()
-					.setMenuElementList(
-							AcideMenuConfiguration.getInstance()
-									.loadMenuConfigurationFile(
-											currentMenuConfiguration));
+			AcideMenuConfiguration.getInstance().setMenuElementList(
+					AcideMenuConfiguration.getInstance().loadMenuConfigurationFile(currentMenuConfiguration));
 
 			// Updates the ACIDE - A Configurable IDE current menu configuration
-			AcideResourceManager.getInstance().setProperty(
-					"currentMenuConfiguration", currentMenuConfiguration);
+			AcideResourceManager.getInstance().setProperty("currentMenuConfiguration", currentMenuConfiguration);
 
 			// Updates the log
 			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s70")
-							+ " " + currentMenuConfiguration);
+					AcideLanguageManager.getInstance().getLabels().getString("s70") + " " + currentMenuConfiguration);
 		} catch (Exception exception) {
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s71")
-							+ exception.getMessage());
+			AcideLog.getLog()
+					.info(AcideLanguageManager.getInstance().getLabels().getString("s71") + exception.getMessage());
 
 			// Gets the name
 			String name;
@@ -3844,37 +2988,28 @@ public class AcideMenuBar extends JMenuBar {
 			if (index == -1)
 				index = currentMenuConfiguration.lastIndexOf("/");
 			name = ".\\configuration\\menu\\"
-					+ currentMenuConfiguration.substring(index + 1,
-							currentMenuConfiguration.length());
+					+ currentMenuConfiguration.substring(index + 1, currentMenuConfiguration.length());
 
 			try {
 
 				// Sets the new menu item list
-				AcideMenuConfiguration.getInstance().setMenuElementList(
-						AcideMenuConfiguration.getInstance()
-								.loadMenuConfigurationFile(name));
+				AcideMenuConfiguration.getInstance()
+						.setMenuElementList(AcideMenuConfiguration.getInstance().loadMenuConfigurationFile(name));
 
 				// Updates the ACIDE - A Configurable IDE current menu
 				// configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentMenuConfiguration", name);
+				AcideResourceManager.getInstance().setProperty("currentMenuConfiguration", name);
 
 				// Updates the ACIDE - A Configurable IDE menu configuration
-				AcideProjectConfiguration.getInstance().setMenuConfiguration(
-						name);
+				AcideProjectConfiguration.getInstance().setMenuConfiguration(name);
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s70")
-								+ " " + name);
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s70") + " " + name);
 
 				// Displays an error message
-				JOptionPane.showMessageDialog(null, AcideLanguageManager
-						.getInstance().getLabels().getString("s956")
-						+ currentMenuConfiguration
-						+ AcideLanguageManager.getInstance().getLabels()
-								.getString("s957") + name);
+				JOptionPane.showMessageDialog(null,
+						AcideLanguageManager.getInstance().getLabels().getString("s956") + currentMenuConfiguration
+								+ AcideLanguageManager.getInstance().getLabels().getString("s957") + name);
 			} catch (Exception exception1) {
 				try {
 
@@ -3883,26 +3018,18 @@ public class AcideMenuBar extends JMenuBar {
 					exception1.printStackTrace();
 
 					// Loads the new menu item list
-					AcideMenuConfiguration
-							.getInstance()
-							.setMenuElementList(
-									AcideMenuConfiguration
-											.getInstance()
-											.loadMenuConfigurationFile(
-													"./configuration/menu/defaultAllOn.menuConfig"));
+					AcideMenuConfiguration.getInstance().setMenuElementList(AcideMenuConfiguration.getInstance()
+							.loadMenuConfigurationFile("./configuration/menu/defaultAllOn.menuConfig"));
 
 					// Updates the ACIDE - A Configurable IDE current menu
 					// configuration
-					AcideResourceManager.getInstance().setProperty(
-							"currentMenuConfiguration",
+					AcideResourceManager.getInstance().setProperty("currentMenuConfiguration",
 							"./configuration/menu/defaultAllOn.menuConfig");
 
 					// Displays an error message
-					JOptionPane.showMessageDialog(null, AcideLanguageManager
-							.getInstance().getLabels().getString("s956")
-							+ currentMenuConfiguration
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+					JOptionPane.showMessageDialog(null,
+							AcideLanguageManager.getInstance().getLabels().getString("s956") + currentMenuConfiguration
+									+ AcideLanguageManager.getInstance().getLabels().getString("s959"));
 				} catch (HeadlessException exception2) {
 
 					// Updates the log
@@ -3922,31 +3049,24 @@ public class AcideMenuBar extends JMenuBar {
 		try {
 			// Gets the ACIDE - A Configurable IDE current menu new
 			// configuration
-			currentMenuNewConfiguration = AcideResourceManager.getInstance()
-					.getProperty("currentMenuNewConfiguration");
+			currentMenuNewConfiguration = AcideResourceManager.getInstance().getProperty("currentMenuNewConfiguration");
 
 			// Sets the new menu item manager
-			AcideMenuItemsConfiguration.getInstance().load(
-					currentMenuNewConfiguration);
+			AcideMenuItemsConfiguration.getInstance().load(currentMenuNewConfiguration);
 
 			// Updates the ACIDE - A Configurable IDE current menu new
 			// configuration
-			AcideResourceManager.getInstance().setProperty(
-					"currentMenuNewConfiguration", currentMenuNewConfiguration);
+			AcideResourceManager.getInstance().setProperty("currentMenuNewConfiguration", currentMenuNewConfiguration);
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s70")
-							+ " " + currentMenuNewConfiguration);
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s70") + " "
+					+ currentMenuNewConfiguration);
 
 		} catch (Exception exception) {
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s71")
-							+ exception.getMessage());
+			AcideLog.getLog()
+					.info(AcideLanguageManager.getInstance().getLabels().getString("s71") + exception.getMessage());
 
 			// Gets the name
 			String name;
@@ -3954,8 +3074,7 @@ public class AcideMenuBar extends JMenuBar {
 			if (index == -1)
 				index = currentMenuNewConfiguration.lastIndexOf("/");
 			name = ".\\configuration\\menu\\"
-					+ currentMenuNewConfiguration.substring(index + 1,
-							currentMenuNewConfiguration.length());
+					+ currentMenuNewConfiguration.substring(index + 1, currentMenuNewConfiguration.length());
 
 			try {
 
@@ -3964,25 +3083,18 @@ public class AcideMenuBar extends JMenuBar {
 
 				// Updates the ACIDE - A Configurable IDE current menu
 				// new configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentMenuNewConfiguration", name);
+				AcideResourceManager.getInstance().setProperty("currentMenuNewConfiguration", name);
 
 				// Updates the ACIDE - A Configurable IDE menu new configuration
-				AcideProjectConfiguration.getInstance()
-						.setMenuNewConfiguration(name);
+				AcideProjectConfiguration.getInstance().setMenuNewConfiguration(name);
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s70")
-								+ " " + name);
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s70") + " " + name);
 
 				// Displays an error message
-				JOptionPane.showMessageDialog(null, AcideLanguageManager
-						.getInstance().getLabels().getString("s956")
-						+ currentMenuNewConfiguration
-						+ AcideLanguageManager.getInstance().getLabels()
-								.getString("s957") + name);
+				JOptionPane.showMessageDialog(null,
+						AcideLanguageManager.getInstance().getLabels().getString("s956") + currentMenuNewConfiguration
+								+ AcideLanguageManager.getInstance().getLabels().getString("s957") + name);
 			} catch (Exception exception1) {
 				try {
 
@@ -3991,21 +3103,18 @@ public class AcideMenuBar extends JMenuBar {
 					exception1.printStackTrace();
 
 					// Loads the new menu item manager
-					AcideMenuItemsConfiguration.getInstance().load(
-							"./configuration/menu/defaultAllOn.xml");
+					AcideMenuItemsConfiguration.getInstance().load("./configuration/menu/defaultAllOn.xml");
 
 					// Updates the ACIDE - A Configurable IDE current menu
 					// new configuration
-					AcideResourceManager.getInstance().setProperty(
-							"currentMenuNewConfiguration",
+					AcideResourceManager.getInstance().setProperty("currentMenuNewConfiguration",
 							"./configuration/menu/defaultAllOn.xml");
 
 					// Displays an error message
-					JOptionPane.showMessageDialog(null, AcideLanguageManager
-							.getInstance().getLabels().getString("s956")
-							+ currentMenuNewConfiguration
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+					JOptionPane.showMessageDialog(null,
+							AcideLanguageManager.getInstance().getLabels().getString("s956")
+									+ currentMenuNewConfiguration
+									+ AcideLanguageManager.getInstance().getLabels().getString("s959"));
 				} catch (HeadlessException exception2) {
 
 					// Updates the log
@@ -4020,26 +3129,21 @@ public class AcideMenuBar extends JMenuBar {
 			}
 		}
 
-		AcideMenuIconsConfiguration.getInstance().load(
-				AcideMenuIconsConfiguration.DEFAULT_PATH
-						+ AcideMenuIconsConfiguration.DEFAULT_NAME);
+		AcideMenuIconsConfiguration.getInstance()
+				.load(AcideMenuIconsConfiguration.DEFAULT_PATH + AcideMenuIconsConfiguration.DEFAULT_NAME);
 
 	}
 
 	/**
 	 * Gets if the menu name given as parameter is original
 	 * 
-	 * @param name
-	 *            the name we want to check
+	 * @param name the name we want to check
 	 * @return if the name given as parameter is original
 	 */
 	public boolean isOriginal(String name) {
-		if ((name != AcideFileMenu.FILE_MENU_NAME)
-				&& (name != AcideEditMenu.EDIT_MENU_NAME)
-				&& (name != AcideProjectMenu.PROJECT_MENU_NAME)
-				&& (name != AcideViewMenu.VIEW_MENU_NAME)
-				&& (name != AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-				&& (name != AcideHelpMenu.HELP_MENU_NAME))
+		if ((name != AcideFileMenu.FILE_MENU_NAME) && (name != AcideEditMenu.EDIT_MENU_NAME)
+				&& (name != AcideProjectMenu.PROJECT_MENU_NAME) && (name != AcideViewMenu.VIEW_MENU_NAME)
+				&& (name != AcideConfigurationMenu.CONFIGURATION_MENU_NAME) && (name != AcideHelpMenu.HELP_MENU_NAME))
 			return true;
 		else
 			return false;
@@ -4075,8 +3179,7 @@ public class AcideMenuBar extends JMenuBar {
 		_viewMenu.setListeners();
 
 		// Sets the configuration menu mouse listener
-		_configurationMenu
-				.addMouseListener(new AcideMenuBarMouseClickListener());
+		_configurationMenu.addMouseListener(new AcideMenuBarMouseClickListener());
 
 		// Sets the configuration menu items listeners
 		_configurationMenu.setListeners();
@@ -4091,8 +3194,7 @@ public class AcideMenuBar extends JMenuBar {
 		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = it.next();
 			if (ob.isSubmenu()) {
-				_insertedMenus.get(ob.getName()).addMouseListener(
-						new AcideMenuBarMouseClickListener());
+				_insertedMenus.get(ob.getName()).addMouseListener(new AcideMenuBarMouseClickListener());
 				_insertedMenus.get(ob.getName()).setListeners();
 			}
 			// else{
@@ -4102,9 +3204,7 @@ public class AcideMenuBar extends JMenuBar {
 		}
 
 		// Updates the log
-		AcideLog.getLog()
-				.info(AcideLanguageManager.getInstance().getLabels()
-						.getString("s72"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s72"));
 	}
 
 	/**
@@ -4174,14 +3274,68 @@ public class AcideMenuBar extends JMenuBar {
 	 * Sets a new value to the ACIDE - A Configurable IDE menu bar is console
 	 * focused flag.
 	 * 
-	 * @param consoleIsFocused
-	 *            new value to set.
+	 * @param consoleIsFocused new value to set.
 	 */
 	public void setIsConsoleFocused(boolean consoleIsFocused) {
 		_isConsoleFocused = consoleIsFocused;
 	}
 
-	public AcideMenuBar getAcideMenuBar(){
+	public AcideMenuBar getAcideMenuBar() {
 		return this;
 	}
+
+	public void setColor(Color color) {
+		backgroundColor = color;
+	}
+
+	@Override
+	protected void paintComponent(java.awt.Graphics g) {
+		super.paintComponent((java.awt.Graphics) g);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setColor(backgroundColor);
+		g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+	}
+
+	public void paintMenuBar(Color background, Color foreground) {
+		this.setColor(background);
+		MenuElement[] menuElements = this.getSubElements();
+		for (MenuElement menuElement : menuElements) {
+			JMenu menu = (JMenu) menuElement.getComponent();
+			menu.setBackground(background);
+			menu.setForeground(foreground);
+			menu.setOpaque(true);
+			JMenu men = (JMenu) menuElement;
+			Component[] comp = men.getMenuComponents();
+			for (int i = 0; i < comp.length; ++i) {
+				Component item = comp[i];
+				try {
+					paintSubMenus((MenuElement) item, background, foreground);
+
+				} catch (Exception e) {
+					((item.getClass().cast(item))).setBackground(background);
+					((item.getClass().cast(item))).setForeground(foreground);
+					(((JComponent) item.getClass().cast(item))).setOpaque(true);
+				}
+			}
+		}
+	}
+	private void paintSubMenus(MenuElement menuElement, Color background, Color foreground) {
+		JMenu menu = (JMenu) menuElement.getComponent();
+	   	 menu.setBackground(background);
+	   	 menu.setForeground(foreground);
+	   	 menu.setOpaque(true);
+	   	JMenu men = (JMenu) menuElement;
+	   	Component[] comp = men.getMenuComponents();
+	   	for(int i =0; i < comp.length; ++i) {
+	   		Component item = comp[i];
+	   		try {
+	   		paintSubMenus((MenuElement) item, background, foreground);
+	   		}catch(Exception e) {
+	   			((item.getClass().cast(item))).setBackground(background);
+	       		((item.getClass().cast(item))).setForeground(foreground);
+	       		(((JComponent) item.getClass().cast(item))).setOpaque(true);
+	   		}
+	   	}
+		}
 }

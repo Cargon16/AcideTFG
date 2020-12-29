@@ -45,6 +45,7 @@ import acide.gui.statusBarPanel.listeners.AcideStatusBarPopupMenuListener;
 import acide.gui.statusBarPanel.popup.AcideStatusBarPopupMenu;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -207,8 +208,7 @@ public class AcideStatusBar extends JPanel {
 			_scrollLockMessageLabel.setCursor(cursor);
 
 			// Sets the text cursor to the status message label
-			_statusMessageLabel.setCursor(Cursor
-					.getPredefinedCursor(Cursor.TEXT_CURSOR));
+			_statusMessageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		} catch (HeadlessException exception) {
 
 			// Updates the log
@@ -277,8 +277,7 @@ public class AcideStatusBar extends JPanel {
 		_timerMessagePanel.add(_timerMessageLabel);
 
 		// Sets the timer message label tool tip text
-		_timerMessageLabel.setToolTipText(DateFormat.getInstance().format(
-				new Date()));
+		_timerMessageLabel.setToolTipText(DateFormat.getInstance().format(new Date()));
 
 		// Initializes the timer for updating the timer message label
 		new Timer(1000, new ActionListener() {
@@ -291,8 +290,7 @@ public class AcideStatusBar extends JPanel {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * java.awt.event.ActionListener#actionPerformed(java.awt.event.
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.
 			 * ActionEvent)
 			 */
 			@Override
@@ -319,8 +317,7 @@ public class AcideStatusBar extends JPanel {
 		_editionModeMessageLabel = new JLabel();
 
 		// Updates the edition mode message label text
-		if (AcideWorkbenchConfiguration.getInstance()
-				.getFileEditorConfiguration().getEditionMode())
+		if (AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().getEditionMode())
 			_editionModeMessageLabel.setText("INS");
 		else
 			_editionModeMessageLabel.setText("   ");
@@ -336,8 +333,7 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Builds the ACIDE - A Configurable IDE status bar SCROLL LOCK message
-	 * panel.
+	 * Builds the ACIDE - A Configurable IDE status bar SCROLL LOCK message panel.
 	 */
 	private void buildScrollLockMessagePanel() {
 
@@ -354,8 +350,7 @@ public class AcideStatusBar extends JPanel {
 		if (AcideOSChecker.isWindows()) {
 
 			// Gets the SCROLL LOCK state
-			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(
-					KeyEvent.VK_SCROLL_LOCK);
+			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_SCROLL_LOCK);
 
 			// Updates the SCROLL LOCK message label text
 			if (state)
@@ -393,8 +388,7 @@ public class AcideStatusBar extends JPanel {
 		if (AcideOSChecker.isWindows()) {
 
 			// Gets the NUM LOCK state
-			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(
-					KeyEvent.VK_NUM_LOCK);
+			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_NUM_LOCK);
 
 			// Updates the NUM LOCK message label text
 			if (state)
@@ -432,8 +426,7 @@ public class AcideStatusBar extends JPanel {
 		if (AcideOSChecker.isWindows()) {
 
 			// Gets the CAPS LOCK state
-			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(
-					KeyEvent.VK_CAPS_LOCK);
+			boolean state = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
 
 			// Updates the CAPS LOCK message label text
 			if (state)
@@ -463,8 +456,7 @@ public class AcideStatusBar extends JPanel {
 		_numberOfLinesMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		// Sets the number of lines message panel border
-		_numberOfLinesMessagePanel
-				.setBorder(BorderFactory.createEtchedBorder());
+		_numberOfLinesMessagePanel.setBorder(BorderFactory.createEtchedBorder());
 
 		// Creates the number of lines message label
 		_numberOfLinesMessageLabel = new JLabel(" ");
@@ -484,8 +476,7 @@ public class AcideStatusBar extends JPanel {
 		_lineAndColumnMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		// Sets the line and column message panel border
-		_lineAndColumnMessagePanel
-				.setBorder(BorderFactory.createEtchedBorder());
+		_lineAndColumnMessagePanel.setBorder(BorderFactory.createEtchedBorder());
 
 		// Creates the line and column message label
 		_lineAndColumnMessageLabel = new JLabel(" ");
@@ -543,9 +534,9 @@ public class AcideStatusBar extends JPanel {
 		_statusMessageLabel = new JTextField(" ACIDE - A Configurable IDE ");
 		// Sets the status message panel border
 		_statusMessageLabel.setBorder(BorderFactory.createEtchedBorder());
-		//Sets the text non editable
+		// Sets the text non editable
 		_statusMessageLabel.setEditable(false);
-		
+
 		// Adds the status message label to the status message panel
 		_statusMessagePanel.add(_statusMessageLabel);
 	}
@@ -620,8 +611,7 @@ public class AcideStatusBar extends JPanel {
 	private void setListeners() {
 
 		// Sets the ACIDE - A Configurable IDE status bar popup menu listener
-		_statusMessageLabel
-				.addMouseListener(new AcideStatusBarPopupMenuListener());
+		_statusMessageLabel.addMouseListener(new AcideStatusBarPopupMenuListener());
 	}
 
 	/**
@@ -641,11 +631,10 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE status barCAPS LOCK
-	 * text field text.
+	 * Sets a new value to the ACIDE - A Configurable IDE status barCAPS LOCK text
+	 * field text.
 	 * 
-	 * @param capsLock
-	 *            new value to set.
+	 * @param capsLock new value to set.
 	 */
 	public void setCapsLockMessage(String capsLock) {
 		_capsLockMessageLabel.setText(capsLock);
@@ -670,11 +659,9 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE status bar status
-	 * message.
+	 * Sets a new value to the ACIDE - A Configurable IDE status bar status message.
 	 * 
-	 * @param message
-	 *            new value to set.
+	 * @param message new value to set.
 	 */
 	public void setStatusMessage(String message) {
 		_statusMessageLabel.setText(message);
@@ -693,8 +680,7 @@ public class AcideStatusBar extends JPanel {
 	 * Sets a new value to the ACIDE - A Configurable IDE status bar NUM LOCK
 	 * message.
 	 * 
-	 * @param numLockMessage
-	 *            new value to set.
+	 * @param numLockMessage new value to set.
 	 */
 	public void setNumLockMessage(String numLockMessage) {
 		_numLockMessageLabel.setText(numLockMessage);
@@ -713,8 +699,7 @@ public class AcideStatusBar extends JPanel {
 	 * Sets a new value to ACIDE - A Configurable IDE status bar SCROLL LOCK
 	 * message.
 	 * 
-	 * @param scrollLockMessage
-	 *            new value to set.
+	 * @param scrollLockMessage new value to set.
 	 */
 	public void setScrollLockMessage(String scrollLockMessage) {
 		_scrollLockMessageLabel.setText(scrollLockMessage);
@@ -730,11 +715,9 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE status bar timer
-	 * message.
+	 * Sets a new value to the ACIDE - A Configurable IDE status bar timer message.
 	 * 
-	 * @param timer
-	 *            new value to set.
+	 * @param timer new value to set.
 	 */
 	public void setTimerMessage(String timer) {
 		_timerMessageLabel.setText(timer);
@@ -750,11 +733,10 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE status bar line and
-	 * column message.
+	 * Sets a new value to the ACIDE - A Configurable IDE status bar line and column
+	 * message.
 	 * 
-	 * @param lineAndColumnMessage
-	 *            new value to set.
+	 * @param lineAndColumnMessage new value to set.
 	 */
 	public void setLineAndColumnMessage(String lineAndColumnMessage) {
 		_lineAndColumnMessageLabel.setText(lineAndColumnMessage);
@@ -773,8 +755,7 @@ public class AcideStatusBar extends JPanel {
 	 * Sets a new value to the ACIDE - A Configurable IDE status bar lexicon
 	 * message.
 	 * 
-	 * @param lexiconMessage
-	 *            new value to set.
+	 * @param lexiconMessage new value to set.
 	 */
 	public void setLexiconMessage(String lexiconMessage) {
 		_lexiconMessageLabel.setText(lexiconMessage);
@@ -793,8 +774,7 @@ public class AcideStatusBar extends JPanel {
 	 * Sets a new value to the ACIDE - A Configurable IDE status bar grammar
 	 * message.
 	 * 
-	 * @param grammarMessage
-	 *            new value to set.
+	 * @param grammarMessage new value to set.
 	 */
 	public void setGrammarMessage(String grammarMessage) {
 		_grammarMessageLabel.setText(grammarMessage);
@@ -811,22 +791,19 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE status bar number of lines
-	 * message.
+	 * Returns the ACIDE - A Configurable IDE status bar number of lines message.
 	 * 
-	 * @return the ACIDE - A Configurable IDE status bar number of lines
-	 *         message.
+	 * @return the ACIDE - A Configurable IDE status bar number of lines message.
 	 */
 	public String getNumberOfLinesMessage() {
 		return _numberOfLinesMessageLabel.getText();
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE status bar number of
-	 * lines message.
+	 * Sets a new value to the ACIDE - A Configurable IDE status bar number of lines
+	 * message.
 	 * 
-	 * @param numberOfLinesMessage
-	 *            new value to set.
+	 * @param numberOfLinesMessage new value to set.
 	 */
 	public void setNumberOfLinesMessage(String numberOfLinesMessage) {
 		_numberOfLinesMessageLabel.setText(numberOfLinesMessage);
@@ -842,11 +819,9 @@ public class AcideStatusBar extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE status bar insert
-	 * message.
+	 * Sets a new value to the ACIDE - A Configurable IDE status bar insert message.
 	 * 
-	 * @param editionModeMessage
-	 *            new value to set.
+	 * @param editionModeMessage new value to set.
 	 */
 	public void setEditionModeMessage(String editionModeMessage) {
 		_editionModeMessageLabel.setText(editionModeMessage);
@@ -859,56 +834,45 @@ public class AcideStatusBar extends JPanel {
 	public void updateStatusMessageFromFileEditor() {
 
 		// If there is a selected file editor panel
-		if (AcideMainWindow.getInstance().getFileEditorManager()
-				.getSelectedFileEditorPanel() != null) {
+		if (AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel() != null) {
 
 			// If it is COMPILABLE file
-			if (AcideMainWindow.getInstance().getFileEditorManager()
-					.getSelectedFileEditorPanel().isCompilableFile())
+			if (AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().isCompilableFile())
 
 				// If it is MAIN file
-				if (AcideMainWindow.getInstance().getFileEditorManager()
-						.getSelectedFileEditorPanel().isMainFile())
+				if (AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().isMainFile())
 
 					// Updates the status message in the status bar with
 					// <MAIN>
-					AcideMainWindow
-							.getInstance()
-							.getStatusBar()
-							.setStatusMessage(
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
-											.getAbsolutePath()
-											+ " <MAIN>");
+					AcideMainWindow.getInstance().getStatusBar().setStatusMessage(AcideMainWindow.getInstance()
+							.getFileEditorManager().getSelectedFileEditorPanel().getAbsolutePath() + " <MAIN>");
 				else
 
 					// Updates the status message in the status bar with
 					// <COMPILABLE>
-					AcideMainWindow
-							.getInstance()
-							.getStatusBar()
-							.setStatusMessage(
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
-											.getAbsolutePath()
-											+ " <COMPILABLE>");
+					AcideMainWindow.getInstance().getStatusBar().setStatusMessage(AcideMainWindow.getInstance()
+							.getFileEditorManager().getSelectedFileEditorPanel().getAbsolutePath() + " <COMPILABLE>");
 			else
 
 				// Updates the status message in the status bar
-				AcideMainWindow
-						.getInstance()
-						.getStatusBar()
-						.setStatusMessage(
-								AcideMainWindow.getInstance()
-										.getFileEditorManager()
-										.getSelectedFileEditorPanel()
-										.getAbsolutePath());
+				AcideMainWindow.getInstance().getStatusBar().setStatusMessage(AcideMainWindow.getInstance()
+						.getFileEditorManager().getSelectedFileEditorPanel().getAbsolutePath());
 		} else {
 
 			// Updates the status message in the status bar
 			AcideMainWindow.getInstance().getStatusBar().setStatusMessage(" ");
+		}
+	}
+
+	public void changeColor(Color background, Color foreground) {
+		Component[] c = this.getComponents();
+		for (int i = 0; i < c.length; ++i) {
+			c[i].getClass().cast(c[i]).setBackground(background);
+			Component []c1 = ((JPanel)c[i]).getComponents();
+			for(int j = 0; j < c1.length; ++j) {
+				c1[j].getClass().cast(c1[j]).setBackground(background);
+				c1[j].getClass().cast(c1[j]).setForeground(foreground);
+			}
 		}
 	}
 }

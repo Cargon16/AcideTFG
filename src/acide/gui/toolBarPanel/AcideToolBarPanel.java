@@ -44,6 +44,7 @@ import acide.gui.toolBarPanel.externaAppsToolBar.AcideExternalAppsToolBar;
 import acide.gui.toolBarPanel.menuBarToolBar.AcideMenuBarToolBar;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -505,5 +506,20 @@ public class AcideToolBarPanel extends JPanel {
 			// Tells to the scroll pane to move there
 			_toolBarScrollPane.validate();
 		}
+	}
+	public void changeColor(Color background, Color foreground) {
+		this._toolBar.setBackground(background);
+		for(int i =0; i < this._consolePanelToolBar.size(); ++i) {
+			if(this._consolePanelToolBar.get(i) instanceof JButton) {
+				((JButton)this._consolePanelToolBar.get(i)).setOpaque(false);
+				((JButton)this._consolePanelToolBar.get(i)).setForeground(foreground);
+			}
+		}
+		for(int i =0; i < this._menuBarToolBar.size(); ++i) {
+			if(this._menuBarToolBar.get(i) instanceof JButton)
+			((JButton)this._menuBarToolBar.get(i)).setOpaque(false);
+		}
+		
+		
 	}
 }

@@ -257,7 +257,7 @@ public class AcideDebugCanvas extends AcideGraphCanvas {
 				BufferedImage.TYPE_INT_ARGB);
 		// gets the image graphics
 		Graphics g = image.getGraphics();
-		// fill the graphics whit white color
+		// fill the graphics with white color
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, _width, _height);
 		// checks if the graph exist
@@ -688,5 +688,4 @@ public class AcideDebugCanvas extends AcideGraphCanvas {
 		// returns the graph
 		return g;
 	}
-
 }

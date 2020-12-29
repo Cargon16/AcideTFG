@@ -161,7 +161,7 @@ public class AcideFileEditorTabbedPaneUI extends BasicTabbedPaneUI {
 
 			Rectangle rectangle = new Rectangle();
 			int index;
-
+			
 			for (index = 0; index < tabPane.getTabCount(); index++) {
 
 				rectangle = getTabBounds(index, rectangle);

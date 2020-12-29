@@ -40,6 +40,7 @@
 package acide.gui.databasePanel.utils;
 
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.Icon;
@@ -114,6 +115,8 @@ public class AcideDataBaseTreeCellRenderer extends DefaultTreeCellRenderer {
 			
 			setIcon(ICON_FOLDER);
 			
+			this.setBackgroundNonSelectionColor(null);
+			
 			if(value instanceof NodeDDBB || value instanceof NodeDB){
 				setIcon(ICON_DATABASE);
 			}
@@ -130,6 +133,11 @@ public class AcideDataBaseTreeCellRenderer extends DefaultTreeCellRenderer {
 				
 			
 			return this;
+		}
+
+		public void setForegroundColor(Color foreGroundColor) {
+			this.textNonSelectionColor = foreGroundColor;
+			
 		}
 
 }

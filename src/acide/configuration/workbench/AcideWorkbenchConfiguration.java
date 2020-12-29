@@ -120,11 +120,11 @@ public class AcideWorkbenchConfiguration {
 	private AcideRecentProjectsConfiguration _recentProjectsConfiguration;
 
 	/**
-	 * Returns the Acide - A Configurable IDE workbench configuration unique
-	 * class instance.
+	 * Returns the Acide - A Configurable IDE workbench configuration unique class
+	 * instance.
 	 * 
-	 * @return the Acide - A Configurable IDE workbench configuration unique
-	 *         class instance.
+	 * @return the Acide - A Configurable IDE workbench configuration unique class
+	 *         instance.
 	 */
 	public static AcideWorkbenchConfiguration getInstance() {
 
@@ -172,8 +172,7 @@ public class AcideWorkbenchConfiguration {
 		try {
 
 			// Gets the ACIDE - A Configurable IDE workbench configuration path
-			workbenchConfigurationPath = AcideResourceManager.getInstance()
-					.getProperty("workbenchConfiguration");
+			workbenchConfigurationPath = AcideResourceManager.getInstance().getProperty("workbenchConfiguration");
 			// AcideMain.frame.repaint();
 		} catch (MissedPropertyException exception) {
 
@@ -181,13 +180,8 @@ public class AcideWorkbenchConfiguration {
 			AcideLog.getLog().error(exception.getMessage());
 
 			// Displays an error message
-			JOptionPane.showMessageDialog(
-					null,
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s960")
-							+ workbenchConfigurationPath
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+			JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s960")
+					+ workbenchConfigurationPath + AcideLanguageManager.getInstance().getLabels().getString("s959"));
 
 			// Exits the application
 			System.exit(0);
@@ -219,34 +213,25 @@ public class AcideWorkbenchConfiguration {
 		if (workbenchConfiguration != null) {
 
 			// Gets the file editor configuration
-			fileEditorConfiguration = workbenchConfiguration
-					.getFileEditorConfiguration();
+			fileEditorConfiguration = workbenchConfiguration.getFileEditorConfiguration();
 
 			// Gets the console panel configuration
-			consolePanelConfiguration = workbenchConfiguration
-					.getConsolePanelConfiguration();
+			consolePanelConfiguration = workbenchConfiguration.getConsolePanelConfiguration();
 
 			// Gets the lexicon assigner configuration
-			lexiconAssignerConfiguration = workbenchConfiguration
-					.getLexiconAssignerConfiguration();
+			lexiconAssignerConfiguration = workbenchConfiguration.getLexiconAssignerConfiguration();
 
 			// Gets the recent files configuration
-			recentFilesConfiguration = workbenchConfiguration
-					.getRecentFilesConfiguration();
+			recentFilesConfiguration = workbenchConfiguration.getRecentFilesConfiguration();
 
 			// Gets the recent projects configuration
-			recentProjectsConfiguration = workbenchConfiguration
-					.getRecentProjectsConfiguration();
+			recentProjectsConfiguration = workbenchConfiguration.getRecentProjectsConfiguration();
 		} else
 
 			// Displays a warning message informing about the problem and the
 			// changes
-			JOptionPane.showMessageDialog(
-					null,
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s2012"),
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s2011"), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2012"),
+					AcideLanguageManager.getInstance().getLabels().getString("s2011"), JOptionPane.WARNING_MESSAGE);
 
 		// If the lexicon assigner configuration was created successfully
 		if (lexiconAssignerConfiguration != null)
@@ -274,6 +259,9 @@ public class AcideWorkbenchConfiguration {
 
 		// Loads the debug configuration
 		loadDebugConfiguration();
+
+		// load database panel configuration
+		loadDatabaseConfiguration();
 
 		// If the console panel configuration was loaded successfully
 		if (consolePanelConfiguration != null)
@@ -311,20 +299,59 @@ public class AcideWorkbenchConfiguration {
 		// Loads the file editor configuration
 		loadFileEditorConfiguration();
 
+		// load menu bar configuration
+		loadThemeConfiguration();
+
 		// Loads the main window configuration
 		loadMainWindowConfiguration();
 	}
 
+	private void loadDatabaseConfiguration() {
+		String colorB;
+		try {
+
+			colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			AcideMainWindow.getInstance().getDataBasePanel().changeColor(new Color(Integer.parseInt(colorB)),
+					new Color(Integer.parseInt(colorF)));
+
+		} catch (MissedPropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void loadThemeConfiguration() {
+		String colorB;
+		try {
+
+			colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			AcideMainWindow.getInstance().getMenu().paintMenuBar(new Color(Integer.parseInt(colorB)),
+					new Color(Integer.parseInt(colorF)));
+			AcideMainWindow.getInstance().getStatusBar().changeColor(new Color(Integer.parseInt(colorB)),
+					new Color(Integer.parseInt(colorF)));
+			AcideMainWindow.getInstance().getToolBarPanel().changeColor(new Color(Integer.parseInt(colorB)),
+					new Color(Integer.parseInt(colorF)));
+			AcideMainWindow.getInstance().getFileEditorManager().setBackground(new Color(Integer.parseInt(colorB)));
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(new Color(Integer.parseInt(colorB)));
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(new Color(Integer.parseInt(colorF)));
+
+		} catch (MissedPropertyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	/**
-	 * Load the ACIDE - A Configurable IDE workbench configuration from an XML
-	 * file.
+	 * Load the ACIDE - A Configurable IDE workbench configuration from an XML file.
 	 * 
-	 * @param configurationFilePath
-	 *            configuration file path.
+	 * @param configurationFilePath configuration file path.
 	 * 
-	 * @return the ACIDE - A Configurable IDE workbench configuration from an
-	 *         XML file. If there is any problem during the loading process then
-	 *         returns <b>null</b>.
+	 * @return the ACIDE - A Configurable IDE workbench configuration from an XML
+	 *         file. If there is any problem during the loading process then returns
+	 *         <b>null</b>.
 	 */
 	public AcideWorkbenchConfiguration load(String configurationFilePath) {
 
@@ -332,8 +359,7 @@ public class AcideWorkbenchConfiguration {
 		AcideWorkbenchConfiguration workbenchConfiguration = null;
 
 		// If the name is already set by the user
-		if ((configurationFilePath != null)
-				&& (!configurationFilePath.trim().equalsIgnoreCase(""))) {
+		if ((configurationFilePath != null) && (!configurationFilePath.trim().equalsIgnoreCase(""))) {
 
 			try {
 
@@ -341,12 +367,10 @@ public class AcideWorkbenchConfiguration {
 				XStream xStream = new XStream(new DomDriver());
 
 				// Creates the file input stream to read the file
-				FileInputStream fileInputStream = new FileInputStream(
-						configurationFilePath);
+				FileInputStream fileInputStream = new FileInputStream(configurationFilePath);
 
 				// Gets the workbench configuration from the XML
-				workbenchConfiguration = (AcideWorkbenchConfiguration) xStream
-						.fromXML(fileInputStream);
+				workbenchConfiguration = (AcideWorkbenchConfiguration) xStream.fromXML(fileInputStream);
 
 				// Closes the file input stream
 				fileInputStream.close();
@@ -354,9 +378,7 @@ public class AcideWorkbenchConfiguration {
 			} catch (Exception exception) {
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s990"));
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s990"));
 				exception.printStackTrace();
 
 				return null;
@@ -372,9 +394,7 @@ public class AcideWorkbenchConfiguration {
 	public void loadFileEditorConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1033"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1033"));
 
 		// Loads the file editor configuration
 		AcideFileEditorLoader.getInstance().run(_fileEditorConfiguration);
@@ -386,9 +406,7 @@ public class AcideWorkbenchConfiguration {
 	public void loadLexiconAssignerConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1092"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1092"));
 	}
 
 	/**
@@ -397,13 +415,10 @@ public class AcideWorkbenchConfiguration {
 	public void loadRecentFilesConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1071"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1071"));
 
 		// Builds the open recent files menu
-		AcideMainWindow.getInstance().getMenu().getFileMenu()
-				.getOpenRecentFilesMenu().build();
+		AcideMainWindow.getInstance().getMenu().getFileMenu().getOpenRecentFilesMenu().build();
 	}
 
 	/**
@@ -412,49 +427,39 @@ public class AcideWorkbenchConfiguration {
 	public void loadRecentProjectsConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1079"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1079"));
 
 		// Builds the open recent project menu
-		AcideMainWindow.getInstance().getMenu().getProjectMenu()
-				.getOpenRecentProjectsMenu().build();
+		AcideMainWindow.getInstance().getMenu().getProjectMenu().getOpenRecentProjectsMenu().build();
 	}
 
 	/**
-	 * Loads the ACIDE - A Configurable IDE console configuration and applies it
-	 * to the ACIDE - A Configurable IDE console pane in the ACIDE - A
-	 * Configurable IDE main window.
+	 * Loads the ACIDE - A Configurable IDE console configuration and applies it to
+	 * the ACIDE - A Configurable IDE console pane in the ACIDE - A Configurable IDE
+	 * main window.
 	 */
 	public void loadConsolePanelConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1031"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1031"));
 
 		// Sets the shell path in the resource manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.shellPath",
+		AcideResourceManager.getInstance().setProperty("consolePanel.shellPath",
 				AcideProjectConfiguration.getInstance().getShellPath());
 
 		// Sets the shell directory in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.shellDirectory",
+		AcideResourceManager.getInstance().setProperty("consolePanel.shellDirectory",
 				AcideProjectConfiguration.getInstance().getShellDirectory());
 
 		// Sets the echo command in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.isEchoCommand",
-				String.valueOf(AcideProjectConfiguration.getInstance()
-						.getIsEchoCommand()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.isEchoCommand",
+				String.valueOf(AcideProjectConfiguration.getInstance().getIsEchoCommand()));
 
 		// Sets the exit command in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.exitCommand",
+		AcideResourceManager.getInstance().setProperty("consolePanel.exitCommand",
 				AcideProjectConfiguration.getInstance().getExitCommand());
 
 		// Sets the font name in the ACIDE - A Configurable IDE resource manager
@@ -462,38 +467,28 @@ public class AcideWorkbenchConfiguration {
 				AcideProjectConfiguration.getInstance().getFontName());
 
 		// Sets the font size in the ACIDE - A Configurable IDE resource manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.fontSize",
-				String.valueOf(AcideProjectConfiguration.getInstance()
-						.getFontSize()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.fontSize",
+				String.valueOf(AcideProjectConfiguration.getInstance().getFontSize()));
 
 		// Sets the font style in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.fontStyle",
-				String.valueOf(AcideProjectConfiguration.getInstance()
-						.getFontStyle()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.fontStyle",
+				String.valueOf(AcideProjectConfiguration.getInstance().getFontStyle()));
 
 		// Sets the foreground color in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.foregroundColor",
-				Integer.toString(AcideProjectConfiguration.getInstance()
-						.getForegroundColor().getRGB()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
+				Integer.toString(AcideProjectConfiguration.getInstance().getForegroundColor().getRGB()));
 
 		// Sets the background color in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.backgroundColor",
-				Integer.toString(AcideProjectConfiguration.getInstance()
-						.getBackgroundColor().getRGB()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
+				Integer.toString(AcideProjectConfiguration.getInstance().getBackgroundColor().getRGB()));
 
 		// Sets the buffer size in the ACIDE - A Configurable IDE resource
 		// manager
-		AcideResourceManager.getInstance().setProperty(
-				"consolePanel.bufferSize",
-				Integer.toString(AcideProjectConfiguration.getInstance()
-						.getBufferSize()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.bufferSize",
+				Integer.toString(AcideProjectConfiguration.getInstance().getBufferSize()));
 
 		// Resets the shell in the ACIDE - A Configurable IDE console panel
 		AcideMainWindow.getInstance().getConsolePanel().resetConsole();
@@ -504,13 +499,11 @@ public class AcideWorkbenchConfiguration {
 		// Loads the console configuration from the ACIDE - A Configurable
 		// IDE
 		// workbench configuration
-		AcideMainWindow.getInstance().getConsolePanel()
-				.getLexiconConfiguration()
+		AcideMainWindow.getInstance().getConsolePanel().getLexiconConfiguration()
 				.load(_consolePanelConfiguration.getLexiconConfiguration());
 
 		// Loads the commands history of the previous execution
-		AcideMainWindow.getInstance().getConsolePanel()
-				.getConsoleCommandsConfiguration()
+		AcideMainWindow.getInstance().getConsolePanel().getConsoleCommandsConfiguration()
 				.load(_consolePanelConfiguration.getCommandsConfiguration());
 
 		// Fills the history with the previous execution
@@ -520,18 +513,15 @@ public class AcideWorkbenchConfiguration {
 		AcideMainWindow.getInstance().getConsolePanel().resetStyledDocument();
 
 		// Activates the console line wrapping
-		AcideMainWindow.getInstance().getConsolePanel().getPopupMenu()
-				.getLineWrappingMenuItem().setSelected(true);
+		AcideMainWindow.getInstance().getConsolePanel().getPopupMenu().getLineWrappingMenuItem().setSelected(true);
 
 		// Puts the default value in the console panel configuration
-		AcideWorkbenchConfiguration.getInstance()
-				.getConsolePanelConfiguration().setLineWrapping(true);
+		AcideWorkbenchConfiguration.getInstance().getConsolePanelConfiguration().setLineWrapping(true);
 
 		// Puts the default value in the console line wrapping check box menu
 		// item
-		AcideMainWindow.getInstance().getMenu().getConfigurationMenu()
-				.getConsoleMenu().getConsoleLineWrappingCheckBoxMenuItem()
-				.setSelected(true);
+		AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getConsoleMenu()
+				.getConsoleLineWrappingCheckBoxMenuItem().setSelected(true);
 	}
 
 	/**
@@ -540,9 +530,7 @@ public class AcideWorkbenchConfiguration {
 	private void loadMenuConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1034"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1034"));
 
 		String currentMenuConfiguration = null;
 
@@ -550,14 +538,11 @@ public class AcideWorkbenchConfiguration {
 
 			// Sets the ACIDE - A Configurable IDE current menu from the
 			// project configuration
-			AcideResourceManager.getInstance().setProperty(
-					"currentMenuConfiguration",
-					AcideProjectConfiguration.getInstance()
-							.getMenuConfiguration());
+			AcideResourceManager.getInstance().setProperty("currentMenuConfiguration",
+					AcideProjectConfiguration.getInstance().getMenuConfiguration());
 
 			// Gets the ACIDE - A Configurable IDE current menu configuration
-			currentMenuConfiguration = AcideResourceManager.getInstance()
-					.getProperty("currentMenuConfiguration");
+			currentMenuConfiguration = AcideResourceManager.getInstance().getProperty("currentMenuConfiguration");
 
 		} catch (Exception exception) {
 
@@ -570,42 +555,33 @@ public class AcideWorkbenchConfiguration {
 			if (index == -1)
 				index = currentMenuConfiguration.lastIndexOf("/");
 			name = "./configuration/menu/"
-					+ currentMenuConfiguration.substring(index + 1,
-							currentMenuConfiguration.length());
+					+ currentMenuConfiguration.substring(index + 1, currentMenuConfiguration.length());
 
 			try {
 
 				// Information message
-				JOptionPane.showMessageDialog(null, AcideLanguageManager
-						.getInstance().getLabels().getString("s2151")
-						+ currentMenuConfiguration
-						+ AcideLanguageManager.getInstance().getLabels()
-								.getString("s957") + name);
+				JOptionPane.showMessageDialog(null,
+						AcideLanguageManager.getInstance().getLabels().getString("s2151") + currentMenuConfiguration
+								+ AcideLanguageManager.getInstance().getLabels().getString("s957") + name);
 
 				// Updates the ACIDE - A Configurable IDE current menu
 				// configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentMenuConfiguration", name);
+				AcideResourceManager.getInstance().setProperty("currentMenuConfiguration", name);
 			} catch (Exception exception1) {
 
 				// Updates the log
-				AcideLog.getLog().error(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s127"));
+				AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s127"));
 
 				try {
 
 					// Information message
-					JOptionPane.showMessageDialog(null, AcideLanguageManager
-							.getInstance().getLabels().getString("s958")
-							+ currentMenuConfiguration
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+					JOptionPane.showMessageDialog(null,
+							AcideLanguageManager.getInstance().getLabels().getString("s958") + currentMenuConfiguration
+									+ AcideLanguageManager.getInstance().getLabels().getString("s959"));
 
 					// Updates the the ACIDE - A Configurable IDE current menu
 					// configuration
-					AcideResourceManager.getInstance().setProperty(
-							"currentMenuConfiguration",
+					AcideResourceManager.getInstance().setProperty("currentMenuConfiguration",
 							"./configuration/menu/defaultAllOn.menuConfig");
 				} catch (HeadlessException exception2) {
 
@@ -628,15 +604,12 @@ public class AcideWorkbenchConfiguration {
 			// Sets the ACIDE - A Configurable IDE current menu new
 			// configuration from the
 			// project configuration
-			AcideResourceManager.getInstance().setProperty(
-					"currentMenuNewConfiguration",
-					AcideProjectConfiguration.getInstance()
-							.getMenuNewConfiguration());
+			AcideResourceManager.getInstance().setProperty("currentMenuNewConfiguration",
+					AcideProjectConfiguration.getInstance().getMenuNewConfiguration());
 
 			// Gets the ACIDE - A Configurable IDE current menu new
 			// configuration
-			currentMenuNewConfiguration = AcideResourceManager.getInstance()
-					.getProperty("currentMenuNewConfiguration");
+			currentMenuNewConfiguration = AcideResourceManager.getInstance().getProperty("currentMenuNewConfiguration");
 
 		} catch (Exception exception) {
 
@@ -649,42 +622,34 @@ public class AcideWorkbenchConfiguration {
 			if (index2 == -1)
 				index2 = currentMenuNewConfiguration.lastIndexOf("/");
 			name2 = "./configuration/menu/"
-					+ currentMenuNewConfiguration.substring(index2 + 1,
-							currentMenuNewConfiguration.length());
+					+ currentMenuNewConfiguration.substring(index2 + 1, currentMenuNewConfiguration.length());
 
 			try {
 
 				// Information message
-				JOptionPane.showMessageDialog(null, AcideLanguageManager
-						.getInstance().getLabels().getString("s2151")
-						+ currentMenuNewConfiguration
-						+ AcideLanguageManager.getInstance().getLabels()
-								.getString("s957") + name2);
+				JOptionPane.showMessageDialog(null,
+						AcideLanguageManager.getInstance().getLabels().getString("s2151") + currentMenuNewConfiguration
+								+ AcideLanguageManager.getInstance().getLabels().getString("s957") + name2);
 
 				// Updates the ACIDE - A Configurable IDE current menu
 				// new configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentMenuNewConfiguration", name2);
+				AcideResourceManager.getInstance().setProperty("currentMenuNewConfiguration", name2);
 			} catch (Exception exception1) {
 
 				// Updates the log
-				AcideLog.getLog().error(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s127"));
+				AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s127"));
 
 				try {
 
 					// Information message
-					JOptionPane.showMessageDialog(null, AcideLanguageManager
-							.getInstance().getLabels().getString("s2151")
-							+ currentMenuNewConfiguration
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+					JOptionPane.showMessageDialog(null,
+							AcideLanguageManager.getInstance().getLabels().getString("s2151")
+									+ currentMenuNewConfiguration
+									+ AcideLanguageManager.getInstance().getLabels().getString("s959"));
 
 					// Updates the the ACIDE - A Configurable IDE current menu
 					// new configuration
-					AcideResourceManager.getInstance().setProperty(
-							"currentMenuNewConfiguration",
+					AcideResourceManager.getInstance().setProperty("currentMenuNewConfiguration",
 							"./configuration/menu/defaultAllOn.xml");
 				} catch (HeadlessException exception2) {
 
@@ -704,16 +669,12 @@ public class AcideWorkbenchConfiguration {
 	/**
 	 * Loads the ACIDE - A Configurable IDE file editor configuration.
 	 * 
-	 * @param fileEditorConfiguration
-	 *            new value to set.
+	 * @param fileEditorConfiguration new value to set.
 	 */
-	public void loadFileEditorConfiguration(
-			AcideFileEditorConfiguration fileEditorConfiguration) {
+	public void loadFileEditorConfiguration(AcideFileEditorConfiguration fileEditorConfiguration) {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1033"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1033"));
 
 		// Sets the file editor configuration
 		_fileEditorConfiguration = fileEditorConfiguration;
@@ -725,16 +686,12 @@ public class AcideWorkbenchConfiguration {
 	/**
 	 * Loads the ACIDE - A Configurable IDE lexicon assigner configuration.
 	 * 
-	 * @param lexiconAssignerConfiguration
-	 *            new value to set.
+	 * @param lexiconAssignerConfiguration new value to set.
 	 */
-	public void loadLexiconAssignerConfiguration(
-			AcideLexiconAssignerConfiguration lexiconAssignerConfiguration) {
+	public void loadLexiconAssignerConfiguration(AcideLexiconAssignerConfiguration lexiconAssignerConfiguration) {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1092"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1092"));
 
 		// Sets the lexicon assigner configuration
 		_lexiconAssignerConfiguration = lexiconAssignerConfiguration;
@@ -743,45 +700,35 @@ public class AcideWorkbenchConfiguration {
 	/**
 	 * Loads the ACIDE - A Configurable IDE recent files configuration.
 	 * 
-	 * @param recentFilesConfiguration
-	 *            new value to set.
+	 * @param recentFilesConfiguration new value to set.
 	 */
-	public void loadRecentFilesConfiguration(
-			AcideRecentFilesConfiguration recentFilesConfiguration) {
+	public void loadRecentFilesConfiguration(AcideRecentFilesConfiguration recentFilesConfiguration) {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1071"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1071"));
 
 		// Sets the recent files configuration
 		_recentFilesConfiguration = recentFilesConfiguration;
 
 		// Builds the open recent files menu
-		AcideMainWindow.getInstance().getMenu().getFileMenu()
-				.getOpenRecentFilesMenu().build();
+		AcideMainWindow.getInstance().getMenu().getFileMenu().getOpenRecentFilesMenu().build();
 	}
 
 	/**
 	 * Loads the ACIDE - A Configurable IDE recent projects configuration.
 	 * 
-	 * @param recentProjectsConfiguration
-	 *            new value to set.
+	 * @param recentProjectsConfiguration new value to set.
 	 */
-	public void loadRecentProjectsConfiguration(
-			AcideRecentProjectsConfiguration recentProjectsConfiguration) {
+	public void loadRecentProjectsConfiguration(AcideRecentProjectsConfiguration recentProjectsConfiguration) {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1079"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1079"));
 
 		// Sets the recent projects configuration
 		_recentProjectsConfiguration = recentProjectsConfiguration;
 
 		// Builds the open recent project menu
-		AcideMainWindow.getInstance().getMenu().getProjectMenu()
-				.getOpenRecentProjectsMenu().build();
+		AcideMainWindow.getInstance().getMenu().getProjectMenu().getOpenRecentProjectsMenu().build();
 	}
 
 	/**
@@ -817,17 +764,14 @@ public class AcideWorkbenchConfiguration {
 	private void loadProjectConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1092"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1092"));
 
 		String projectConfiguration = null;
 
 		try {
 
 			// Gets the ACIDE - A Configurable IDE project configuration
-			projectConfiguration = AcideResourceManager.getInstance()
-					.getProperty("projectConfiguration");
+			projectConfiguration = AcideResourceManager.getInstance().getProperty("projectConfiguration");
 
 			// Loads the project configuration
 			AcideProjectConfiguration.getInstance().load(projectConfiguration);
@@ -837,17 +781,11 @@ public class AcideWorkbenchConfiguration {
 			AcideLog.getLog().error(exception.getMessage());
 
 			// Loads the default configuration
-			AcideProjectConfiguration.getInstance().load(
-					AcideProjectConfiguration.DEFAULT_PATH);
+			AcideProjectConfiguration.getInstance().load(AcideProjectConfiguration.DEFAULT_PATH);
 
 			// Displays an error message
-			JOptionPane.showMessageDialog(
-					null,
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s960")
-							+ projectConfiguration
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+			JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s960")
+					+ projectConfiguration + AcideLanguageManager.getInstance().getLabels().getString("s959"));
 		}
 	}
 
@@ -857,17 +795,14 @@ public class AcideWorkbenchConfiguration {
 	private void loadDebugConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s2338"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s2338"));
 
 		String debugConfiguration = null;
 
 		try {
 
 			// Gets the ACIDE - A Configurable IDE project configuration
-			debugConfiguration = AcideResourceManager.getInstance()
-					.getProperty("debugConfigurationPath");
+			debugConfiguration = AcideResourceManager.getInstance().getProperty("debugConfigurationPath");
 
 			// Loads the project configuration
 			AcideDebugConfiguration.getInstance().load(debugConfiguration);
@@ -880,15 +815,10 @@ public class AcideWorkbenchConfiguration {
 			AcideDebugConfiguration.getInstance().setDefaultConfiguration();
 
 			// Displays an error message
-			JOptionPane.showMessageDialog(
-					null,
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s2339")
-							+ AcideLanguageManager.getInstance().getLabels()
-							.getString("s959"));
+			JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2339")
+					+ AcideLanguageManager.getInstance().getLabels().getString("s959"));
 		}
 	}
-
 
 	/**
 	 * Loads the ACIDE - A Configurable tool bar configuration.
@@ -896,9 +826,7 @@ public class AcideWorkbenchConfiguration {
 	private void loadToolBarConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1072"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1072"));
 
 		String currentToolBarConfiguration = null;
 
@@ -906,20 +834,16 @@ public class AcideWorkbenchConfiguration {
 
 			// Sets the ACIDE - A Configurable IDE current tool bar from the
 			// project configuration
-			AcideResourceManager.getInstance().setProperty(
-					"currentToolBarConfiguration",
-					AcideProjectConfiguration.getInstance()
-							.getToolBarConfiguration());
+			AcideResourceManager.getInstance().setProperty("currentToolBarConfiguration",
+					AcideProjectConfiguration.getInstance().getToolBarConfiguration());
 
 			// Gets the ACIDE - A Configurable IDE current tool bar
 			// configuration
-			currentToolBarConfiguration = AcideResourceManager.getInstance()
-					.getProperty("currentToolBarConfiguration");
+			currentToolBarConfiguration = AcideResourceManager.getInstance().getProperty("currentToolBarConfiguration");
 
 			// Loads the ACIDE - A Configurable IDE tool bar configuration the
 			// current tool bar configuration
-			AcideToolBarConfiguration.getInstance().load(
-					currentToolBarConfiguration);
+			AcideToolBarConfiguration.getInstance().load(currentToolBarConfiguration);
 
 		} catch (Exception exception) {
 
@@ -934,8 +858,7 @@ public class AcideWorkbenchConfiguration {
 				if (index == -1)
 					index = currentToolBarConfiguration.lastIndexOf("/");
 				name = "./configuration/toolbar/"
-						+ currentToolBarConfiguration.substring(index + 1,
-								currentToolBarConfiguration.length());
+						+ currentToolBarConfiguration.substring(index + 1, currentToolBarConfiguration.length());
 
 				// Loads the ACIDE - A Configurable IDE tool bar configuration
 				// the
@@ -949,50 +872,40 @@ public class AcideWorkbenchConfiguration {
 					AcideProjectConfiguration.getInstance().setIsModified(true);
 
 				// Information message
-				JOptionPane.showMessageDialog(null, AcideLanguageManager
-						.getInstance().getLabels().getString("s958")
-						+ currentToolBarConfiguration
-						+ AcideLanguageManager.getInstance().getLabels()
-								.getString("s957") + name);
+				JOptionPane.showMessageDialog(null,
+						AcideLanguageManager.getInstance().getLabels().getString("s958") + currentToolBarConfiguration
+								+ AcideLanguageManager.getInstance().getLabels().getString("s957") + name);
 
 				// Updates the ACIDE - A Configurable IDE current tool bar
 				// configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentToolBarConfiguration", name);
+				AcideResourceManager.getInstance().setProperty("currentToolBarConfiguration", name);
 
 			} catch (Exception exception1) {
 
 				// Updates the log
-				AcideLog.getLog().error(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s127"));
+				AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s127"));
 
 				try {
 
 					// Loads the default ACIDE - A Configurable IDE tool bar
 					// configuration
-					AcideToolBarConfiguration.getInstance().load(
-							"./configuration/toolbar/default.toolbarConfig");
+					AcideToolBarConfiguration.getInstance().load("./configuration/toolbar/default.toolbarConfig");
 
 					// If it is not the default project
-					if (!AcideProjectConfiguration.getInstance()
-							.isDefaultProject())
+					if (!AcideProjectConfiguration.getInstance().isDefaultProject())
 
 						// The project has been modified
-						AcideProjectConfiguration.getInstance().setIsModified(
-								true);
+						AcideProjectConfiguration.getInstance().setIsModified(true);
 
 					// Information message
-					JOptionPane.showMessageDialog(null, AcideLanguageManager
-							.getInstance().getLabels().getString("s958")
-							+ currentToolBarConfiguration
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s959"));
+					JOptionPane.showMessageDialog(null,
+							AcideLanguageManager.getInstance().getLabels().getString("s958")
+									+ currentToolBarConfiguration
+									+ AcideLanguageManager.getInstance().getLabels().getString("s959"));
 
 					// Updates the the ACIDE - A Configurable IDE current tool
 					// bar configuration
-					AcideResourceManager.getInstance().setProperty(
-							"currentToolBarConfiguration",
+					AcideResourceManager.getInstance().setProperty("currentToolBarConfiguration",
 							"./configuration/toolbar/default.toolbarConfig");
 
 				} catch (HeadlessException exception2) {
@@ -1008,9 +921,7 @@ public class AcideWorkbenchConfiguration {
 			}
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s127"));
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s127"));
 		}
 	}
 
@@ -1020,8 +931,8 @@ public class AcideWorkbenchConfiguration {
 	 * </p>
 	 * <p>
 	 * In order to apply the specific language, the menu item action will be
-	 * performed, so it is mandatory that the ACIDE - A Configurable IDE menu
-	 * has been created previously.
+	 * performed, so it is mandatory that the ACIDE - A Configurable IDE menu has
+	 * been created previously.
 	 * </p>
 	 * 
 	 * @return the ACIDE - A Configurable IDE language configuration.
@@ -1029,9 +940,7 @@ public class AcideWorkbenchConfiguration {
 	public void loadLanguageConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1030"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1030"));
 
 		// // If the ACIDE - A Configurable IDE language is Spanish
 		// if
@@ -1057,60 +966,43 @@ public class AcideWorkbenchConfiguration {
 	 * Loads the ACIDE - A Configurable IDE main window configuration.
 	 * </p>
 	 * <p>
-	 * Sets the values from the ACIDE - A Configurable IDE project configuration
-	 * and applies them to the ACIDE - A Configurable IDE main window.
+	 * Sets the values from the ACIDE - A Configurable IDE project configuration and
+	 * applies them to the ACIDE - A Configurable IDE main window.
 	 * </p>
 	 */
 	public void loadMainWindowConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1035"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1035"));
 
 		// If the ACIDE - A Configurable IDE explorer panel has not to be showed
 		if (!AcideProjectConfiguration.getInstance().isExplorerPanelShowed()) {
 
 			// Hides the explorer panel
-			AcideMainWindow.getInstance().getExplorerPanel()
-					.disposeExplorerPanel();
+			AcideMainWindow.getInstance().getExplorerPanel().disposeExplorerPanel();
 		} else {
 
 			// Displays the explorer panel
-			AcideMainWindow.getInstance().getExplorerPanel()
-					.showExplorerPanel();
+			AcideMainWindow.getInstance().getExplorerPanel().showExplorerPanel();
 		}
 
 		// Updates the show explorer panel check box menu item state
-		AcideMainWindow
-				.getInstance()
-				.getMenu()
-				.getViewMenu()
-				.getShowExplorerPanelCheckBoxMenuItem()
-				.setSelected(
-						AcideProjectConfiguration.getInstance()
-								.isExplorerPanelShowed());
+		AcideMainWindow.getInstance().getMenu().getViewMenu().getShowExplorerPanelCheckBoxMenuItem()
+				.setSelected(AcideProjectConfiguration.getInstance().isExplorerPanelShowed());
 
 		// If the ACIDE - A Configurable IDE console panel has not to be showed
 		if (!AcideProjectConfiguration.getInstance().isConsolePanelShowed())
 
 			// Hides the console panel
-			AcideMainWindow.getInstance().getConsolePanel()
-					.disposeConsolePanel();
+			AcideMainWindow.getInstance().getConsolePanel().disposeConsolePanel();
 		else
 
 			// Shows the console panel
 			AcideMainWindow.getInstance().getConsolePanel().showConsolePanel();
 
 		// Updates the show console panel check box menu item state
-		AcideMainWindow
-				.getInstance()
-				.getMenu()
-				.getViewMenu()
-				.getShowConsolePanelCheckBoxMenuItem()
-				.setSelected(
-						AcideProjectConfiguration.getInstance()
-								.isConsolePanelShowed());
+		AcideMainWindow.getInstance().getMenu().getViewMenu().getShowConsolePanelCheckBoxMenuItem()
+				.setSelected(AcideProjectConfiguration.getInstance().isConsolePanelShowed());
 
 		// Updates the show graph panel check box menu item state
 		if (!AcideProjectConfiguration.getInstance().isGraphPanelShowed())
@@ -1121,14 +1013,8 @@ public class AcideWorkbenchConfiguration {
 			AcideMainWindow.getInstance().getGraphPanel().showGraphPanel();
 
 		// Shows the graph panel
-		AcideMainWindow
-				.getInstance()
-				.getMenu()
-				.getViewMenu()
-				.getShowGraphPanelCheckBoxMenuItem()
-				.setSelected(
-						AcideProjectConfiguration.getInstance()
-								.isGraphPanelShowed());
+		AcideMainWindow.getInstance().getMenu().getViewMenu().getShowGraphPanelCheckBoxMenuItem()
+				.setSelected(AcideProjectConfiguration.getInstance().isGraphPanelShowed());
 
 		// Updates the show debug panel check box menu item state
 		if (!AcideProjectConfiguration.getInstance().isDebugPanelShowed())
@@ -1139,92 +1025,56 @@ public class AcideWorkbenchConfiguration {
 			AcideMainWindow.getInstance().getDebugPanel().showDebugPanel();
 
 		// Shows the debug panel
-		AcideMainWindow
-				.getInstance()
-				.getMenu()
-				.getViewMenu()
-				.getShowDebugPanelCheckBoxMenuItem()
-				.setSelected(
-						AcideProjectConfiguration.getInstance()
-								.isDebugPanelShowed());
+		AcideMainWindow.getInstance().getMenu().getViewMenu().getShowDebugPanelCheckBoxMenuItem()
+				.setSelected(AcideProjectConfiguration.getInstance().isDebugPanelShowed());
 
 		// Updates the show database panel check box menu item state
 		if (!AcideProjectConfiguration.getInstance().isDatabasePanelShowed())
 
 			// Hides the database panel
-			AcideMainWindow.getInstance().getDataBasePanel()
-					.disposeDataBasePanel();
+			AcideMainWindow.getInstance().getDataBasePanel().disposeDataBasePanel();
 		else
 			// Shows the database panel
-			AcideMainWindow.getInstance().getDataBasePanel()
-					.showDataBasePanel();
+			AcideMainWindow.getInstance().getDataBasePanel().showDataBasePanel();
 
 		// Updates the show database panel check box menu item state
-		AcideMainWindow
-				.getInstance()
-				.getMenu()
-				.getViewMenu()
-				.getShowDataBasePanelCheckBoxMenuItem()
-				.setSelected(
-						AcideProjectConfiguration.getInstance()
-								.isDatabasePanelShowed());
+		AcideMainWindow.getInstance().getMenu().getViewMenu().getShowDataBasePanelCheckBoxMenuItem()
+				.setSelected(AcideProjectConfiguration.getInstance().isDatabasePanelShowed());
 
 		// Sets the ACIDE - A Configurable IDE main window preferred size
-		AcideMainWindow.getInstance().setPreferredSize(
-				new Dimension(AcideProjectConfiguration.getInstance()
-						.getWindowWidth(), AcideProjectConfiguration
-						.getInstance().getWindowHeight()));
+		AcideMainWindow.getInstance()
+				.setPreferredSize(new Dimension(AcideProjectConfiguration.getInstance().getWindowWidth(),
+						AcideProjectConfiguration.getInstance().getWindowHeight()));
 
 		// Sets the ACIDE - A Configurable IDE main window location
-		AcideMainWindow.getInstance().setLocation(
-				AcideProjectConfiguration.getInstance().getXCoordinate(),
+		AcideMainWindow.getInstance().setLocation(AcideProjectConfiguration.getInstance().getXCoordinate(),
 				AcideProjectConfiguration.getInstance().getYCoordinate());
 
 		// Sets the ACIDE - A Configurable IDE main window split panel vertical
 		// files divider location
-		AcideMainWindow
-				.getInstance()
-				.getVerticalFilesSplitPane()
-				.setDividerLocation(
-						AcideProjectConfiguration.getInstance()
-								.getVerticalFilesSplitPaneDividerLocation());
+		AcideMainWindow.getInstance().getVerticalFilesSplitPane()
+				.setDividerLocation(AcideProjectConfiguration.getInstance().getVerticalFilesSplitPaneDividerLocation());
 
 		// Sets the ACIDE - A Configurable IDE main window split panel vertical
 		// database divider location
-		AcideMainWindow
-				.getInstance()
-				.getVerticalDataBaseSplitPane()
-				.setDividerLocation(
-						AcideProjectConfiguration.getInstance()
-								.getVerticalDataBaseSplitPaneDividerLocation());
+		AcideMainWindow.getInstance().getVerticalDataBaseSplitPane().setDividerLocation(
+				AcideProjectConfiguration.getInstance().getVerticalDataBaseSplitPaneDividerLocation());
 
 		// Sets the ACIDE - A Configurable IDE main window split panel
 		// horizontal divider location
-		AcideMainWindow
-				.getInstance()
-				.getHorizontalSplitPane()
-				.setDividerLocation(
-						AcideProjectConfiguration.getInstance()
-								.getHorizontalSplitPanelDividerLocation());
+		AcideMainWindow.getInstance().getHorizontalSplitPane()
+				.setDividerLocation(AcideProjectConfiguration.getInstance().getHorizontalSplitPanelDividerLocation());
 
 		// Sets the ACIDE - A Configurable IDE main window split panel vertical
 		// divider location
-		AcideMainWindow
-				.getInstance()
-				.getVerticalSplitPane()
-				.setDividerLocation(
-						AcideProjectConfiguration.getInstance()
-								.getVerticalGraphSplitPaneDividerLocation());
+		AcideMainWindow.getInstance().getVerticalSplitPane()
+				.setDividerLocation(AcideProjectConfiguration.getInstance().getVerticalGraphSplitPaneDividerLocation());
 
 		// Sets the ACIDE - A Configurable IDE main window split panel
 		// horizontal
 		// divider location
-		AcideMainWindow
-				.getInstance()
-				.getHorizontalGraphSplitPane()
-				.setDividerLocation(
-						AcideProjectConfiguration.getInstance()
-								.getHorizontalGraphSplitPaneDividerLocation());
+		AcideMainWindow.getInstance().getHorizontalGraphSplitPane().setDividerLocation(
+				AcideProjectConfiguration.getInstance().getHorizontalGraphSplitPaneDividerLocation());
 
 		// Updates the ACIDE - A Configurable IDE main window
 		AcideMainWindow.getInstance().validate();
@@ -1243,9 +1093,7 @@ public class AcideWorkbenchConfiguration {
 	public void loadExplorerConfiguration() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s1032"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1032"));
 
 		try {
 
@@ -1253,10 +1101,7 @@ public class AcideWorkbenchConfiguration {
 			if (AcideProjectConfiguration.getInstance().isDefaultProject()) {
 
 				// Sets the title with the <empty> tag
-				AcideMainWindow.getInstance()
-						.setTitle(
-								AcideMainWindow.getInstance().getTitle()
-										+ " - <empty>");
+				AcideMainWindow.getInstance().setTitle(AcideMainWindow.getInstance().getTitle() + " - <empty>");
 			} else {
 
 				// Sets all the features for the main window to allow the
@@ -1271,47 +1116,37 @@ public class AcideWorkbenchConfiguration {
 				newProjectFile.setIsDirectory(true);
 
 				// Enables add file menu item in the explorer popup menu
-				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu()
-						.getAddFileMenuItem().setEnabled(true);
+				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu().getAddFileMenuItem().setEnabled(true);
 
 				// Enables the remove file menu item in the explorer popup menu
-				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu()
-						.getRemoveFileMenuItem().setEnabled(true);
+				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu().getRemoveFileMenuItem()
+						.setEnabled(true);
 
 				// Sets the project title
-				AcideMainWindow.getInstance().setTitle(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s425")
-								+ " - "
-								+ AcideProjectConfiguration.getInstance()
-										.getName());
+				AcideMainWindow.getInstance().setTitle(AcideLanguageManager.getInstance().getLabels().getString("s425")
+						+ " - " + AcideProjectConfiguration.getInstance().getName());
 
 				// Builds the explorer tree with all the associated files
-				AcideMainWindow.getInstance().getExplorerPanel().getRoot()
-						.removeAllChildren();
+				AcideMainWindow.getInstance().getExplorerPanel().getRoot().removeAllChildren();
 
 				// Creates the new explorer node
-				DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(
-						newProjectFile);
+				DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(newProjectFile);
 
 				// Adds the new node to the explorer tree root
-				AcideMainWindow.getInstance().getExplorerPanel().getRoot()
-						.add(rootNode);
+				AcideMainWindow.getInstance().getExplorerPanel().getRoot().add(rootNode);
 
 				// Creates the directory list
 				ArrayList<DefaultMutableTreeNode> directoryList = new ArrayList<DefaultMutableTreeNode>();
 
-				for (int index = 0; index < AcideProjectConfiguration
-						.getInstance().getNumberOfFilesFromList(); index++) {
+				for (int index = 0; index < AcideProjectConfiguration.getInstance()
+						.getNumberOfFilesFromList(); index++) {
 
 					// Gets the node
 					DefaultMutableTreeNode fileProjectNode = new DefaultMutableTreeNode(
-							AcideProjectConfiguration.getInstance().getFileAt(
-									index));
+							AcideProjectConfiguration.getInstance().getFileAt(index));
 
 					// If is a directory
-					if (AcideProjectConfiguration.getInstance()
-							.getFileAt(index).isDirectory()) {
+					if (AcideProjectConfiguration.getInstance().getFileAt(index).isDirectory()) {
 
 						// Allows children in the tree
 						fileProjectNode.setAllowsChildren(true);
@@ -1324,25 +1159,17 @@ public class AcideWorkbenchConfiguration {
 						fileProjectNode.setAllowsChildren(false);
 					}
 					// If the file already exists in the level above
-					if (AcideProjectConfiguration
-							.getInstance()
-							.getFileAt(index)
-							.getParent()
-							.equals(AcideProjectConfiguration.getInstance()
-									.getName())) {
+					if (AcideProjectConfiguration.getInstance().getFileAt(index).getParent()
+							.equals(AcideProjectConfiguration.getInstance().getName())) {
 
 						// Adds the new node
 						rootNode.add(fileProjectNode);
 					} else {
 
 						// Searches for the node
-						DefaultMutableTreeNode parentNode = AcideMainWindow
-								.getInstance()
-								.getExplorerPanel()
-								.searchDirectoryList(
-										directoryList,
-										AcideProjectConfiguration.getInstance()
-												.getFileAt(index).getParent());
+						DefaultMutableTreeNode parentNode = AcideMainWindow.getInstance().getExplorerPanel()
+								.searchDirectoryList(directoryList,
+										AcideProjectConfiguration.getInstance().getFileAt(index).getParent());
 
 						// Adds the new node
 						if (parentNode != null)
@@ -1351,41 +1178,40 @@ public class AcideWorkbenchConfiguration {
 				}
 
 				// Updates the explorer tree
-				AcideMainWindow.getInstance().getExplorerPanel().getTreeModel()
-						.reload();
+				AcideMainWindow.getInstance().getExplorerPanel().getTreeModel().reload();
 
 				// Repaint the explorer tree
 				AcideMainWindow.getInstance().getExplorerPanel().expandTree();
 
 				// Enables the add file menu item in the popup menu
-				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu()
-						.getAddFileMenuItem().setEnabled(true);
+				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu().getAddFileMenuItem().setEnabled(true);
 
 				// Enables the save project menu item in the popup menu
-				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu()
-						.getSaveProjectMenuItem().setEnabled(true);
+				AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu().getSaveProjectMenuItem()
+						.setEnabled(true);
 
 				// If it has more than 0 files associated
-				if (AcideProjectConfiguration.getInstance()
-						.getNumberOfFilesFromList() > 0)
+				if (AcideProjectConfiguration.getInstance().getNumberOfFilesFromList() > 0)
 
 					// Allows to remove files in the EXPLORER menu
-					AcideMainWindow.getInstance().getExplorerPanel()
-							.getPopupMenu().getRemoveFileMenuItem()
+					AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu().getRemoveFileMenuItem()
 							.setEnabled(true);
 				else
 					// Removing files in the EXPLORER menu is not allowed
-					AcideMainWindow.getInstance().getExplorerPanel()
-							.getPopupMenu().getRemoveFileMenuItem()
+					AcideMainWindow.getInstance().getExplorerPanel().getPopupMenu().getRemoveFileMenuItem()
 							.setEnabled(false);
 
 				// Saves the ACIDE - A Configurable IDE project configuration
 				AcideProjectConfiguration.getInstance().setIsFirstSave(true);
 
 				// Updates the ACIDE - A Configurable IDE project configuration
-				AcideProjectConfiguration.getInstance().setProjectPath(
-						AcideResourceManager.getInstance().getProperty(
-								"projectConfiguration"));
+				AcideProjectConfiguration.getInstance()
+						.setProjectPath(AcideResourceManager.getInstance().getProperty("projectConfiguration"));
+
+				String colorB = AcideResourceManager.getInstance().getProperty("explorerPanel.backgroundColor");
+				String colorF = AcideResourceManager.getInstance().getProperty("explorerPanel.foregroundColor");
+				AcideMainWindow.getInstance().getExplorerPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)),
+						new Color(Integer.parseInt(colorF)));
 			}
 		} catch (NumberFormatException exception) {
 
@@ -1402,9 +1228,9 @@ public class AcideWorkbenchConfiguration {
 
 	/**
 	 * <p>
-	 * Closes the new and log tab in the editor and saves the state of each one
-	 * of the opened files in the ACIDE -A Configurable IDE file editor into the
-	 * ACIDE -A Configurable IDE file editor configuration.
+	 * Closes the new and log tab in the editor and saves the state of each one of
+	 * the opened files in the ACIDE -A Configurable IDE file editor into the ACIDE
+	 * -A Configurable IDE file editor configuration.
 	 * </p>
 	 */
 	public void saveFileEditorOpenedFilesConfiguration() {
@@ -1412,29 +1238,25 @@ public class AcideWorkbenchConfiguration {
 		try {
 
 			// SPECIAL CASE: New file
-			int newFileIndex = AcideMainWindow.getInstance()
-					.getFileEditorManager().getNewFileIndex();
+			int newFileIndex = AcideMainWindow.getInstance().getFileEditorManager().getNewFileIndex();
 
 			// If it has new file opened
 			if (newFileIndex != -1) {
 
 				// Closes the new file so it will not be saved
 				// in the configuration
-				AcideMainWindow.getInstance().getFileEditorManager()
-						.getTabbedPane().remove(newFileIndex);
+				AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().remove(newFileIndex);
 			}
 
 			// SPECIAL CASE: Log file
-			int logFileIndex = AcideMainWindow.getInstance()
-					.getFileEditorManager().getLogFileIndex();
+			int logFileIndex = AcideMainWindow.getInstance().getFileEditorManager().getLogFileIndex();
 
 			// If it has log file opened
 			if (logFileIndex != -1) {
 
 				// Closes the log file so it will not be saved in the
 				// project configuration
-				AcideMainWindow.getInstance().getFileEditorManager()
-						.getTabbedPane().remove(logFileIndex);
+				AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().remove(logFileIndex);
 			}
 
 			// Saves the editor configuration configuration
@@ -1449,8 +1271,8 @@ public class AcideWorkbenchConfiguration {
 	}
 
 	/**
-	 * Saves the configurations of the ACIDE - A Configurable IDE components
-	 * once the opened modified file editor panels has been saved or not.
+	 * Saves the configurations of the ACIDE - A Configurable IDE components once
+	 * the opened modified file editor panels has been saved or not.
 	 */
 	public void saveComponentsConfiguration() {
 
@@ -1465,6 +1287,7 @@ public class AcideWorkbenchConfiguration {
 
 		// Stores the configuration of the files
 		saveFileEditorOpenedFilesConfiguration();
+
 	}
 
 	/**
@@ -1474,10 +1297,8 @@ public class AcideWorkbenchConfiguration {
 
 		// Saves the console configuration from the current ACIDE - A
 		// Configurable IDE console panel
-		_consolePanelConfiguration.setLexiconConfiguration(AcideMainWindow
-				.getInstance().getConsolePanel().getLexiconConfiguration()
-				.getPath());
-
+		_consolePanelConfiguration.setLexiconConfiguration(
+				AcideMainWindow.getInstance().getConsolePanel().getLexiconConfiguration().getPath());
 		// Closes the console panel
 		AcideMainWindow.getInstance().getConsolePanel().executeExitCommand();
 	}
@@ -1490,24 +1311,20 @@ public class AcideWorkbenchConfiguration {
 		try {
 			// Gets the ACIDE - A Configurable IDE current tool bar
 			// configuration
-			String currentToolBarConfiguration = AcideResourceManager
-					.getInstance().getProperty("currentToolBarConfiguration");
+			String currentToolBarConfiguration = AcideResourceManager.getInstance()
+					.getProperty("currentToolBarConfiguration");
 
-			if ((currentToolBarConfiguration
-					.endsWith("lastModified.toolbarConfig"))
-					|| currentToolBarConfiguration
-							.endsWith("newToolBar.toolbarConfig")) {
+			if ((currentToolBarConfiguration.endsWith("lastModified.toolbarConfig"))
+					|| currentToolBarConfiguration.endsWith("newToolBar.toolbarConfig")) {
 
 				// Gets the ACIDE - A Configurable IDE previous tool bar
 				// configuration
-				String previousToolBarConfiguration = AcideResourceManager
-						.getInstance().getProperty(
-								"previousToolBarConfiguration");
+				String previousToolBarConfiguration = AcideResourceManager.getInstance()
+						.getProperty("previousToolBarConfiguration");
 
 				// Updates the ACIDE - A Configurable IDE current tool bar
 				// configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentToolBarConfiguration",
+				AcideResourceManager.getInstance().setProperty("currentToolBarConfiguration",
 						previousToolBarConfiguration);
 			}
 
@@ -1517,11 +1334,8 @@ public class AcideWorkbenchConfiguration {
 			AcideLog.getLog().error(exception.getMessage());
 
 			// Displays an error message
-			JOptionPane.showMessageDialog(
-					null,
-					exception.getMessage(),
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s294"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, exception.getMessage(),
+					AcideLanguageManager.getInstance().getLabels().getString("s294"), JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -1532,21 +1346,20 @@ public class AcideWorkbenchConfiguration {
 
 		try {
 			// Gets the ACIDE - A Configurable IDE current menu configuration
-			String currentMenuConfiguration = AcideResourceManager
-					.getInstance().getProperty("currentMenuConfiguration");
+			String currentMenuConfiguration = AcideResourceManager.getInstance()
+					.getProperty("currentMenuConfiguration");
 
 			if ((currentMenuConfiguration.endsWith("lastModified.menuConfig"))
 					|| (currentMenuConfiguration.endsWith("newMenu.menuConfig"))) {
 
 				// Gets the ACIDE - A Configurable IDE previous menu
 				// configuration
-				String previousMenuConfiguration = AcideResourceManager
-						.getInstance().getProperty("previousMenuConfiguration");
+				String previousMenuConfiguration = AcideResourceManager.getInstance()
+						.getProperty("previousMenuConfiguration");
 
 				// Updates the ACIDE - A Configurable IDE current menu
 				// configuration
-				AcideResourceManager.getInstance().setProperty(
-						"currentMenuConfiguration", previousMenuConfiguration);
+				AcideResourceManager.getInstance().setProperty("currentMenuConfiguration", previousMenuConfiguration);
 			}
 
 		} catch (Exception exception) {
@@ -1555,11 +1368,8 @@ public class AcideWorkbenchConfiguration {
 			AcideLog.getLog().error(exception.getMessage());
 
 			// Displays an error message
-			JOptionPane.showMessageDialog(
-					null,
-					exception.getMessage(),
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s294"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, exception.getMessage(),
+					AcideLanguageManager.getInstance().getLabels().getString("s294"), JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -1572,172 +1382,127 @@ public class AcideWorkbenchConfiguration {
 
 			// Sets the the ACIDE - A Configurable IDE language
 			// configuration
-			AcideProjectConfiguration.getInstance().setLanguageConfiguration(
-					AcideResourceManager.getInstance().getProperty("language"));
+			AcideProjectConfiguration.getInstance()
+					.setLanguageConfiguration(AcideResourceManager.getInstance().getProperty("language"));
 
 			// Sets the ACIDE - A Configurable IDE current menu
 			// configuration
-			AcideProjectConfiguration.getInstance().setMenuConfiguration(
-					AcideResourceManager.getInstance().getProperty(
-							"currentMenuConfiguration"));
+			AcideProjectConfiguration.getInstance()
+					.setMenuConfiguration(AcideResourceManager.getInstance().getProperty("currentMenuConfiguration"));
 
 			// Sets the ACIDE - A Configurable IDE current tool bar
 			// configuration
 			AcideProjectConfiguration.getInstance().setToolBarConfiguration(
-					AcideResourceManager.getInstance().getProperty(
-							"currentToolBarConfiguration"));
+					AcideResourceManager.getInstance().getProperty("currentToolBarConfiguration"));
 
 			// Sets the is explorer panel showed flag as true
-			AcideProjectConfiguration.getInstance().setIsExplorerPanelShowed(
-					AcideMainWindow.getInstance().getMenu().getViewMenu()
-							.getShowExplorerPanelCheckBoxMenuItem()
-							.isSelected());
+			AcideProjectConfiguration.getInstance().setIsExplorerPanelShowed(AcideMainWindow.getInstance().getMenu()
+					.getViewMenu().getShowExplorerPanelCheckBoxMenuItem().isSelected());
 
 			// Sets the is console panel showed flag as true
-			AcideProjectConfiguration.getInstance()
-					.setIsConsolePanelShowed(
-							AcideMainWindow.getInstance().getMenu()
-									.getViewMenu()
-									.getShowConsolePanelCheckBoxMenuItem()
-									.isSelected());
+			AcideProjectConfiguration.getInstance().setIsConsolePanelShowed(AcideMainWindow.getInstance().getMenu()
+					.getViewMenu().getShowConsolePanelCheckBoxMenuItem().isSelected());
 
 			// Sets the is database panel showed flag as true
-			AcideProjectConfiguration.getInstance().setIsDatabasePanelShowed(
-					AcideMainWindow.getInstance().getMenu().getViewMenu()
-							.getShowDataBasePanelCheckBoxMenuItem()
-							.isSelected());
+			AcideProjectConfiguration.getInstance().setIsDatabasePanelShowed(AcideMainWindow.getInstance().getMenu()
+					.getViewMenu().getShowDataBasePanelCheckBoxMenuItem().isSelected());
 
 			// Sets the is graph panel showed flag as true
-			AcideProjectConfiguration.getInstance().setIsGraphPanelShowed(
-					AcideMainWindow.getInstance().getMenu().getViewMenu()
-							.getShowGraphPanelCheckBoxMenuItem().isSelected());
+			AcideProjectConfiguration.getInstance().setIsGraphPanelShowed(AcideMainWindow.getInstance().getMenu()
+					.getViewMenu().getShowGraphPanelCheckBoxMenuItem().isSelected());
 
 			// Sets the is debug panel showed flag as true
-			AcideProjectConfiguration.getInstance().setIsDebugPanelShowed(
-					AcideMainWindow.getInstance().getMenu().getViewMenu()
-							.getShowDebugPanelCheckBoxMenuItem().isSelected());
+			AcideProjectConfiguration.getInstance().setIsDebugPanelShowed(AcideMainWindow.getInstance().getMenu()
+					.getViewMenu().getShowDebugPanelCheckBoxMenuItem().isSelected());
 
 			// Sets the ACIDE - A Configurable IDE main window width
-			AcideProjectConfiguration.getInstance().setWindowWidth(
-					AcideMainWindow.getInstance().getWidth());
+			AcideProjectConfiguration.getInstance().setWindowWidth(AcideMainWindow.getInstance().getWidth());
 
 			// Sets the ACIDE - A Configurable IDE main window height
-			AcideProjectConfiguration.getInstance().setWindowHeight(
-					AcideMainWindow.getInstance().getHeight());
+			AcideProjectConfiguration.getInstance().setWindowHeight(AcideMainWindow.getInstance().getHeight());
 
 			// Sets the ACIDE - A Configurable IDE main window x coordinate
-			AcideProjectConfiguration.getInstance().setXCoordinate(
-					AcideMainWindow.getInstance().getX());
+			AcideProjectConfiguration.getInstance().setXCoordinate(AcideMainWindow.getInstance().getX());
 
 			// Sets the ACIDE - A Configurable IDE main window y coordinate
-			AcideProjectConfiguration.getInstance().setYCoordinate(
-					AcideMainWindow.getInstance().getY());
+			AcideProjectConfiguration.getInstance().setYCoordinate(AcideMainWindow.getInstance().getY());
 
 			// Sets the ACIDE - A Configurable IDE main window vertical
 			// files split pane divider location
-			AcideProjectConfiguration.getInstance()
-					.setVerticalFilesSplitPaneDividerLocation(
-							AcideMainWindow.getInstance()
-									.getVerticalFilesSplitPane()
-									.getDividerLocation());
+			AcideProjectConfiguration.getInstance().setVerticalFilesSplitPaneDividerLocation(
+					AcideMainWindow.getInstance().getVerticalFilesSplitPane().getDividerLocation());
 
 			// Sets the ACIDE - A Configurable IDE main window horizontal
 			// graph split pane divider location
-			AcideProjectConfiguration.getInstance()
-					.setHorizontalGraphSplitPaneDividerLocation(
-							AcideMainWindow.getInstance()
-									.getHorizontalGraphSplitPane()
-									.getDividerLocation());
+			AcideProjectConfiguration.getInstance().setHorizontalGraphSplitPaneDividerLocation(
+					AcideMainWindow.getInstance().getHorizontalGraphSplitPane().getDividerLocation());
 
 			// Sets the ACIDE - A Configurable IDE main window vertical
 			// database split pane divider location
-			AcideProjectConfiguration.getInstance()
-					.setVerticalDataBaseSplitPaneDividerLocation(
-							AcideMainWindow.getInstance()
-									.getVerticalDataBaseSplitPane()
-									.getDividerLocation());
+			AcideProjectConfiguration.getInstance().setVerticalDataBaseSplitPaneDividerLocation(
+					AcideMainWindow.getInstance().getVerticalDataBaseSplitPane().getDividerLocation());
 
 			// Sets the ACIDE - A Configurable IDE main window vertical
 			// graph pane divider location
-			AcideProjectConfiguration.getInstance()
-					.setVerticalGraphSplitPaneDividerLocation(
-							AcideMainWindow.getInstance()
-									.getVerticalSplitPane()
-									.getDividerLocation());
+			AcideProjectConfiguration.getInstance().setVerticalGraphSplitPaneDividerLocation(
+					AcideMainWindow.getInstance().getVerticalSplitPane().getDividerLocation());
 
 			// Sets the ACIDE - A Configurable IDE main window horizontal
 			// split pane divider location
-			AcideProjectConfiguration.getInstance()
-					.setHorizontalSplitPaneDividerLocation(
-							AcideMainWindow.getInstance()
-									.getHorizontalSplitPane()
-									.getDividerLocation());
+			AcideProjectConfiguration.getInstance().setHorizontalSplitPaneDividerLocation(
+					AcideMainWindow.getInstance().getHorizontalSplitPane().getDividerLocation());
 
 			// Sets the ACIDE - A Configurable IDE console panel shell path
-			AcideProjectConfiguration.getInstance().setShellPath(
-					AcideResourceManager.getInstance().getProperty(
-							"consolePanel.shellPath"));
+			AcideProjectConfiguration.getInstance()
+					.setShellPath(AcideResourceManager.getInstance().getProperty("consolePanel.shellPath"));
 
 			// Sets the ACIDE - A Configurable IDE console panel shell
 			// directory
-			AcideProjectConfiguration.getInstance().setShellDirectory(
-					AcideResourceManager.getInstance().getProperty(
-							"consolePanel.shellDirectory"));
+			AcideProjectConfiguration.getInstance()
+					.setShellDirectory(AcideResourceManager.getInstance().getProperty("consolePanel.shellDirectory"));
 
 			// Sets the ACIDE - A Configurable IDE console panel exit
 			// command
-			AcideProjectConfiguration.getInstance().setExitCommand(
-					AcideResourceManager.getInstance().getProperty(
-							"consolePanel.exitCommand"));
+			AcideProjectConfiguration.getInstance()
+					.setExitCommand(AcideResourceManager.getInstance().getProperty("consolePanel.exitCommand"));
 
 			// Sets the ACIDE - A Configurable IDE console panel is echo
 			// command
 			AcideProjectConfiguration.getInstance().setIsEchoCommand(
-					Boolean.parseBoolean(AcideResourceManager.getInstance()
-							.getProperty("consolePanel.isEchoCommand")));
+					Boolean.parseBoolean(AcideResourceManager.getInstance().getProperty("consolePanel.isEchoCommand")));
 
 			// Sets the ACIDE - A Configurable IDE console panel foreground
 			// color
-			AcideProjectConfiguration.getInstance().setForegroundColor(
-					new Color(Integer.parseInt(AcideResourceManager
-							.getInstance().getProperty(
-									"consolePanel.foregroundColor"))));
+			AcideProjectConfiguration.getInstance().setForegroundColor(new Color(
+					Integer.parseInt(AcideResourceManager.getInstance().getProperty("consolePanel.foregroundColor"))));
 
 			// Sets the ACIDE - A Configurable IDE console panel background
 			// color
-			AcideProjectConfiguration.getInstance().setBackgroundColor(
-					new Color(Integer.parseInt(AcideResourceManager
-							.getInstance().getProperty(
-									"consolePanel.backgroundColor"))));
+			AcideProjectConfiguration.getInstance().setBackgroundColor(new Color(
+					Integer.parseInt(AcideResourceManager.getInstance().getProperty("consolePanel.backgroundColor"))));
 
 			// Sets the ACIDE - A Configurable IDE console panel buffer
 			// size
 			AcideProjectConfiguration.getInstance().setBufferSize(
-					Integer.parseInt(AcideResourceManager.getInstance()
-							.getProperty("consolePanel.bufferSize")));
+					Integer.parseInt(AcideResourceManager.getInstance().getProperty("consolePanel.bufferSize")));
 
 			// Sets the ACIDE - A Configurable IDE console panel font name
-			AcideProjectConfiguration.getInstance().setFontName(
-					AcideResourceManager.getInstance().getProperty(
-							"consolePanel.fontName"));
+			AcideProjectConfiguration.getInstance()
+					.setFontName(AcideResourceManager.getInstance().getProperty("consolePanel.fontName"));
 
 			// Sets the ACIDE - A Configurable IDE console panel font style
 			AcideProjectConfiguration.getInstance().setFontStyle(
-					Integer.parseInt(AcideResourceManager.getInstance()
-							.getProperty("consolePanel.fontStyle")));
+					Integer.parseInt(AcideResourceManager.getInstance().getProperty("consolePanel.fontStyle")));
 
 			// Sets the ACIDE - A Configurable IDE console panel font size
 			AcideProjectConfiguration.getInstance().setFontSize(
-					Integer.parseInt(AcideResourceManager.getInstance()
-							.getProperty("consolePanel.fontSize")));
+					Integer.parseInt(AcideResourceManager.getInstance().getProperty("consolePanel.fontSize")));
 
 			// Saves the configuration into the file
 			String fileContent = AcideProjectConfiguration.getInstance().save();
 
 			// Writes the file content into it
-			AcideFileManager.getInstance().write(
-					AcideProjectConfiguration.getInstance().getProjectPath(),
-					fileContent);
+			AcideFileManager.getInstance().write(AcideProjectConfiguration.getInstance().getProjectPath(), fileContent);
 
 		} catch (Exception exception) {
 
@@ -1748,22 +1513,19 @@ public class AcideWorkbenchConfiguration {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE workbench
-	 * configuration loaded flag.
+	 * Sets a new value to the ACIDE - A Configurable IDE workbench configuration
+	 * loaded flag.
 	 * 
-	 * @param loaded
-	 *            new value to set.
+	 * @param loaded new value to set.
 	 */
 	public void setWorkbenchLoaded(boolean loaded) {
 		_workbenchLoaded = loaded;
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE workbench configuration loaded
-	 * flag.
+	 * Returns the ACIDE - A Configurable IDE workbench configuration loaded flag.
 	 * 
-	 * @return the ACIDE - A Configurable IDE workbench configuration loaded
-	 *         flag.
+	 * @return the ACIDE - A Configurable IDE workbench configuration loaded flag.
 	 */
 	public boolean isWorkbenchLoaded() {
 		return _workbenchLoaded;
@@ -1779,14 +1541,11 @@ public class AcideWorkbenchConfiguration {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE file editor
-	 * configuration.
+	 * Sets a new value to the ACIDE - A Configurable IDE file editor configuration.
 	 * 
-	 * @param fileEditorConfiguration
-	 *            new value to set.
+	 * @param fileEditorConfiguration new value to set.
 	 */
-	public void setFileEditorConfiguration(
-			AcideFileEditorConfiguration fileEditorConfiguration) {
+	public void setFileEditorConfiguration(AcideFileEditorConfiguration fileEditorConfiguration) {
 		_fileEditorConfiguration = fileEditorConfiguration;
 	}
 
@@ -1803,11 +1562,9 @@ public class AcideWorkbenchConfiguration {
 	 * Sets a new value to the ACIDE - A Configurable IDE recent projects
 	 * configuration.
 	 * 
-	 * @param recentProjectsConfiguration
-	 *            new value to set.
+	 * @param recentProjectsConfiguration new value to set.
 	 */
-	public void setRecentProjectsConfiguration(
-			AcideRecentProjectsConfiguration recentProjectsConfiguration) {
+	public void setRecentProjectsConfiguration(AcideRecentProjectsConfiguration recentProjectsConfiguration) {
 		_recentProjectsConfiguration = recentProjectsConfiguration;
 	}
 
@@ -1824,11 +1581,9 @@ public class AcideWorkbenchConfiguration {
 	 * Sets a new value to the ACIDE - A Configurable IDE recent files
 	 * configuration.
 	 * 
-	 * @param recentFilesConfiguration
-	 *            new value to set.
+	 * @param recentFilesConfiguration new value to set.
 	 */
-	public void setRecentFilesConfiguration(
-			AcideRecentFilesConfiguration recentFilesConfiguration) {
+	public void setRecentFilesConfiguration(AcideRecentFilesConfiguration recentFilesConfiguration) {
 		_recentFilesConfiguration = recentFilesConfiguration;
 	}
 
@@ -1845,11 +1600,9 @@ public class AcideWorkbenchConfiguration {
 	 * Sets a new value to the ACIDE - A Configurable IDE lexicon assigner
 	 * configuration.
 	 * 
-	 * @param lexiconAssignerConfiguration
-	 *            new value to set.
+	 * @param lexiconAssignerConfiguration new value to set.
 	 */
-	public void setRecentProjectsConfiguration(
-			AcideLexiconAssignerConfiguration lexiconAssignerConfiguration) {
+	public void setRecentProjectsConfiguration(AcideLexiconAssignerConfiguration lexiconAssignerConfiguration) {
 		_lexiconAssignerConfiguration = lexiconAssignerConfiguration;
 	}
 
@@ -1866,11 +1619,9 @@ public class AcideWorkbenchConfiguration {
 	 * Sets a new value to the the ACIDE - A Configurable IDE console panel
 	 * configuration.
 	 * 
-	 * @param consolePanelConfiguration
-	 *            new value to set.
+	 * @param consolePanelConfiguration new value to set.
 	 */
-	public void setConsolePanelConfiguration(
-			AcideConsolePanelConfiguration consolePanelConfiguration) {
+	public void setConsolePanelConfiguration(AcideConsolePanelConfiguration consolePanelConfiguration) {
 		_consolePanelConfiguration = consolePanelConfiguration;
 	}
 }

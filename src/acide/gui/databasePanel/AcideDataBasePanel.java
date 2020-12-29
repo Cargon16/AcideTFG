@@ -40,6 +40,7 @@
 package acide.gui.databasePanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -114,6 +115,7 @@ import acide.gui.databasePanel.utils.AcideDataBaseTreeCellRenderer;
 import acide.gui.databasePanel.utils.AcideEnterTextWindow;
 import acide.gui.databasePanel.utils.AcideTree;
 import acide.gui.debugPanel.debugSQLPanel.AcideDebugSQLDebugWindow;
+import acide.gui.explorerPanel.utils.AcideExplorerTreeCellRenderer;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.gui.menuBar.viewMenu.AcideViewMenu;
 import acide.language.AcideLanguageManager;
@@ -258,7 +260,7 @@ public class AcideDataBasePanel extends JPanel {
 
 			// Sets the cell renderer
 			_tree.setCellRenderer(new AcideDataBaseTreeCellRenderer());
-
+			
 			// Sets the auto scroll as true
 			_tree.setAutoscrolls(true);
 			
@@ -1653,5 +1655,19 @@ public class AcideDataBasePanel extends JPanel {
 	public void setTableConstraints(HashMap<String,AcideConstraintDefinitionWindowControl> constraintWindow) {
 		_constraintWindow = constraintWindow;
 	}
+
+	public void changeColor(Color backGroundColor, Color foreGroundColor) {
+		this._tree.setBackground(backGroundColor);
+		this._tree.setForeground(foreGroundColor);
+		((AcideDataBaseTreeCellRenderer)this._tree.getCellRenderer()).setForegroundColor(foreGroundColor);
+		repaint();
+	}
 	
+	public Color getBackgroundColor() {
+		return this._tree.getBackground();
+	}
+	
+	public Color getForegroundColor() {
+		return this._tree.getForeground();
+	}
 }

@@ -39,6 +39,7 @@
  */
 package acide.gui.explorerPanel.utils;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.Icon;
@@ -100,6 +101,7 @@ public class AcideExplorerTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
 		AcideProjectFile projectFile;
+		this.setBackgroundNonSelectionColor(null);
 		
 		try {
 			
@@ -125,5 +127,9 @@ public class AcideExplorerTreeCellRenderer extends DefaultTreeCellRenderer {
 			//exception.printStackTrace();
 		}
 		return this;
+	}
+	
+	public void setForegroundColor(Color foreGroundColor) {
+		this.textNonSelectionColor = foreGroundColor;
 	}
 }

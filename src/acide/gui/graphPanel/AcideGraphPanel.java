@@ -40,6 +40,7 @@
 package acide.gui.graphPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
@@ -491,5 +492,10 @@ public class AcideGraphPanel extends JPanel {
 
 	public JRadioButton getRDG(){
 		return _RDGButton;
+	}
+	
+	public void setBackgroundColor(Color backgroundColor) {
+		this.setBackground(backgroundColor);
+		repaint();
 	}
 }

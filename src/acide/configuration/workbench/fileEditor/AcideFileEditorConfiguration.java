@@ -263,7 +263,7 @@ public class AcideFileEditorConfiguration {
 					.getSelectedFileEditorPanel().getActiveTextEditionArea()
 					.getFont().getSize();
 
-			// Sets the foreground color
+			/*// Sets the foreground color
 			_foregroundColor = AcideMainWindow.getInstance()
 					.getFileEditorManager().getSelectedFileEditorPanel()
 					.getActiveTextEditionArea().getForeground();
@@ -272,7 +272,7 @@ public class AcideFileEditorConfiguration {
 			_backgroundColor = AcideMainWindow.getInstance()
 					.getFileEditorManager().getSelectedFileEditorPanel()
 					.getActiveTextEditionArea().getBackground();
-
+	*/
 			// Sets the edition mode
 			_editionMode = AcideMainWindow.getInstance().getFileEditorManager()
 					.getSelectedFileEditorPanel().getEditionMode();

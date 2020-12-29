@@ -98,6 +98,7 @@ import acide.gui.menuBar.configurationMenu.lexiconMenu.listeners.AcideDocumentLe
 import acide.gui.menuBar.configurationMenu.lexiconMenu.listeners.AcideModifyLexiconMenuItemListener;
 import acide.gui.menuBar.configurationMenu.lexiconMenu.listeners.AcideNewLexiconMenuItemListener;
 import acide.gui.menuBar.configurationMenu.listeners.AcideCompilerMenuItemListener;
+import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemeMenuItemListener;
 import acide.gui.menuBar.configurationMenu.toolBarMenu.listeners.AcideLoadToolBarMenuItemListener;
 import acide.gui.menuBar.configurationMenu.toolBarMenu.listeners.AcideModifyToolBarMenuItemListener;
 import acide.gui.menuBar.configurationMenu.toolBarMenu.listeners.AcideNewToolBarMenuItemListener;
@@ -564,7 +565,10 @@ public class AcideInsertedItemListenersManager {
 			break;
 		case 612:
 			AcideDebugPanelSelectedNodeColorItemMenuItemListener.action(event);
-			break;			
+			break;	
+		case 700:
+			AcideThemeMenuItemListener.action(event);
+			break;
 		default:
 			// Displays a message
 			JOptionPane.showMessageDialog(null, AcideLanguageManager
