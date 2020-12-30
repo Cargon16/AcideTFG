@@ -41,6 +41,7 @@ package acide.gui.debugPanel.traceDatalogPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -52,6 +53,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
@@ -206,6 +208,7 @@ public class AcideTraceDatalogPanel extends JPanel {
 		JPanel subButtonPanel1 = new JPanel();
 		// adds the layout to the sub button panel
 		subButtonPanel1.setLayout(new FlowLayout());
+		subButtonPanel1.setOpaque(false);
 		// adds the sub button panel to the main button panel
 		_mainButtonPanel.add(subButtonPanel1, BorderLayout.NORTH);
 		refreshDatalog.setIcon(REFRESH_IMAGE);
@@ -265,6 +268,7 @@ public class AcideTraceDatalogPanel extends JPanel {
 		JPanel subButtonPanel2 = new JPanel();
 		// adds the layout to the sub button panel
 		subButtonPanel2.setLayout(new FlowLayout());
+		subButtonPanel2.setOpaque(false);
 		// adds the sub button panel to the main button panel
 		_mainButtonPanel.add(subButtonPanel2, BorderLayout.SOUTH);
 
@@ -488,6 +492,11 @@ public class AcideTraceDatalogPanel extends JPanel {
 	 */	
 	public JCheckBox getShowLabelsMenuItem() {
 		return _showLabelsMenuItem;
+	}
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
+		this.setBackground(backgroundColor);
+		this._mainButtonPanel.setBackground(backgroundColor.darker());
+		this._mainButtonPanel.setForeground(foregroundColor);
 	}
 
 }

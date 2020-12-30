@@ -1004,4 +1004,5 @@ public class AcideFileEditorDisplayOptionsWindow extends JFrame {
 			_displayArea.setForeground(Color.BLACK);
 		}
 	}
+	
 }

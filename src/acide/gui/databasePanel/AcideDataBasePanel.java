@@ -41,9 +41,11 @@ package acide.gui.databasePanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -66,6 +68,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -185,7 +188,7 @@ public class AcideDataBasePanel extends JPanel {
 	/**
 	 * ACIDE - database panel menu bar
 	 */
-	private JMenuBar menuBar;
+	private dataBaseBar menuBar;
 	
 	/**
 	 * ACIDE - name of the current container 
@@ -228,7 +231,7 @@ public class AcideDataBasePanel extends JPanel {
 	 */
 	public AcideDataBasePanel() {
 
-
+		menuBar = new dataBaseBar();
 		// Sets the layout
 		setLayout(new BorderLayout());
 
@@ -363,6 +366,7 @@ public class AcideDataBasePanel extends JPanel {
 		_mainButtonPanel.setLayout(new BorderLayout());
 		// creates the sub button panel 1
 		JPanel subButtonPanel1 = new JPanel();
+		subButtonPanel1.setOpaque(false);
 		// adds the layout to the sub button panel
 		subButtonPanel1.setLayout(new FlowLayout());
 		// adds the sub button panel to the main button panel
@@ -1248,6 +1252,12 @@ public class AcideDataBasePanel extends JPanel {
 					}
 
 					_popUp = ((AcideDataBaseNodes)selectedNode).getPopUp();
+					Component[] men = _popUp.getComponents();
+					for(Component c:men) {
+						c.getClass().cast(c).setBackground(menuBar.getBackColor().darker());
+						c.getClass().cast(c).setForeground(menuBar.getColorFont());
+						((JComponent) c.getClass().cast(c)).setOpaque(true);
+					}
 					_popUp.show(arg0.getComponent(), arg0.getX(), arg0.getY() );
 				}
 				else {
@@ -1519,7 +1529,7 @@ public class AcideDataBasePanel extends JPanel {
 	 * 
 	 */
 	public void buildMenuBar() {
-		menuBar = new JMenuBar();
+		menuBar = new dataBaseBar();
 		
 		// Creates the icon for the panel
 		JLabel menu = new JLabel();
@@ -1529,6 +1539,7 @@ public class AcideDataBasePanel extends JPanel {
 		
 		// Creates the label for the name of the panel
 		JLabel name = new JLabel();
+		name.setForeground(this.menuBar.getColorFont());
 		// Adds the label of the name of the panel
 		menuBar.add(name);
 		// Sets the text of the name of the panel
@@ -1659,6 +1670,12 @@ public class AcideDataBasePanel extends JPanel {
 	public void changeColor(Color backGroundColor, Color foreGroundColor) {
 		this._tree.setBackground(backGroundColor);
 		this._tree.setForeground(foreGroundColor);
+		this.menuBar.setBackColor(backGroundColor.darker());
+		for(Component m:this.menuBar.getComponents()) {
+			m.setForeground(foreGroundColor);
+		}
+		this.menuBar.repaint();
+		this._mainButtonPanel.setBackground(backGroundColor.darker());
 		((AcideDataBaseTreeCellRenderer)this._tree.getCellRenderer()).setForegroundColor(foreGroundColor);
 		repaint();
 	}
@@ -1669,5 +1686,43 @@ public class AcideDataBasePanel extends JPanel {
 	
 	public Color getForegroundColor() {
 		return this._tree.getForeground();
+	}
+	
+	class dataBaseBar extends JMenuBar{
+		private static final long serialVersionUID = 1L;
+		private Color background;
+		private Color foreground;
+		
+		public dataBaseBar() {
+			super();
+			try {
+			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			this.background = new Color(Integer.parseInt(colorB)).darker();
+			this.foreground = (new Color(Integer.parseInt(colorF)));
+			}catch(Exception e){
+				this.background = Color.WHITE;
+			}
+		}
+		
+		public Color getColorFont() {
+			return foreground;
+		}
+		
+		public Color getBackColor() {
+			return background;
+		}
+		public void setBackColor(Color background) {
+			this.background = background;
+		}
+		
+		@Override
+		protected void paintComponent(java.awt.Graphics g) {
+			super.paintComponent((java.awt.Graphics) g);
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(background);
+			g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+		}
 	}
 }

@@ -41,8 +41,10 @@ package acide.gui.graphPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,6 +61,7 @@ import acide.gui.graphPanel.listeners.AcideGraphPanelZoomSpinnerListener;
 import acide.gui.graphUtils.Node;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
+import acide.resources.AcideResourceManager;
 
 /**
  * ACIDE - A Configurable IDE graph panel.
@@ -91,7 +94,7 @@ public class AcideGraphPanel extends JPanel {
 	/**
 	 * ACIDE - A Configurable IDE menu bar of the graph panel.
 	 */
-	private JMenuBar _menuBar;
+	private graphPanellBar _menuBar;
 	/**
 	 * ACIDE - A Configurable IDE panel for the zoom buttons.
 	 */
@@ -160,7 +163,7 @@ public class AcideGraphPanel extends JPanel {
 	 */
 	public void buildMenuBar() {
 
-		_menuBar = new JMenuBar();
+		_menuBar = new graphPanellBar();
 
 		// Creates the icon for the panel
 		JLabel menu = new JLabel();
@@ -221,6 +224,7 @@ public class AcideGraphPanel extends JPanel {
 		String name = AcideLanguageManager.getInstance().getLabels()
 				.getString("s2231");
 		((JLabel) _menuBar.getComponent(1)).setText(" " + name);
+		((JLabel) _menuBar.getComponent(1)).setForeground(this._menuBar.getColorFont());
 		if (_showLabelsMenuItem != null)
 			_showLabelsMenuItem.setText(AcideLanguageManager.getInstance()
 					.getLabels().getString("s2263"));
@@ -494,8 +498,56 @@ public class AcideGraphPanel extends JPanel {
 		return _RDGButton;
 	}
 	
-	public void setBackgroundColor(Color backgroundColor) {
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
 		this.setBackground(backgroundColor);
-		repaint();
+		this._menuBar.setBackColor(backgroundColor.darker());
+		this._menuBar.setForeground(foregroundColor);
+		this._menuBar.repaint();
+		this._buttonPanel.setBackground(backgroundColor.darker());
+		this._buttonPanel.setForeground(foregroundColor);
+		Component[] c = this._buttonPanel.getComponents();
+		try {
+		for(Component c1:((JPanel)c[1]).getComponents()) {
+			if(c1 instanceof JLabel)
+				((JLabel)c1).setForeground(foregroundColor);
+		}
+		}catch(Exception e) {}
+	}
+	class graphPanellBar extends JMenuBar{
+		private static final long serialVersionUID = 1L;
+		private Color background;
+		private Color foreground;
+		
+		public graphPanellBar() {
+			super();
+			try {
+			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			this.background = new Color(Integer.parseInt(colorB)).darker();
+			this.foreground = (new Color(Integer.parseInt(colorF)));
+			}catch(Exception e){
+				this.background = Color.WHITE;
+			}
+		}
+		
+		public Color getColorFont() {
+			return foreground;
+		}
+		
+		public Color getBackColor() {
+			return background;
+		}
+		public void setBackColor(Color background) {
+			this.background = background;
+		}
+		
+		@Override
+		protected void paintComponent(java.awt.Graphics g) {
+			super.paintComponent((java.awt.Graphics) g);
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(background);
+			g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+		}
 	}
 }

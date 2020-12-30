@@ -41,8 +41,10 @@ package acide.gui.explorerPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -53,6 +55,7 @@ import java.util.ArrayList;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -76,6 +79,7 @@ import acide.gui.explorerPanel.utils.AcideExplorerTreeCellRenderer;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
+import acide.resources.AcideResourceManager;
 
 /**
  * ACIDE - A Configurable IDE explorer panel.
@@ -118,7 +122,7 @@ public class AcideExplorerPanel extends JPanel {
 	/**
 	 * ACIDE - A Configurable IDE explorer panel menu bar.
 	 */
-	private JMenuBar menuBar;
+	private explorePanelBar menuBar;
 	/**
 	 * ACIDE - A Configurable IDE explorer panel name of the container.
 	 */
@@ -653,7 +657,7 @@ public class AcideExplorerPanel extends JPanel {
 	 */
 	public void buildMenuBar() {
 		
-		menuBar = new JMenuBar();
+		menuBar = new explorePanelBar();
 		
 		// Creates the icon for the panel
 		JLabel menu = new JLabel();
@@ -663,6 +667,7 @@ public class AcideExplorerPanel extends JPanel {
 		
 		// Creates the label for the name of the panel
 		JLabel name = new JLabel();
+		name.setForeground(this.menuBar.getColorFont());
 		// Adds the label of the name of the panel
 		menuBar.add(name);
 		// Sets the text of the name of the panel
@@ -716,6 +721,17 @@ public class AcideExplorerPanel extends JPanel {
 	public void setBackgroundColor(Color backgroundColor, Color foreGroundColor) {
 		this._tree.setBackground(backgroundColor);
 		this._tree.setForeground(foreGroundColor);
+		this.menuBar.setBackColor(backgroundColor.darker());
+		for(Component m:this.menuBar.getComponents()) {
+			m.setForeground(foreGroundColor);
+		}
+		this.menuBar.repaint();
+		Component[] men = this._popupMenu.getComponents();
+		for(Component c:men) {
+			c.getClass().cast(c).setBackground(backgroundColor.darker());
+			c.getClass().cast(c).setForeground(foreGroundColor);
+			((JComponent) c.getClass().cast(c)).setOpaque(true);
+		}
 		((AcideExplorerTreeCellRenderer)this._tree.getCellRenderer()).setForegroundColor(foreGroundColor);
 		repaint();
 	}
@@ -727,7 +743,43 @@ public class AcideExplorerPanel extends JPanel {
 		return this._tree.getForeground();
 	}
 	
-	
+	class explorePanelBar extends JMenuBar{
+		private static final long serialVersionUID = 1L;
+		private Color background;
+		private Color foreground;
+		
+		public explorePanelBar() {
+			super();
+			try {
+			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			this.background = new Color(Integer.parseInt(colorB)).darker();
+			this.foreground = (new Color(Integer.parseInt(colorF)));
+			}catch(Exception e){
+				this.background = Color.WHITE;
+			}
+		}
+		
+		public Color getColorFont() {
+			return foreground;
+		}
+		
+		public Color getBackColor() {
+			return background;
+		}
+		public void setBackColor(Color background) {
+			this.background = background;
+		}
+		
+		@Override
+		protected void paintComponent(java.awt.Graphics g) {
+			super.paintComponent((java.awt.Graphics) g);
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(background);
+			g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+		}
+	}
 	
 	
 }

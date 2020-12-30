@@ -213,12 +213,10 @@ public class AcideThemesConfigurationWindow extends JFrame {
 					.getActiveTextEditionArea().getFont().getFamily();
 
 			// Gets the initial foreground color from the selected file editor
-			_initialForegroundColor = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
-					.getActiveTextEditionArea().getForeground();
+			_initialForegroundColor = AcideMainWindow.getInstance().getExplorerPanel().getTree().getForeground();
 
 			// Gets the initial background color from the selected file editor
-			_initialBackgroundColor = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
-					.getActiveTextEditionArea().getBackground();
+			_initialBackgroundColor = AcideMainWindow.getInstance().getExplorerPanel().getTree().getBackground();
 		}
 
 		// Builds the window components
@@ -578,7 +576,7 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			// Apply the changes to the opened file editor panels
 			AcideMainWindow.getInstance().getFileEditorManager().setBackground(_displayArea.getBackground());
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
-			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(_displayArea.getBackground());
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(_displayArea.getBackground().darker());
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(_displayArea.getForeground());
 			for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
 					.getNumberOfFileEditorPanels(); index++) {
@@ -589,15 +587,17 @@ public class AcideThemesConfigurationWindow extends JFrame {
 						.getActiveTextEditionArea().setBackground(_displayArea.getBackground());
 				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index)
 						.getActiveTextEditionArea().setForeground(_displayArea.getForeground());
+				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(_displayArea.getBackground(), _displayArea.getForeground());
 			}
+			
 			//Apply changes to toolbar
-			AcideMainWindow.getInstance().getToolBarPanel().changeColor(_displayArea.getBackground(), _displayArea.getForeground());
+			AcideMainWindow.getInstance().getToolBarPanel().changeColor(_displayArea.getBackground().darker(), _displayArea.getForeground());
 			
 			//Apply changes to statusBar
-			AcideMainWindow.getInstance().getStatusBar().changeColor(_displayArea.getBackground(), _displayArea.getForeground());
+			AcideMainWindow.getInstance().getStatusBar().changeColor(_displayArea.getBackground().darker(), _displayArea.getForeground());
 			
 			// Apply changes to menuBar
-			AcideMainWindow.getInstance().getMenu().paintMenuBar(_displayArea.getBackground(), _displayArea.getForeground());
+			AcideMainWindow.getInstance().getMenu().paintMenuBar(_displayArea.getBackground().darker(), _displayArea.getForeground());
 
 			// Apply changes to the database panel
 			AcideMainWindow.getInstance().getDataBasePanel().changeColor(_displayArea.getBackground(),
@@ -610,13 +610,13 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			// Apply changes to debugPanel
 			AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(_displayArea.getBackground(),
 					_displayArea.getForeground());
-			AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(_displayArea.getBackground());
+			AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(_displayArea.getBackground(),
+					_displayArea.getForeground());
 
 			// Apply changes to the console panel
-			AcideMainWindow.getInstance().getConsolePanel().getTextPane().setBackground(_displayArea.getBackground());
+			AcideMainWindow.getInstance().getConsolePanel().changeColor(_displayArea.getBackground(), _displayArea.getForeground());
 			AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
 					Integer.toString(_displayArea.getBackground().getRGB()));
-			AcideMainWindow.getInstance().getConsolePanel().getTextPane().setForeground(_displayArea.getForeground());
 			AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
 					Integer.toString(_displayArea.getForeground().getRGB()));
 

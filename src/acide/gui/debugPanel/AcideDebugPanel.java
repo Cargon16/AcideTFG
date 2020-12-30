@@ -41,7 +41,9 @@ package acide.gui.debugPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +51,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -62,6 +65,7 @@ import acide.gui.debugPanel.traceSQLPanel.AcideTraceSQLPanel;
 import acide.gui.debugPanel.debugSQLPanel.AcideDebugSQLPanel;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
+import acide.resources.AcideResourceManager;
 
 /**
  * ACIDE - A Configurable IDE debug panel.
@@ -90,7 +94,7 @@ public class AcideDebugPanel extends JPanel {
 	/**
 	 * ACIDE - A Configurable IDE menu bar of the debug panel.
 	 */
-	private JMenuBar _menuBar;
+	private debugPanelBar _menuBar;
 	/**
 	 * ACIDE - A Configurable IDE debug panel default size.
 	 */
@@ -151,7 +155,6 @@ public class AcideDebugPanel extends JPanel {
 	 */
 	public void buildTabbedPane() {
 		_tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		
 		// creates the trace datalog panel
 		_traceDatalogPanel = new AcideTraceDatalogPanel();
 		// adds the trace datalog panel
@@ -183,7 +186,7 @@ public class AcideDebugPanel extends JPanel {
 	 */
 	public void buildMenuBar() {
 
-		_menuBar = new JMenuBar();
+		_menuBar = new debugPanelBar();
 
 		// Creates the icon for the panel
 		JLabel menu = new JLabel();
@@ -253,6 +256,7 @@ public class AcideDebugPanel extends JPanel {
 		String name = AcideLanguageManager.getInstance().getLabels()
 				.getString("s2243");
 		((JLabel) _menuBar.getComponent(1)).setText(" " + name);
+		((JLabel) _menuBar.getComponent(1)).setForeground(this._menuBar.getColorFont());
 		if (_tabbedPane != null) {
 			if (_tabbedPane.getTitleAt(_traceDatalogPanelIndex) != null)
 				_tabbedPane.setTitleAt(_traceDatalogPanelIndex,
@@ -503,15 +507,61 @@ public class AcideDebugPanel extends JPanel {
 	}
 
 	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
-		this.setBackground(backgroundColor);
-		this.setForeground(foregroundColor);
-		this._traceDatalogPanel.setBackground(backgroundColor);
-		this._traceDatalogPanel.setForeground(foregroundColor);
-		this._debugSQLPanel.setBackgroundColor(backgroundColor);
-		this._debugSQLPanel.setForeground(foregroundColor);
-		this._traceSQLPanel.setBackground(backgroundColor);
-		this._traceSQLPanel.setForeground(foregroundColor);
+		this.getTabbedPane().setOpaque(true);
+		this.getTabbedPane().setBackground(backgroundColor.darker());
+		//this.getTabbedPane().setForeground(foregroundColor);
+		for(int i =0; i < this.getTabbedPane().getTabCount(); ++i) {
+			//this.getTabbedPane().setBackgroundAt(i, backgroundColor);
+		}
 		
+		//this.getTabbedPane().repaint();
+		this._menuBar.setBackColor(backgroundColor.darker());
+		this._menuBar.setForeground(foregroundColor);
+		for(Component m:this._menuBar.getComponents()) {
+			m.setForeground(foregroundColor);
+		}
+		this._menuBar.repaint();
+		this._debugSQLPanel.setBackgroundColor(backgroundColor, foregroundColor);
+		this._traceSQLPanel.setBackgroundColor(backgroundColor, foregroundColor);
+		this._traceDatalogPanel.setBackgroundColor(backgroundColor, foregroundColor);
 		repaint();
+	}
+	
+	class debugPanelBar extends JMenuBar{
+		private static final long serialVersionUID = 1L;
+		private Color background;
+		private Color foreground;
+		
+		public debugPanelBar() {
+			super();
+			try {
+			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			this.background = new Color(Integer.parseInt(colorB)).darker();
+			this.foreground = (new Color(Integer.parseInt(colorF)));
+			}catch(Exception e){
+				this.background = Color.WHITE;
+			}
+		}
+		
+		public Color getColorFont() {
+			return foreground;
+		}
+		
+		public Color getBackColor() {
+			return background;
+		}
+		public void setBackColor(Color background) {
+			this.background = background;
+		}
+		
+		@Override
+		protected void paintComponent(java.awt.Graphics g) {
+			super.paintComponent((java.awt.Graphics) g);
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(background);
+			g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+		}
 	}
 }

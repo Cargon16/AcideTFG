@@ -40,10 +40,13 @@
 package acide.gui.fileEditor.fileEditorPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.text.BadLocationException;
@@ -102,8 +105,7 @@ public class AcideFileEditorPanel extends JPanel {
 	 */
 	private AcideFileEditorPopupMenu _popupMenu;
 	/**
-	 * ACIDE - A Configurable IDE file editor panel styled document for the
-	 * files.
+	 * ACIDE - A Configurable IDE file editor panel styled document for the files.
 	 */
 	private AcideFileEditorStyledDocument _styledDocument;
 	/**
@@ -111,8 +113,8 @@ public class AcideFileEditorPanel extends JPanel {
 	 */
 	private AcideFileEditorPanelDocumentListener _documentListener;
 	/**
-	 * ACIDE - A Configurable IDE file editor panel flag that indicates the
-	 * active text edition area index.
+	 * ACIDE - A Configurable IDE file editor panel flag that indicates the active
+	 * text edition area index.
 	 */
 	private int _activeTextEditionAreaIndex;
 	/**
@@ -120,13 +122,13 @@ public class AcideFileEditorPanel extends JPanel {
 	 */
 	private JSplitPane _horizontalSplitPane;
 	/**
-	 * ACIDE - A Configurable IDE file editor panel flag that indicates if the
-	 * file is main.
+	 * ACIDE - A Configurable IDE file editor panel flag that indicates if the file
+	 * is main.
 	 */
 	private boolean _isMainFile;
 	/**
-	 * ACIDE - A Configurable IDE file editor panel flag that indicates if the
-	 * file is compilable.
+	 * ACIDE - A Configurable IDE file editor panel flag that indicates if the file
+	 * is compilable.
 	 */
 	private boolean _isCompilableFile;
 	/**
@@ -144,45 +146,31 @@ public class AcideFileEditorPanel extends JPanel {
 	 */
 	private AcideLexiconConfiguration _lexiconConfiguration;
 	/**
-	 * ACIDE - A Configurable IDE file editor panel previous grammar
-	 * configuration.
+	 * ACIDE - A Configurable IDE file editor panel previous grammar configuration.
 	 */
 	private AcideGrammarConfiguration _previousGrammarConfiguration;
 	/**
-	 * ACIDE - A Configurable IDE file editor panel current grammar
-	 * configuration.
+	 * ACIDE - A Configurable IDE file editor panel current grammar configuration.
 	 */
 	private AcideGrammarConfiguration _currentGrammarConfiguration;
-	
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE file editor panel.
 	 * 
-	 * @param lastSize
-	 *            last size.
-	 * @param lastChange
-	 *            last change.
+	 * @param lastSize                     last size.
+	 * @param lastChange                   last change.
 	 * 
-	 * @param activeTextEditionAreaIndex
-	 *            active text edition area index
-	 * @param isEditable
-	 *            is editable flag.
-	 * @param filePath
-	 *            file path.
-	 * @param splitPaneDividerLocation
-	 *            split pane divider location.
-	 * @param lexiconConfiguration
-	 *            lexicon configuration.
-	 * @param currentGrammarConfiguration
-	 *            current grammar configuration.
-	 * @param previousGrammarConfiguration
-	 *            previous grammar configuration.
+	 * @param activeTextEditionAreaIndex   active text edition area index
+	 * @param isEditable                   is editable flag.
+	 * @param filePath                     file path.
+	 * @param splitPaneDividerLocation     split pane divider location.
+	 * @param lexiconConfiguration         lexicon configuration.
+	 * @param currentGrammarConfiguration  current grammar configuration.
+	 * @param previousGrammarConfiguration previous grammar configuration.
 	 */
-	public AcideFileEditorPanel(String filePath, boolean isEditable,
-			long lastChange, long lastSize, int activeTextEditionAreaIndex,
-			int splitPaneDividerLocation,
-			AcideLexiconConfiguration lexiconConfiguration,
-			AcideGrammarConfiguration currentGrammarConfiguration,
+	public AcideFileEditorPanel(String filePath, boolean isEditable, long lastChange, long lastSize,
+			int activeTextEditionAreaIndex, int splitPaneDividerLocation,
+			AcideLexiconConfiguration lexiconConfiguration, AcideGrammarConfiguration currentGrammarConfiguration,
 			AcideGrammarConfiguration previousGrammarConfiguration) {
 
 		super();
@@ -214,9 +202,7 @@ public class AcideFileEditorPanel extends JPanel {
 			_previousGrammarConfiguration = previousGrammarConfiguration;
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s317"));
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s317"));
 
 			// Creates the text edition panel list
 			_textEditionAreaList = new ArrayList<AcideFileEditorTextEditionArea>();
@@ -225,8 +211,7 @@ public class AcideFileEditorPanel extends JPanel {
 			_documentListener = new AcideFileEditorPanelDocumentListener();
 
 			// Creates the styled document
-			_styledDocument = new AcideFileEditorStyledDocument(
-					_lexiconConfiguration);
+			_styledDocument = new AcideFileEditorStyledDocument(_lexiconConfiguration);
 
 			// Puts the name property
 			_styledDocument.putProperty("name", getFileNameWithExtension());
@@ -241,15 +226,13 @@ public class AcideFileEditorPanel extends JPanel {
 			for (int index = 0; index < NUM_TEXT_EDITORS; index++) {
 
 				// Adds the new file editor text edition area to the list
-				_textEditionAreaList.add(new AcideFileEditorTextEditionArea(
-						_styledDocument));
-				
+				_textEditionAreaList.add(new AcideFileEditorTextEditionArea(_styledDocument));
+
 			}
 
 			// Creates the split horizontal pane
 			_horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-					_textEditionAreaList.get(0).getScrollPane(),
-					_textEditionAreaList.get(1).getScrollPane());
+					_textEditionAreaList.get(0).getScrollPane(), _textEditionAreaList.get(1).getScrollPane());
 
 			// Sets the horizontal split pane divider location
 			_horizontalSplitPane.setDividerLocation(splitPaneDividerLocation);
@@ -261,16 +244,12 @@ public class AcideFileEditorPanel extends JPanel {
 			add(_horizontalSplitPane);
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s318"));
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s318"));
 
 		} catch (Exception exception) {
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s319"));
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s319"));
 			exception.printStackTrace();
 		}
 	}
@@ -283,51 +262,45 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel active text
-	 * edition panel.
+	 * Returns the ACIDE - A Configurable IDE file editor panel active text edition
+	 * panel.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel active text
-	 *         edition panel.
+	 * @return the ACIDE - A Configurable IDE file editor panel active text edition
+	 *         panel.
 	 */
 	public AcideTextComponent getActiveTextEditionArea() {
-		return _textEditionAreaList.get(_activeTextEditionAreaIndex)
-				.getTextComponent();
+		return _textEditionAreaList.get(_activeTextEditionAreaIndex).getTextComponent();
 	}
-	
+
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel active text
-	 * edition panel line number component.
+	 * Returns the ACIDE - A Configurable IDE file editor panel active text edition
+	 * panel line number component.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel active text
-	 *         edition panel line number component.
+	 * @return the ACIDE - A Configurable IDE file editor panel active text edition
+	 *         panel line number component.
 	 */
 	public AcideLineNumberComponent2 getActiveTextEditionAreaLineNumberComponent() {
 		return _textEditionAreaList.get(_activeTextEditionAreaIndex).getLineNumberPanel();
 	}
 
 	/**
-	 * Sets the file content given as a parameter into all the text edition
-	 * areas of the file editor panel.
+	 * Sets the file content given as a parameter into all the text edition areas of
+	 * the file editor panel.
 	 * 
-	 * @param fileContent
-	 *            file content to set.
+	 * @param fileContent file content to set.
 	 */
 	public void setFileContent(final String fileContent) {
 
-		
 		for (int index = 0; index < NUM_TEXT_EDITORS; index++) {
 
 			// Removes the document listener
-			_textEditionAreaList.get(index).getTextComponent().getDocument()
-					.removeDocumentListener(_documentListener);
+			_textEditionAreaList.get(index).getTextComponent().getDocument().removeDocumentListener(_documentListener);
 
 			// Sets the text content
-			_textEditionAreaList.get(index).getTextComponent()
-					.setText(fileContent);
+			_textEditionAreaList.get(index).getTextComponent().setText(fileContent);
 
 			// Adds the document listener
-			_textEditionAreaList.get(index).getTextComponent().getDocument()
-					.addDocumentListener(_documentListener);
+			_textEditionAreaList.get(index).getTextComponent().getDocument().addDocumentListener(_documentListener);
 		}
 
 		// Updates the file disk copy with the new content
@@ -340,10 +313,8 @@ public class AcideFileEditorPanel extends JPanel {
 	/**
 	 * Selects a text in both editors.
 	 * 
-	 * @param start
-	 *            selection start.
-	 * @param length
-	 *            selection length.
+	 * @param start  selection start.
+	 * @param length selection length.
 	 */
 	public void selectText(int start, int length) {
 
@@ -367,8 +338,7 @@ public class AcideFileEditorPanel extends JPanel {
 	/**
 	 * Sets the caret at the start of a line.
 	 * 
-	 * @param line
-	 *            line to put the caret on.
+	 * @param line line to put the caret on.
 	 */
 	public void goToLine(int line) {
 
@@ -376,39 +346,35 @@ public class AcideFileEditorPanel extends JPanel {
 		AcideTextComponent activeTextEditionArea = getActiveTextEditionArea();
 
 		// Calculates the line
-		Element root = activeTextEditionArea.getDocument()
-				.getDefaultRootElement();
+		Element root = activeTextEditionArea.getDocument().getDefaultRootElement();
 		line = Math.max(line, 1);
 		line = Math.min(line, root.getElementCount());
 
 		// Puts the caret at the beginning of the line
-		activeTextEditionArea.setCaretPosition(root.getElement(line - 1)
-				.getStartOffset());
+		activeTextEditionArea.setCaretPosition(root.getElement(line - 1).getStartOffset());
 	}
 
 	/**
 	 * <p>
-	 * Returns the ACIDE - A Configurable IDE file editor panel text edition
-	 * area content.
+	 * Returns the ACIDE - A Configurable IDE file editor panel text edition area
+	 * content.
 	 * </p>
 	 * <p>
 	 * Returns the content from the document to avoid "\r\n" extra.
 	 * </p>
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel text edition
-	 *         area content.
+	 * @return the ACIDE - A Configurable IDE file editor panel text edition area
+	 *         content.
 	 */
 	public String getTextEditionAreaContent() {
 
 		// Gets the document length
-		int documentLength = _textEditionAreaList
-				.get(_activeTextEditionAreaIndex).getTextComponent()
-				.getDocument().getLength();
+		int documentLength = _textEditionAreaList.get(_activeTextEditionAreaIndex).getTextComponent().getDocument()
+				.getLength();
 
 		try {
-			return _textEditionAreaList.get(_activeTextEditionAreaIndex)
-					.getTextComponent().getDocument()
-					.getText(0, documentLength);
+			return _textEditionAreaList.get(_activeTextEditionAreaIndex).getTextComponent().getDocument().getText(0,
+					documentLength);
 		} catch (BadLocationException exception) {
 
 			// Updates the log
@@ -418,52 +384,47 @@ public class AcideFileEditorPanel extends JPanel {
 
 		return "";
 	}
-	
+
 	/**
 	 * <p>
-	 * Returns the ACIDE - A Configurable IDE file editor panel text edition
-	 * area content selected by the user.
+	 * Returns the ACIDE - A Configurable IDE file editor panel text edition area
+	 * content selected by the user.
 	 * </p>
 	 * <p>
 	 * Returns the selected content from the document.
 	 * </p>
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel text edition
-	 *         area content selected by the user.
+	 * @return the ACIDE - A Configurable IDE file editor panel text edition area
+	 *         content selected by the user.
 	 */
 	public String getTextEditionAreaContentSelected() {
 		String content = "";
-		content = _textEditionAreaList
-			.get(_activeTextEditionAreaIndex).getTextComponent()
-			.getSelectedText();
+		content = _textEditionAreaList.get(_activeTextEditionAreaIndex).getTextComponent().getSelectedText();
 
 		return content;
 	}
-	
+
 	/**
 	 * <p>
-	 * Returns the ACIDE - A Configurable IDE caret position of the file editor 
+	 * Returns the ACIDE - A Configurable IDE caret position of the file editor
 	 * panel text edition area.
 	 * </p>
 	 * <p>
 	 * Returns the caret position from the document.
 	 * </p>
 	 * 
-	 * @return the ACIDE - A Configurable IDE caret position file editor panel 
-	 * text edition area.
+	 * @return the ACIDE - A Configurable IDE caret position file editor panel text
+	 *         edition area.
 	 */
 	public int getTextEditionAreaCaretPosition() {
-		return _textEditionAreaList.get(_activeTextEditionAreaIndex)
-				.getTextComponent().getCaretPosition();
+		return _textEditionAreaList.get(_activeTextEditionAreaIndex).getTextComponent().getCaretPosition();
 	}
-	
 
 	/**
 	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel file
 	 * path.
 	 * 
-	 * @param path
-	 *            new value to set.
+	 * @param path new value to set.
 	 */
 	public void setAbsolutePath(String path) {
 
@@ -472,22 +433,18 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel absolute file
-	 * path.
+	 * Returns the ACIDE - A Configurable IDE file editor panel absolute file path.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel absolute file
-	 *         path.
+	 * @return the ACIDE - A Configurable IDE file editor panel absolute file path.
 	 */
 	public String getAbsolutePath() {
 		return _path;
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel relative file
-	 * path.
+	 * Returns the ACIDE - A Configurable IDE file editor panel relative file path.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel relative file
-	 *         path.
+	 * @return the ACIDE - A Configurable IDE file editor panel relative file path.
 	 */
 	public String getFilePath() {
 
@@ -513,12 +470,12 @@ public class AcideFileEditorPanel extends JPanel {
 
 	/**
 	 * <p>
-	 * Returns the ACIDE - A Configurable IDE file editor panel file name
-	 * without the file extension.
+	 * Returns the ACIDE - A Configurable IDE file editor panel file name without
+	 * the file extension.
 	 * </p>
 	 * <p>
-	 * This method is exclusively invoked by those methods and classes that
-	 * executes commands in the ACIDE - A Configurable IDE console panel.
+	 * This method is exclusively invoked by those methods and classes that executes
+	 * commands in the ACIDE - A Configurable IDE console panel.
 	 * </p>
 	 * <p>
 	 * For instance {@link AcideConsolePanel},
@@ -526,8 +483,8 @@ public class AcideFileEditorPanel extends JPanel {
 	 * {@link AcideExecutionConfigurationWindow}
 	 * </p>
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel file name
-	 *         without the file extension.
+	 * @return the ACIDE - A Configurable IDE file editor panel file name without
+	 *         the file extension.
 	 */
 	public String getFileNameWithoutExtension() {
 
@@ -545,11 +502,11 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel file name,
-	 * extension included.
+	 * Returns the ACIDE - A Configurable IDE file editor panel file name, extension
+	 * included.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel file name,
-	 *         extension included.
+	 * @return the ACIDE - A Configurable IDE file editor panel file name, extension
+	 *         included.
 	 */
 	public String getFileNameWithExtension() {
 
@@ -576,8 +533,7 @@ public class AcideFileEditorPanel extends JPanel {
 	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel last
 	 * change.
 	 * 
-	 * @param lastChange
-	 *            New value to set.
+	 * @param lastChange New value to set.
 	 */
 	public void setLastChange(long lastChange) {
 		_lastChange = lastChange;
@@ -595,30 +551,27 @@ public class AcideFileEditorPanel extends JPanel {
 	/**
 	 * Sets the modifiable feature of the editors to false or true.
 	 * 
-	 * @param editable
-	 *            new value to set.
+	 * @param editable new value to set.
 	 */
 	public void setEditable(boolean editable) {
-		_textEditionAreaList.get(_activeTextEditionAreaIndex)
-				.getTextComponent().setEditable(editable);
+		_textEditionAreaList.get(_activeTextEditionAreaIndex).getTextComponent().setEditable(editable);
 	}
 
 	/**
 	 * Sets a new value to the last size.
 	 * 
-	 * @param lastSize
-	 *            new value to set.
+	 * @param lastSize new value to set.
 	 */
 	public void setLastSize(long lastSize) {
 		_lastSize = lastSize;
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel is compilable
-	 * file flag.
+	 * Returns the ACIDE - A Configurable IDE file editor panel is compilable file
+	 * flag.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel is compilable
-	 *         file flag.
+	 * @return the ACIDE - A Configurable IDE file editor panel is compilable file
+	 *         flag.
 	 */
 	public boolean isCompilableFile() {
 		return _isCompilableFile;
@@ -628,30 +581,26 @@ public class AcideFileEditorPanel extends JPanel {
 	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel is
 	 * compilable flag.
 	 * 
-	 * @param compilableFile
-	 *            new value to set.
+	 * @param compilableFile new value to set.
 	 */
 	public void setCompilableFile(boolean compilableFile) {
 		_isCompilableFile = compilableFile;
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel is main file
-	 * flag.
+	 * Returns the ACIDE - A Configurable IDE file editor panel is main file flag.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel is main file
-	 *         flag.
+	 * @return the ACIDE - A Configurable IDE file editor panel is main file flag.
 	 */
 	public boolean isMainFile() {
 		return _isMainFile;
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel is
-	 * main file flag.
+	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel is main
+	 * file flag.
 	 * 
-	 * @param mainFile
-	 *            new value to set.
+	 * @param mainFile new value to set.
 	 */
 	public void setMainFile(boolean mainFile) {
 		_isMainFile = mainFile;
@@ -667,11 +616,9 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel
-	 * icon.
+	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel icon.
 	 * 
-	 * @param icon
-	 *            new value to set.
+	 * @param icon new value to set.
 	 */
 	public void setIcon(ImageIcon icon) {
 		_icon = icon;
@@ -687,11 +634,11 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel active text
-	 * edition area index.
+	 * Returns the ACIDE - A Configurable IDE file editor panel active text edition
+	 * area index.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel active text
-	 *         edition area index.
+	 * @return the ACIDE - A Configurable IDE file editor panel active text edition
+	 *         area index.
 	 */
 	public int getActiveTextEditionAreaIndex() {
 		return _activeTextEditionAreaIndex;
@@ -707,15 +654,14 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Returns true if the opened file in the editor is the new file and false
-	 * in other case.
+	 * Returns true if the opened file in the editor is the new file and false in
+	 * other case.
 	 * 
-	 * @return true if the opened file in the editor is the new file and false
-	 *         in other case.
+	 * @return true if the opened file in the editor is the new file and false in
+	 *         other case.
 	 */
 	public boolean isNewFile() {
-		return _path.equals(AcideLanguageManager.getInstance().getLabels()
-				.getString("s79"));
+		return _path.equals(AcideLanguageManager.getInstance().getLabels().getString("s79"));
 	}
 
 	/**
@@ -732,8 +678,7 @@ public class AcideFileEditorPanel extends JPanel {
 	/**
 	 * Sets a new value to the active text edition area.
 	 * 
-	 * @param activeTextEditionAreaIndex
-	 *            new value to set.
+	 * @param activeTextEditionAreaIndex new value to set.
 	 */
 	public void setActiveTextEditionAreaIndex(int activeTextEditionAreaIndex) {
 
@@ -742,11 +687,11 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel text edition
-	 * panel list.
+	 * Returns the ACIDE - A Configurable IDE file editor panel text edition panel
+	 * list.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel text edition
-	 *         panel list.
+	 * @return the ACIDE - A Configurable IDE file editor panel text edition panel
+	 *         list.
 	 */
 	public ArrayList<AcideFileEditorTextEditionArea> getTextEditionPanelList() {
 		return _textEditionAreaList;
@@ -762,11 +707,10 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Sets a new value for the ACIDE - A Configurable IDE file editor panel
-	 * file disk copy.
+	 * Sets a new value for the ACIDE - A Configurable IDE file editor panel file
+	 * disk copy.
 	 * 
-	 * @param fileDiskCopy
-	 *            new value to set.
+	 * @param fileDiskCopy new value to set.
 	 */
 	public void setFileDiskCopy(String fileDiskCopy) {
 		_fileDiskCopy = "" + fileDiskCopy;
@@ -785,15 +729,14 @@ public class AcideFileEditorPanel extends JPanel {
 
 	/**
 	 * Checks if the file content given as a parameter is equal to the file copy
-	 * disk. This method is used to determine if the file has been modified in
-	 * order to set the green button or the red button to an opened file in the
-	 * file editor.
+	 * disk. This method is used to determine if the file has been modified in order
+	 * to set the green button or the red button to an opened file in the file
+	 * editor.
 	 * 
-	 * @param fileContent
-	 *            text to compare within.
+	 * @param fileContent text to compare within.
 	 * 
-	 * @return true if the text given as a parameter is equal to the file disk
-	 *         copy and false in other case.
+	 * @return true if the text given as a parameter is equal to the file disk copy
+	 *         and false in other case.
 	 */
 	public boolean isEqualToFileDiskCopy(String fileContent) {
 
@@ -815,20 +758,17 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Zooms in or out the font size of all the text editors depending on a
-	 * boolean variable given as a parameter. Also the increment is given as
-	 * parameter as well.
+	 * Zooms in or out the font size of all the text editors depending on a boolean
+	 * variable given as a parameter. Also the increment is given as parameter as
+	 * well.
 	 * 
-	 * @param zoom
-	 *            increment to apply.
-	 * @param hasToIncrement
-	 *            indicates if the zoom is in or out.
+	 * @param zoom           increment to apply.
+	 * @param hasToIncrement indicates if the zoom is in or out.
 	 */
 	public void zoomFont(int zoom, boolean hasToIncrement) {
 
 		// Gets the current font
-		Font currentFont = _textEditionAreaList.get(0).getTextComponent()
-				.getFont();
+		Font currentFont = _textEditionAreaList.get(0).getTextComponent().getFont();
 
 		// Creates the new font
 		Font newFont;
@@ -837,19 +777,16 @@ public class AcideFileEditorPanel extends JPanel {
 		if (hasToIncrement) {
 
 			// Sets the new font
-			newFont = new Font(currentFont.getFontName(),
-					currentFont.getStyle(), currentFont.getSize() + zoom);
+			newFont = new Font(currentFont.getFontName(), currentFont.getStyle(), currentFont.getSize() + zoom);
 		} else {
 
 			// Sets the new font
-			newFont = new Font(currentFont.getFontName(),
-					currentFont.getStyle(), currentFont.getSize() - zoom);
+			newFont = new Font(currentFont.getFontName(), currentFont.getStyle(), currentFont.getSize() - zoom);
 		}
-		
+
 		// Updates the ACIDE - A Configurable IDE file editor
 		// configuration font size
-		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration()
-				.setFontSize(newFont.getSize());
+		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setFontSize(newFont.getSize());
 
 		for (int index = 0; index < NUM_TEXT_EDITORS; index++) {
 
@@ -861,22 +798,20 @@ public class AcideFileEditorPanel extends JPanel {
 	/**
 	 * Sets the edition mode in the text edition area for both text editors.
 	 * 
-	 * @param editionMode
-	 *            new value to set.
+	 * @param editionMode new value to set.
 	 */
 	public void setEditionMode(final boolean editionMode) {
 
 		for (int index = 0; index < _textEditionAreaList.size(); index++)
-			_textEditionAreaList.get(index).getTextComponent()
-					.setEditionMode(editionMode);
+			_textEditionAreaList.get(index).getTextComponent().setEditionMode(editionMode);
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE file editor panel edition mode in
-	 * the text edition area.
+	 * Returns the ACIDE - A Configurable IDE file editor panel edition mode in the
+	 * text edition area.
 	 * 
-	 * @return the ACIDE - A Configurable IDE file editor panel edition mode in
-	 *         the text edition area.
+	 * @return the ACIDE - A Configurable IDE file editor panel edition mode in the
+	 *         text edition area.
 	 */
 	public boolean getEditionMode() {
 		return getActiveTextEditionArea().isOverwriteMode();
@@ -894,14 +829,12 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel
-	 * lexicon configuration.
+	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel lexicon
+	 * configuration.
 	 * 
-	 * @param lexiconConfiguration
-	 *            new value to set.
+	 * @param lexiconConfiguration new value to set.
 	 */
-	public void setLexiconConfiguration(
-			AcideLexiconConfiguration lexiconConfiguration) {
+	public void setLexiconConfiguration(AcideLexiconConfiguration lexiconConfiguration) {
 		_lexiconConfiguration = lexiconConfiguration;
 	}
 
@@ -928,27 +861,31 @@ public class AcideFileEditorPanel extends JPanel {
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel
-	 * current grammar configuration.
+	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel current
+	 * grammar configuration.
 	 * 
-	 * @param currentGrammarConfiguration
-	 *            new value to set.
+	 * @param currentGrammarConfiguration new value to set.
 	 */
-	public void setCurrentGrammarConfiguration(
-			AcideGrammarConfiguration currentGrammarConfiguration) {
+	public void setCurrentGrammarConfiguration(AcideGrammarConfiguration currentGrammarConfiguration) {
 		_currentGrammarConfiguration = currentGrammarConfiguration;
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel
-	 * previous grammar configuration.
+	 * Sets a new value to the ACIDE - A Configurable IDE file editor panel previous
+	 * grammar configuration.
 	 * 
-	 * @param previousGrammarConfiguration
-	 *            new value to set.
+	 * @param previousGrammarConfiguration new value to set.
 	 */
-	public void setPreviousGrammarConfiguration(
-			AcideGrammarConfiguration previousGrammarConfiguration) {
+	public void setPreviousGrammarConfiguration(AcideGrammarConfiguration previousGrammarConfiguration) {
 		_previousGrammarConfiguration = previousGrammarConfiguration;
 	}
-	
+
+	public void changeColor(Color background, Color foreground) {
+		Component[] men = this._popupMenu.getComponents();
+		for (Component c : men) {
+			c.getClass().cast(c).setBackground(background.darker());
+			c.getClass().cast(c).setForeground(foreground);
+			((JComponent) c.getClass().cast(c)).setOpaque(true);
+		}
+	}
 }

@@ -41,8 +41,10 @@ package acide.gui.consolePanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +53,7 @@ import java.io.IOException;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -152,7 +155,7 @@ public class AcideConsolePanel extends JPanel {
 	/**
 	 * ACIDE - A Configurable IDE console menu bar.
 	 */
-	private JMenuBar menuBar;
+	private consolePanelBar menuBar;
 	/**
 	 * ACIDE - A Configurable IDE name of the container.
 	 */
@@ -415,6 +418,7 @@ public class AcideConsolePanel extends JPanel {
 			// Sets the buffer size
 			_bufferSize = Integer.parseInt(AcideResourceManager.getInstance()
 					.getProperty("consolePanel.bufferSize"));
+			
 
 		} catch (NumberFormatException exception) {
 
@@ -1717,7 +1721,7 @@ public class AcideConsolePanel extends JPanel {
 	 */
 	public void buildMenuBar() {
 
-		menuBar = new JMenuBar();
+		menuBar = new consolePanelBar();
 
 		// Creates the icon for the panel
 		JLabel menu = new JLabel();
@@ -1728,6 +1732,7 @@ public class AcideConsolePanel extends JPanel {
 
 		// Creates the label for the name of the panel
 		JLabel name = new JLabel();
+		name.setForeground(this.menuBar.getColorFont());
 		// Adds the label of the name of the panel
 		menuBar.add(name);
 		// Sets the text of the name of the panel
@@ -1889,6 +1894,60 @@ public class AcideConsolePanel extends JPanel {
 			// Updates the log
 			AcideLog.getLog().error(exception.getMessage());
 			exception.printStackTrace();
+		}
+	}
+	
+	public void changeColor(Color background, Color foreground) {
+		this._textPane.setBackground(background);
+		this._textPane.setForeground(foreground);
+		this.menuBar.setBackColor(background.darker());
+		for(Component m:this.menuBar.getComponents()) {
+			m.setForeground(foreground);
+		}
+		this.menuBar.repaint();
+		Component[] men = this._popupMenu.getComponents();
+		for(Component c:men) {
+			c.getClass().cast(c).setBackground(background.darker());
+			c.getClass().cast(c).setForeground(foreground);
+			((JComponent) c.getClass().cast(c)).setOpaque(true);
+		}
+	}
+	
+	class consolePanelBar extends JMenuBar{
+		private static final long serialVersionUID = 1L;
+		private Color background;
+		private Color foreground;
+		
+		public consolePanelBar() {
+			super();
+			try {
+			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			this.background = new Color(Integer.parseInt(colorB)).darker();
+			this.foreground = (new Color(Integer.parseInt(colorF)));
+			}catch(Exception e){
+				this.background = Color.WHITE;
+			}
+		}
+		
+		public Color getColorFont() {
+			return foreground;
+		}
+		
+		public Color getBackColor() {
+			return background;
+		}
+		public void setBackColor(Color background) {
+			this.background = background;
+		}
+		
+		@Override
+		protected void paintComponent(java.awt.Graphics g) {
+			super.paintComponent((java.awt.Graphics) g);
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(background);
+			g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
+
 		}
 	}
 

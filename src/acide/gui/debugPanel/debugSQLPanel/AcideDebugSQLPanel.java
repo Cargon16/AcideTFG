@@ -263,6 +263,7 @@ public class AcideDebugSQLPanel extends JPanel {
 		JPanel subButtonPanel1 = new JPanel();
 		// adds the layout to the sub button panel
 		subButtonPanel1.setLayout(new FlowLayout());
+		subButtonPanel1.setOpaque(false);
 		// adds the sub button panel to the main button panel
 		_mainButtonPanel.add(subButtonPanel1, BorderLayout.NORTH);
 		refreshSQL.setIcon(REFRESH_IMAGE);
@@ -366,6 +367,7 @@ public class AcideDebugSQLPanel extends JPanel {
 		JPanel subButtonPanel2 = new JPanel();
 		// adds the layout to the sub button panel
 		subButtonPanel2.setLayout(new FlowLayout());
+		subButtonPanel2.setOpaque(false);
 		// adds the sub button panel to the main button panel
 		_mainButtonPanel.add(subButtonPanel2, BorderLayout.SOUTH);
 		// Builds the view label
@@ -839,9 +841,15 @@ public class AcideDebugSQLPanel extends JPanel {
 		this.debuging = debuging;
 	}
 	
-	public void setBackgroundColor(Color backgroundColor) {
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
 		this.setBackground(backgroundColor);
-		repaint();
+		this._mainButtonPanel.setBackground(backgroundColor.darker());
+		this._mainButtonPanel.setForeground(foregroundColor);
+		Component[] c = this._mainButtonPanel.getComponents();
+		for(Component c1:((JPanel)c[1]).getComponents()) {
+			if(c1 instanceof JLabel)
+				((JLabel)c1).setForeground(foregroundColor);
+		}
 	}
 
 }
