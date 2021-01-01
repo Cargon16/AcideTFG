@@ -1059,14 +1059,26 @@
                   <__erasable>false</__erasable>
                   <__image></__image>
                 </acide.configuration.menu.AcideMenuSubmenuConfiguration>
-                <acide.configuration.menu.AcideMenuItemConfiguration>
-                 <__command>$THEMES</__command>
-                  <__parameter>None</__parameter>
-                  <__name>Themes</__name>
+                <acide.configuration.menu.AcideMenuSubmenuConfiguration>
+                  <__itemsManager>
+                    <__list>
+                      <__list>
+                        <acide.configuration.menu.AcideMenuItemConfiguration>
+                          <__command>$THEMES</__command>
+                          <__parameter>None</__parameter>
+                          <__name>Themes configuration</__name>
+                          <__visible>true</__visible>
+                          <__erasable>false</__erasable>
+                          <__image>./resources/icons/menu/configuration/paleta.gif</__image>
+                        </acide.configuration.menu.AcideMenuItemConfiguration>
+                      </__list>
+                    </__list>
+                  </__itemsManager>
+                   <__name>Themes</__name>
                   <__visible>true</__visible>
                   <__erasable>false</__erasable>
-                  <__image>./resources/icons/menu/configuration/paleta.png</__image>
-                </acide.configuration.menu.AcideMenuItemConfiguration>
+                  <__image></__image>
+                </acide.configuration.menu.AcideMenuSubmenuConfiguration>
               </__list>
             </__list>
           </__itemsManager>

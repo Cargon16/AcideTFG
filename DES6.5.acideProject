@@ -12,8 +12,8 @@ false
 /q
 true
 
+-16777216
 -1
--10066330
 Monospaced
 0
 12
@@ -21,17 +21,17 @@ Monospaced
 true
 true
 true
-true
-true
+false
+false
 1936
 1056
 -8
 -8
-224
-275
-1600
-800
-488
+239
+290
+1914
+856
+1
 Español
 .\configuration\menu\lastModified.menuConfig
 ./configuration/menu/defaultAllOn.xml

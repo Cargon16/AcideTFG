@@ -39,6 +39,7 @@
  */
 package acide.gui.menuBar.configurationMenu.languageMenu;
 
+import java.awt.Color;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -64,6 +65,7 @@ import acide.gui.menuBar.editMenu.gui.AcideSearchWindow;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
 import acide.resources.AcideResourceManager;
+import acide.resources.exception.MissedPropertyException;
 import acide.utils.IconsUtils;
 
 /**
@@ -245,6 +247,16 @@ public class AcideLanguageMenu extends JMenu {
 		
 		// Updates the database tree
 		updateDataBaseTree();
+		
+		// Updates toolbar
+		try {
+			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			AcideMainWindow.getInstance().getToolBarPanel().changeColor(new Color(Integer.parseInt(colorB)).darker(),
+					new Color(Integer.parseInt(colorF)));
+		} catch (MissedPropertyException e) {}
+		
+		
 		
 		// Updates the explorer panel menu bar
 		AcideMainWindow.getInstance().getExplorerPanel().setTextMenuBar();

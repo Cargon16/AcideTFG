@@ -42,6 +42,7 @@ package acide.gui.menuBar.configurationMenu.themesMenu.gui.themesWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -50,6 +51,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -65,6 +71,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 
@@ -72,6 +79,9 @@ import acide.configuration.project.AcideProjectConfiguration;
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
 import acide.gui.listeners.AcideWindowClosingListener;
 import acide.gui.mainWindow.AcideMainWindow;
+import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
+import acide.gui.menuBar.configurationMenu.menuMenu.gui.configurationPanel.AcideConfigurationMenuPanel;
+import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemesMenu;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
 import acide.resources.AcideResourceManager;
@@ -153,6 +163,13 @@ public class AcideThemesConfigurationWindow extends JFrame {
 	 */
 	private JPanel _buttonPanel;
 	/**
+	 * ACIDE - A Configurable IDE file editor display save options panel.
+	 */
+	private JPanel _SavePanel;
+
+	private JPanel _PanelSouth;
+
+	/**
 	 * ACIDE - A Configurable IDE file editor display options window accept button.
 	 */
 	private JButton _acceptButton;
@@ -161,9 +178,14 @@ public class AcideThemesConfigurationWindow extends JFrame {
 	 */
 	private JButton _cancelButton;
 	/**
+	 * ACIDE - A Configurable IDE file editor display options window cancel button.
+	 */
+	private JButton _saveButton;
+	/**
 	 * ACIDE - A Configurable IDE file editor display options window background
 	 * color label.
 	 */
+
 	private JLabel _backgroundColorLabel;
 	/**
 	 * ACIDE - A Configurable IDE file editor display options window foreground
@@ -190,6 +212,11 @@ public class AcideThemesConfigurationWindow extends JFrame {
 	 * configuration.
 	 */
 	private JButton _restoreDefaultConfiguration;
+
+	/**
+	 * ACIDE - A Configurable IDE console display options window save theme
+	 */
+	private JTextField _themeName;
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE file editor display options window.
@@ -367,8 +394,13 @@ public class AcideThemesConfigurationWindow extends JFrame {
 		// Adds the preview panel to the window
 		add(_previewPanel, BorderLayout.CENTER);
 
-		// Adds the button panel to the window
-		add(_buttonPanel, BorderLayout.SOUTH);
+		this._PanelSouth.setLayout(new BorderLayout());
+
+		_PanelSouth.add(_SavePanel, BorderLayout.NORTH);
+		_PanelSouth.add(_buttonPanel, BorderLayout.SOUTH);
+
+		add(_PanelSouth, BorderLayout.SOUTH);
+
 	}
 
 	/**
@@ -376,6 +408,9 @@ public class AcideThemesConfigurationWindow extends JFrame {
 	 * components.
 	 */
 	private void buildComponents() {
+
+		// Creates the south panel
+		_PanelSouth = new JPanel(new GridBagLayout());
 
 		// Creates the controls panel
 		_controlsPanel = new JPanel(new GridBagLayout());
@@ -416,8 +451,12 @@ public class AcideThemesConfigurationWindow extends JFrame {
 		// Creates the restore default configuration
 		_restoreDefaultConfiguration = new JButton(AcideLanguageManager.getInstance().getLabels().getString("s1095"));
 
+		//
 		// Builds the button panel
 		buildButtonPanel();
+
+		// Builds the save panel
+		buildSavePanel();
 	}
 
 	/**
@@ -440,6 +479,33 @@ public class AcideThemesConfigurationWindow extends JFrame {
 
 		// Adds the cancel button to the button panel
 		_buttonPanel.add(_cancelButton);
+
+	}
+
+	private void buildSavePanel() {
+		// Creates the button panel
+		_SavePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+		_SavePanel.setBorder(
+				BorderFactory.createTitledBorder(AcideLanguageManager.getInstance().getLabels().getString("s40")));
+
+		// Creates the save name label
+		JLabel labelSave = new JLabel(AcideLanguageManager.getInstance().getLabels().getString("s2382"));
+		_SavePanel.add(labelSave);
+
+		// Creates the cancel button
+		_themeName = new JTextField();
+		_themeName.setPreferredSize(new Dimension(100, 20));
+
+		// Adds the cancel button to the button panel
+		_SavePanel.add(_themeName);
+
+		// Creates the save button
+		_saveButton = new JButton(AcideLanguageManager.getInstance().getLabels().getString("s40"));
+
+		// Adds the save button
+		_SavePanel.add(_saveButton);
+
 	}
 
 	/**
@@ -459,6 +525,9 @@ public class AcideThemesConfigurationWindow extends JFrame {
 
 		// Sets the cancel button action listener
 		_cancelButton.addActionListener(new CancelButtonAction());
+
+		// Sets the save button action listener
+		_saveButton.addActionListener(new SaveButtonAction());
 
 		// Sets the restore default configuration action listener
 		_restoreDefaultConfiguration.addActionListener(new RestoreDefaultConfigurationButtonAction());
@@ -576,8 +645,10 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			// Apply the changes to the opened file editor panels
 			AcideMainWindow.getInstance().getFileEditorManager().setBackground(_displayArea.getBackground());
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
-			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(_displayArea.getBackground().darker());
-			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(_displayArea.getForeground());
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane()
+					.setBackground(_displayArea.getBackground().darker());
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane()
+					.setForeground(_displayArea.getForeground());
 			for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
 					.getNumberOfFileEditorPanels(); index++) {
 
@@ -587,17 +658,21 @@ public class AcideThemesConfigurationWindow extends JFrame {
 						.getActiveTextEditionArea().setBackground(_displayArea.getBackground());
 				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index)
 						.getActiveTextEditionArea().setForeground(_displayArea.getForeground());
-				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(_displayArea.getBackground(), _displayArea.getForeground());
+				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index)
+						.changeColor(_displayArea.getBackground(), _displayArea.getForeground());
 			}
-			
-			//Apply changes to toolbar
-			AcideMainWindow.getInstance().getToolBarPanel().changeColor(_displayArea.getBackground().darker(), _displayArea.getForeground());
-			
-			//Apply changes to statusBar
-			AcideMainWindow.getInstance().getStatusBar().changeColor(_displayArea.getBackground().darker(), _displayArea.getForeground());
-			
+
+			// Apply changes to toolbar
+			AcideMainWindow.getInstance().getToolBarPanel().changeColor(_displayArea.getBackground().darker(),
+					_displayArea.getForeground());
+
+			// Apply changes to statusBar
+			AcideMainWindow.getInstance().getStatusBar().changeColor(_displayArea.getBackground().darker(),
+					_displayArea.getForeground());
+
 			// Apply changes to menuBar
-			AcideMainWindow.getInstance().getMenu().paintMenuBar(_displayArea.getBackground().darker(), _displayArea.getForeground());
+			AcideMainWindow.getInstance().getMenu().paintMenuBar(_displayArea.getBackground().darker(),
+					_displayArea.getForeground());
 
 			// Apply changes to the database panel
 			AcideMainWindow.getInstance().getDataBasePanel().changeColor(_displayArea.getBackground(),
@@ -614,7 +689,8 @@ public class AcideThemesConfigurationWindow extends JFrame {
 					_displayArea.getForeground());
 
 			// Apply changes to the console panel
-			AcideMainWindow.getInstance().getConsolePanel().changeColor(_displayArea.getBackground(), _displayArea.getForeground());
+			AcideMainWindow.getInstance().getConsolePanel().changeColor(_displayArea.getBackground(),
+					_displayArea.getForeground());
 			AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
 					Integer.toString(_displayArea.getBackground().getRGB()));
 			AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
@@ -811,5 +887,47 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			// Sets the foreground color
 			_displayArea.setForeground(Color.BLACK);
 		}
+	}
+
+	class SaveButtonAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (_themeName.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2383"));
+			} else {
+				File folder = new File("./configuration/themes");
+				File[] themesFiles = folder.listFiles();
+				int i = 0; boolean enUso = false;
+				while (i < themesFiles.length && !enUso) {
+					String name = themesFiles[i].getName();
+					String newTheme = _themeName.getText() + ".properties";
+					if(name.equalsIgnoreCase(newTheme)) enUso = true;
+					i++;
+				}
+				if (enUso) {
+					JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2384"));
+				} else {
+					try {
+						File file = new File("./configuration/themes/" + _themeName.getText() + ".properties");
+
+						Properties prop = new Properties();
+
+						// set the properties value
+						prop.setProperty("backgroundColor", String.valueOf(_displayArea.getBackground().getRGB()));
+						prop.setProperty("foregroundColor", String.valueOf(_displayArea.getForeground().getRGB()));
+
+						// save properties to project root folder
+						prop.store(new FileOutputStream(file.getPath()), null);
+						AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
+								.addComponents();
+						AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
+					} catch (IOException io) {
+
+					}
+				}
+			}
+		}
+
 	}
 }

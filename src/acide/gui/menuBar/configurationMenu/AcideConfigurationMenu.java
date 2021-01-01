@@ -65,6 +65,7 @@ import acide.gui.menuBar.configurationMenu.graphPanelMenu.AcideGraphPanelMenu;
 import acide.gui.menuBar.configurationMenu.languageMenu.AcideLanguageMenu;
 import acide.gui.menuBar.configurationMenu.lexiconMenu.AcideLexiconMenu;
 import acide.gui.menuBar.configurationMenu.menuMenu.AcideMenuMenu;
+import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemesMenu;
 import acide.gui.menuBar.configurationMenu.toolBarMenu.AcideToolBarMenu;
 import acide.gui.menuBar.listeners.AcideMenuBarMouseClickListener;
 import acide.language.AcideLanguageManager;
@@ -175,7 +176,7 @@ public class AcideConfigurationMenu extends JMenu {
 	/**
 	 * ACIDE - A Configurable IDE configuration theme configuration menu item.
 	 */
-	private JMenuItem _themeMenu;
+	private AcideThemesMenu _themeMenu;
 	/**
 	 * ACIDE - A Configurable IDE configuration theme configuration menu menu item has
 	 * been inserted.
@@ -517,15 +518,8 @@ public class AcideConfigurationMenu extends JMenu {
 		// Sets the grammar menu menu name
 		_grammarMenu.setName(GRAMMAR_NAME);
 		
-		//Creates the themes menu item
-		ImageIcon themeIcon = IconsUtils.getIcon(AcideMenuItemsConfiguration
-				.getInstance().getMenuItemsManager()
-				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-				.getItem(THEME_NAME).getImage());
-		if (themeIcon != null)
-			_themeMenu = new JMenuItem(themeIcon);
-		else
-			_themeMenu = new JMenuItem();
+		//Creates the themes menu
+		_themeMenu = new AcideThemesMenu();
 		
 		//Sets the theme menu menu name
 		_themeMenu.setName(THEME_NAME);
@@ -617,6 +611,9 @@ public class AcideConfigurationMenu extends JMenu {
 		_themeMenu.setText(AcideLanguageManager.getInstance()
 				.getLabels().getString("s2380"));
 		
+		// Sets the theme menu items text
+		_themeMenu.setTextOfMenuComponents();
+		
 		// Sets the lexicon menu text
 		_lexiconMenu.setText(AcideLanguageManager.getInstance().getLabels()
 				.getString("s224"));
@@ -681,9 +678,14 @@ public class AcideConfigurationMenu extends JMenu {
 				.getItem(COMPILER_NAME);
 		_compilerMenuItem.setVisible(compilerConfiguration.isVisible());
 		
-		//Sets the themes menu item to visible or not visible
-		themesConfiguration = _configurationSubmenuConfiguration.getItem(THEME_NAME);
-		_themeMenu.setVisible(themesConfiguration.isVisible());
+		// Builds the theme menu
+				_themeMenu.updateComponentsVisibility();
+
+				// Sets the theme menu to visible or not visible
+				_themeMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
+						.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
+						AcideThemesMenu.THEME_MENU_NAME).isVisible());
+
 		
 		// Builds the file editor menu
 		_fileEditorMenu.updateComponentsVisibility();
@@ -870,12 +872,7 @@ public class AcideConfigurationMenu extends JMenu {
 						.getItem(COMPILER_NAME)));
 		
 		// Sets the theme menu item listener
-		_themeMenu.addActionListener(new AcideInsertedItemListener(
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItem(THEME_NAME)));
+		_themeMenu.setListeners();
 
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
 		while (it.hasNext()) {
@@ -1001,7 +998,12 @@ public class AcideConfigurationMenu extends JMenu {
 	 * @return the ACIDE - A Configurable IDE configuration menu theme menu
 	 *         item.
 	 */
-	public JMenuItem getThemeMenuItem() {
+	public AcideThemesMenu getThemeMenuItem() {
 		return _themeMenu;
 	}
+	
+	public void setThemeMenuItem(AcideThemesMenu newThemesMenu) {
+		this._themeMenu = newThemesMenu;
+	}
+
 }

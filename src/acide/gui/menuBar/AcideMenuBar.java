@@ -3320,22 +3320,24 @@ public class AcideMenuBar extends JMenuBar {
 			}
 		}
 	}
+
 	private void paintSubMenus(MenuElement menuElement, Color background, Color foreground) {
 		JMenu menu = (JMenu) menuElement.getComponent();
-	   	 menu.setBackground(background);
-	   	 menu.setForeground(foreground);
-	   	 menu.setOpaque(true);
-	   	JMenu men = (JMenu) menuElement;
-	   	Component[] comp = men.getMenuComponents();
-	   	for(int i =0; i < comp.length; ++i) {
-	   		Component item = comp[i];
-	   		try {
-	   		paintSubMenus((MenuElement) item, background, foreground);
-	   		}catch(Exception e) {
-	   			((item.getClass().cast(item))).setBackground(background);
-	       		((item.getClass().cast(item))).setForeground(foreground);
-	       		(((JComponent) item.getClass().cast(item))).setOpaque(true);
-	   		}
-	   	}
+		menu.setBackground(background);
+		menu.setForeground(foreground);
+		menu.setOpaque(true);
+		JMenu men = (JMenu) menuElement;
+		Component[] comp = men.getMenuComponents();
+		for (int i = 0; i < comp.length; ++i) {
+			Component item = comp[i];
+			try {
+				paintSubMenus((MenuElement) item, background, foreground);
+			} catch (Exception e) {
+				((item.getClass().cast(item))).setBackground(background);
+				((item.getClass().cast(item))).setForeground(foreground);
+				(((JComponent) item.getClass().cast(item))).setOpaque(true);
+			}
 		}
+	}
+
 }
