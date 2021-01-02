@@ -58,9 +58,11 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 
 import acide.gui.debugPanel.debugCanvas.AcideDebugCanvas;
 import acide.gui.debugPanel.traceSQLPanel.listeners.*;
+import acide.gui.debugPanel.utils.AcideDebugHelper;
 import acide.gui.debugPanel.utils.AcideDebugPanelHighLighter;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
@@ -550,6 +552,7 @@ public class AcideTraceSQLPanel extends JPanel {
 			if(c1 instanceof JLabel)
 				((JLabel)c1).setForeground(foregroundColor);
 		}
+		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
 	}
 
 }

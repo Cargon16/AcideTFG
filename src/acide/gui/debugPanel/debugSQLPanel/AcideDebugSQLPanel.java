@@ -850,6 +850,7 @@ public class AcideDebugSQLPanel extends JPanel {
 			if(c1 instanceof JLabel)
 				((JLabel)c1).setForeground(foregroundColor);
 		}
+		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
 	}
 
 }

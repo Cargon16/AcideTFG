@@ -118,6 +118,7 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 	 */
 	private boolean _hasGhost = true;
 	
+	
 	/*
 	 * (non-Javadoc)
 	 * @see java.awt.Component#getName()
@@ -305,8 +306,8 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 		// Creates a new drag source
 		new DragSource().createDefaultDragGestureRecognizer(this,
 				DnDConstants.ACTION_COPY_OR_MOVE, dragGestureListener);
+		
 	}
-
 	/**
 	 * ACIDE - A Configurable IDE drop target listener.
 	 * 

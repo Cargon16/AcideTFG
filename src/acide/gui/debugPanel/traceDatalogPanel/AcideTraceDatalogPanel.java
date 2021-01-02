@@ -58,6 +58,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 
 import acide.gui.debugPanel.debugCanvas.AcideDebugCanvas;
 import acide.gui.debugPanel.traceDatalogPanel.listeners.AcideTraceDatalogPanelFirstNodeListener;
@@ -71,6 +72,7 @@ import acide.gui.debugPanel.traceDatalogPanel.listeners.AcideTraceDatalogPanelSh
 import acide.gui.debugPanel.traceDatalogPanel.listeners.AcideTraceDatalogPanelZoomInListener;
 import acide.gui.debugPanel.traceDatalogPanel.listeners.AcideTraceDatalogPanelZoomOutListener;
 import acide.gui.debugPanel.traceDatalogPanel.listeners.AcideTraceDatalogPanelZoomSpinnerListener;
+import acide.gui.debugPanel.utils.AcideDebugHelper;
 import acide.gui.debugPanel.utils.AcideDebugPanelHighLighter;
 import acide.gui.debugPanel.utils.AcideQueryDialog;
 import acide.language.AcideLanguageManager;
@@ -497,6 +499,7 @@ public class AcideTraceDatalogPanel extends JPanel {
 		this.setBackground(backgroundColor);
 		this._mainButtonPanel.setBackground(backgroundColor.darker());
 		this._mainButtonPanel.setForeground(foregroundColor);
+		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
 	}
 
 }

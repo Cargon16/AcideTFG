@@ -131,13 +131,11 @@ public class AcideGraphCanvas extends Canvas {
 	 */
 	protected double _zoom = 1;
 	/**
-	 * ACIDE - A Configurable IDE graph canvas long of the links to be
-	 * displayed.
+	 * ACIDE - A Configurable IDE graph canvas long of the links to be displayed.
 	 */
 	private int _linkLong = 100;
 	/**
-	 * ACIDE - A Configurable IDE graph canvas size of the nodes to be
-	 * displayed.
+	 * ACIDE - A Configurable IDE graph canvas size of the nodes to be displayed.
 	 */
 	protected int _nodeSize = 20;
 	/**
@@ -173,8 +171,8 @@ public class AcideGraphCanvas extends Canvas {
 	 */
 	protected Color _linkColor2 = Color.RED;
 	/**
-	 * ACIDE - A Configurable IDE graph canvas sets if the labels of the nodes
-	 * are showed.
+	 * ACIDE - A Configurable IDE graph canvas sets if the labels of the nodes are
+	 * showed.
 	 */
 	protected boolean _showingLabels = true;
 	/**
@@ -182,8 +180,10 @@ public class AcideGraphCanvas extends Canvas {
 	 */
 	private static AcideGraphCanvas _instance;
 
-	public enum CanvasPanel { TraceData, TraceSQL, DebugSQL, Graph }
-	
+	public enum CanvasPanel {
+		TraceData, TraceSQL, DebugSQL, Graph
+	}
+
 	/**
 	 * 
 	 * @return the instance of ACIDE - A Configurable IDE graph canvas.
@@ -215,26 +215,22 @@ public class AcideGraphCanvas extends Canvas {
 		this._graph = new DirectedWeightedGraph();
 		try {
 			// gets the size of the nodes
-			this._nodeSize = Integer.parseInt(AcideResourceManager
-					.getInstance().getProperty("graphPanel.nodeSize"));
+			this._nodeSize = Integer.parseInt(AcideResourceManager.getInstance().getProperty("graphPanel.nodeSize"));
 		} catch (NumberFormatException e) {
 
 		} catch (MissedPropertyException e) {
 			// sets the default size of the nodes
 			this._nodeSize = 20;
 			// saves the size of the nodes
-			AcideResourceManager.getInstance().setProperty(
-					"graphPanel.nodeSize", Integer.toString(this._nodeSize));
+			AcideResourceManager.getInstance().setProperty("graphPanel.nodeSize", Integer.toString(this._nodeSize));
 		}
 	}
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE graph canvas.
 	 * 
-	 * @param width
-	 *            width of the canvas.
-	 * @param height
-	 *            height of the canvas.
+	 * @param width  width of the canvas.
+	 * @param height height of the canvas.
 	 */
 	public AcideGraphCanvas(int width, int height) {
 		// creates the canvas
@@ -255,16 +251,14 @@ public class AcideGraphCanvas extends Canvas {
 		this._graph = new DirectedWeightedGraph();
 		try {
 			// gets the size of the nodes
-			this._nodeSize = Integer.parseInt(AcideResourceManager
-					.getInstance().getProperty("graphPanel.nodeSize"));
+			this._nodeSize = Integer.parseInt(AcideResourceManager.getInstance().getProperty("graphPanel.nodeSize"));
 		} catch (NumberFormatException e) {
 
 		} catch (MissedPropertyException e) {
 			// sets the default size of the nodes
 			this._nodeSize = 20;
 			// saves the size of the nodes
-			AcideResourceManager.getInstance().setProperty(
-					"graphPanel.nodeSize", Integer.toString(this._nodeSize));
+			AcideResourceManager.getInstance().setProperty("graphPanel.nodeSize", Integer.toString(this._nodeSize));
 		}
 	}
 
@@ -281,8 +275,7 @@ public class AcideGraphCanvas extends Canvas {
 	 * 
 	 * Sets a new value to the ACIDE - A Configurable IDE graph canvas graph.
 	 * 
-	 * @param _graph
-	 *            the new value to set.
+	 * @param _graph the new value to set.
 	 */
 	public void set_graph(DirectedWeightedGraph _graph) {
 		this.setZoom(1, CanvasPanel.Graph);
@@ -316,8 +309,7 @@ public class AcideGraphCanvas extends Canvas {
 				if (incomingLinks[i] < incomingLinks[rootIndex])
 					rootIndex = i;
 				// Same i incoming & more i outgoing -> rootIndex = i;
-				else if (incomingLinks[i] == incomingLinks[rootIndex]
-						&& outgoingLinks[i] > outgoingLinks[rootIndex])
+				else if (incomingLinks[i] == incomingLinks[rootIndex] && outgoingLinks[i] > outgoingLinks[rootIndex])
 					rootIndex = i;
 			}
 			root = _graph.get_nodes().get(rootIndex);
@@ -325,8 +317,7 @@ public class AcideGraphCanvas extends Canvas {
 			// Aplies the layout
 			this._layout = new TreeLayout(root, TreeLayout.INVERSE_MODE);
 			// updates the nodes distribution
-			_layout.calculateNodesPosition(this._graph, this._width,
-					this._height, this._nodeSize);
+			_layout.calculateNodesPosition(this._graph, this._width, this._height, this._nodeSize);
 		}
 	}
 
@@ -372,12 +363,12 @@ public class AcideGraphCanvas extends Canvas {
 	@Override
 	public void paint(Graphics gorig) {
 		// creates a new image with the dimension of the canvas
-		Image image = new BufferedImage(_width, _height,
-				BufferedImage.TYPE_INT_ARGB);
+		Image image = new BufferedImage(_width, _height, BufferedImage.TYPE_INT_ARGB);
 		// gets the image graphics
 		Graphics g = image.getGraphics();
 		// fill the graphics whit white color
-		g.setColor(Color.WHITE);
+		Color colorB = AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor();
+		g.setColor(colorB);
 		g.fillRect(0, 0, _width, _height);
 		// checks if the graph exist
 		if (_graph == null)
@@ -401,15 +392,12 @@ public class AcideGraphCanvas extends Canvas {
 			} else {
 				g.setColor(_linkColor2);
 				float dash[] = { 5 };
-				((Graphics2D) g).setStroke(new BasicStroke(_strokeSize,
-						BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f,
-						dash, 0.0f));
+				((Graphics2D) g).setStroke(
+						new BasicStroke(_strokeSize, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 5.0f, dash, 0.0f));
 			}
 			// draws a line from the origin to the destiny of the link
-			g.drawLine(xOrig + (int) (_nodeSize * _zoom / 2), yOrig
-					+ (int) (_nodeSize * _zoom / 2), xDest
-					+ (int) (_nodeSize * _zoom / 2), yDest
-					+ (int) (_nodeSize * _zoom / 2));
+			g.drawLine(xOrig + (int) (_nodeSize * _zoom / 2), yOrig + (int) (_nodeSize * _zoom / 2),
+					xDest + (int) (_nodeSize * _zoom / 2), yDest + (int) (_nodeSize * _zoom / 2));
 			// restarts the stroke value
 			((Graphics2D) g).setStroke(trazo);
 			// draws the tip of the link
@@ -429,37 +417,26 @@ public class AcideGraphCanvas extends Canvas {
 			g.setColor(_nodeColor);
 			// draws the node
 			if (_nodeShape == NODE_CIRCLE)
-				g.fillOval((int) n.getX(), (int) n.getY(),
-						(int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
+				g.fillOval((int) n.getX(), (int) n.getY(), (int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
 			if (_nodeShape == NODE_SQUARE)
-				g.fillRect((int) n.getX(), (int) n.getY(),
-						(int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
+				g.fillRect((int) n.getX(), (int) n.getY(), (int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
 			// draws the label of the node
 			if (_showingLabels) {
-				Rectangle2D rect = g.getFontMetrics().getStringBounds(
-						n.getLabel(), g);
+				Rectangle2D rect = g.getFontMetrics().getStringBounds(n.getLabel(), g);
 				g.setColor(Color.WHITE);
-				g.fillRect(
-						(int) n.getX()
-								- (int) ((rect.getWidth() / 2 - (_nodeSize * _zoom) / 2)),
-						(int) n.getY() - (5 + (int) rect.getHeight()),
-						(int) rect.getWidth(), (int) rect.getHeight());
+				g.fillRect((int) n.getX() - (int) ((rect.getWidth() / 2 - (_nodeSize * _zoom) / 2)),
+						(int) n.getY() - (5 + (int) rect.getHeight()), (int) rect.getWidth(), (int) rect.getHeight());
 				g.setColor(Color.BLACK);
-				g.drawString(
-						n.getLabel(),
-						(int) n.getX()
-								- (int) ((rect.getWidth() / 2 - (_nodeSize * _zoom) / 2)),
+				g.drawString(n.getLabel(), (int) n.getX() - (int) ((rect.getWidth() / 2 - (_nodeSize * _zoom) / 2)),
 						(int) n.getY() - 5);
 			}
 			// draws the node border
 			g.setColor(Color.BLACK);
 			((Graphics2D) g).setStroke(new BasicStroke(_strokeSize));
 			if (_nodeShape == NODE_CIRCLE)
-				g.drawOval((int) n.getX(), (int) n.getY(),
-						(int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
+				g.drawOval((int) n.getX(), (int) n.getY(), (int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
 			if (_nodeShape == NODE_SQUARE)
-				g.drawRect((int) n.getX(), (int) n.getY(),
-						(int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
+				g.drawRect((int) n.getX(), (int) n.getY(), (int) (_nodeSize * _zoom), (int) (_nodeSize * _zoom));
 			((Graphics2D) g).setStroke(trazo);
 		}
 		// draws the image with the graph in to the canvas graphics
@@ -470,15 +447,11 @@ public class AcideGraphCanvas extends Canvas {
 	 * 
 	 * Draws the ACIDE - A Configurable IDE graph canvas arrowhead of the link.
 	 * 
-	 * @param link
-	 *            to owns the arrowhead.
-	 * @param color
-	 *            of the arrowhead.
-	 * @param g
-	 *            Graphics where the arrowhead will be draw.
+	 * @param link  to owns the arrowhead.
+	 * @param color of the arrowhead.
+	 * @param g     Graphics where the arrowhead will be draw.
 	 */
-	protected void drawTriangle(DirectedWeightedLink link, Color color,
-			Graphics g) {
+	protected void drawTriangle(DirectedWeightedLink link, Color color, Graphics g) {
 		double ang = 0.0, angSep = 0.0;
 		double tx, ty;
 		int dist = 0;
@@ -495,8 +468,7 @@ public class AcideGraphCanvas extends Canvas {
 				&& link.getOrigin().getY() == link.getDestiny().getY()) {
 			point1 = new Point((int) link.getOrigin().getX() - _nodeSize * 2,
 					(int) link.getOrigin().getY() + _nodeSize * 3);
-			point2 = new Point((int) link.getOrigin().getX(), (int) link
-					.getOrigin().getY() + _nodeSize);
+			point2 = new Point((int) link.getOrigin().getX(), (int) link.getOrigin().getY() + _nodeSize);
 		}
 		xd += _nodeSize * _zoom / 2;
 
@@ -515,19 +487,13 @@ public class AcideGraphCanvas extends Canvas {
 		Point p1 = new Point(), p2 = new Point(), poitn = point2;
 		angSep = 25.0;
 
-		poitn.x = (int) ((link.getDestiny().getX() + _nodeSize * _zoom / 2) + Math
-				.cos(ang) * (_nodeSize * _zoom / 2));
-		poitn.y = (int) ((link.getDestiny().getY() + _nodeSize * _zoom / 2) - Math
-				.sin(ang) * (_nodeSize * _zoom / 2));
+		poitn.x = (int) ((link.getDestiny().getX() + _nodeSize * _zoom / 2) + Math.cos(ang) * (_nodeSize * _zoom / 2));
+		poitn.y = (int) ((link.getDestiny().getY() + _nodeSize * _zoom / 2) - Math.sin(ang) * (_nodeSize * _zoom / 2));
 
-		p1.x = (int) (poitn.x + dist * _zoom
-				* Math.cos(ang - Math.toRadians(angSep)));
-		p1.y = (int) (poitn.y - dist * _zoom
-				* Math.sin(ang - Math.toRadians(angSep)));
-		p2.x = (int) (poitn.x + dist * _zoom
-				* Math.cos(ang + Math.toRadians(angSep)));
-		p2.y = (int) (poitn.y - dist * _zoom
-				* Math.sin(ang + Math.toRadians(angSep)));
+		p1.x = (int) (poitn.x + dist * _zoom * Math.cos(ang - Math.toRadians(angSep)));
+		p1.y = (int) (poitn.y - dist * _zoom * Math.sin(ang - Math.toRadians(angSep)));
+		p2.x = (int) (poitn.x + dist * _zoom * Math.cos(ang + Math.toRadians(angSep)));
+		p2.y = (int) (poitn.y - dist * _zoom * Math.sin(ang + Math.toRadians(angSep)));
 
 		Graphics2D g2D = (Graphics2D) g;
 
@@ -544,59 +510,49 @@ public class AcideGraphCanvas extends Canvas {
 			g.fillPolygon(x, y, 3);
 
 		}
-		if (link.getOrigin().getX() == link.getDestiny().getX()
-				&& link.getOrigin().getY() == link.getDestiny().getY())
-			g.drawOval((int) (p1.x + 8 * _zoom), (int) (p1.y - 6 * _zoom),
-					(int) (poitn.x + 10 * _zoom - p1.x), (int) (poitn.y + 30
-							* _zoom - p1.y));
+		if (link.getOrigin().getX() == link.getDestiny().getX() && link.getOrigin().getY() == link.getDestiny().getY())
+			g.drawOval((int) (p1.x + 8 * _zoom), (int) (p1.y - 6 * _zoom), (int) (poitn.x + 10 * _zoom - p1.x),
+					(int) (poitn.y + 30 * _zoom - p1.y));
 	}
 
 	/**
-	 * Calculates the ACIDE - A Configurable IDE graph canvas graph x coordinate
-	 * of the node i of the graph.
+	 * Calculates the ACIDE - A Configurable IDE graph canvas graph x coordinate of
+	 * the node i of the graph.
 	 * 
-	 * @param i
-	 *            position of the node in the graph.
-	 * @param rads
-	 *            angle of separation between nodes.
-	 * @return the ACIDE - A Configurable IDE graph canvas graph x coordinate of
-	 *         the node i of the graph.
+	 * @param i    position of the node in the graph.
+	 * @param rads angle of separation between nodes.
+	 * @return the ACIDE - A Configurable IDE graph canvas graph x coordinate of the
+	 *         node i of the graph.
 	 */
 	protected int caluclaXNodo(int i, double rads) {
-		return Math
-				.max(0,
-						Math.min(
-								i != 0 ? (int) (X0 + _linkLong
-										* Math.cos(i * rads))
-										: (int) (X0 + _linkLong
-												* Math.cos(0.1 * rads)), _width));
+		return Math.max(0, Math.min(
+				i != 0 ? (int) (X0 + _linkLong * Math.cos(i * rads)) : (int) (X0 + _linkLong * Math.cos(0.1 * rads)),
+				_width));
 	}
 
 	/**
-	 * Calculates the ACIDE - A Configurable IDE graph canvas graph y coordinate
-	 * of the node i of the graph.
+	 * Calculates the ACIDE - A Configurable IDE graph canvas graph y coordinate of
+	 * the node i of the graph.
 	 * 
-	 * @param i
-	 *            position of the node in the graph.
-	 * @param rads
-	 *            angle of separation between nodes.
-	 * @return the ACIDE - A Configurable IDE graph canvas graph y coordinate of
-	 *         the node i of the graph.
+	 * @param i    position of the node in the graph.
+	 * @param rads angle of separation between nodes.
+	 * @return the ACIDE - A Configurable IDE graph canvas graph y coordinate of the
+	 *         node i of the graph.
 	 */
 	protected int caluclaYNodo(int i, double rads) {
 		return Math.max(0, Math.min(
-				i != 0 ? (int) (Y0 + _linkLong * Math.sin(i * rads))
-						: (int) (Y0 + _linkLong * Math.cos(0.1 * rads)),
+				i != 0 ? (int) (Y0 + _linkLong * Math.sin(i * rads)) : (int) (Y0 + _linkLong * Math.cos(0.1 * rads)),
 				_height));
 	}
 
 	/**
 	 * Increases the zoom of the ACIDE - A Configurable IDE graph canvas graph.
+	 * 
 	 * @param canvasPanel TODO
 	 */
 	public void zoomIn(CanvasPanel panel) {
 		ArrayList<Node> nodes = _graph.get_nodes();
-		this.setZoom(_zoom * _inc, panel );
+		this.setZoom(_zoom * _inc, panel);
 		for (Node n : nodes) {
 			float difx = n.getX() - X0;
 			float dify = n.getY() - Y0;
@@ -609,6 +565,7 @@ public class AcideGraphCanvas extends Canvas {
 
 	/**
 	 * Decreases the zoom of the ACIDE - A Configurable IDE graph canvas graph.
+	 * 
 	 * @param panel TODO
 	 */
 	public void zoomOut(CanvasPanel panel) {
@@ -628,10 +585,8 @@ public class AcideGraphCanvas extends Canvas {
 	/**
 	 * Moves the nodes of the ACIDE - A Configurable IDE graph canvas graph.
 	 * 
-	 * @param x
-	 *            the horizontal shift of the nodes.
-	 * @param y
-	 *            the vertical shift of the nodes.
+	 * @param x the horizontal shift of the nodes.
+	 * @param y the vertical shift of the nodes.
 	 */
 	public void moveGraph(int x, int y) {
 		ArrayList<Node> nodes = _graph.get_nodes();
@@ -642,11 +597,9 @@ public class AcideGraphCanvas extends Canvas {
 	}
 
 	/**
-	 * Returns the nodes of the ACIDE - A Configurable IDE graph canvas node
-	 * size.
+	 * Returns the nodes of the ACIDE - A Configurable IDE graph canvas node size.
 	 * 
-	 * @return the nodes of the ACIDE - A Configurable IDE graph canvas node
-	 *         size.
+	 * @return the nodes of the ACIDE - A Configurable IDE graph canvas node size.
 	 */
 	public int getNodeSize() {
 		return _nodeSize;
@@ -664,8 +617,7 @@ public class AcideGraphCanvas extends Canvas {
 	/**
 	 * Sets a new value to the ACIDE - A Configurable IDE graph canvas zoom.
 	 * 
-	 * @param zoom
-	 *            new value to set.
+	 * @param zoom        new value to set.
 	 * @param canvasPanel TODO
 	 */
 	public void setZoom(double zoom, CanvasPanel panel) {
@@ -699,44 +651,42 @@ public class AcideGraphCanvas extends Canvas {
 	}
 
 	/**
-	 * Returns the value of the ACIDE - A Configurable IDE graph canvas x
-	 * coordinate of the center.
+	 * Returns the value of the ACIDE - A Configurable IDE graph canvas x coordinate
+	 * of the center.
 	 * 
-	 * @return the value of the ACIDE - A Configurable IDE graph canvas x
-	 *         coordinate of the center.
+	 * @return the value of the ACIDE - A Configurable IDE graph canvas x coordinate
+	 *         of the center.
 	 */
 	public int getX0() {
 		return X0;
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE graph canvas x
-	 * coordinate of the center.
+	 * Sets a new value to the ACIDE - A Configurable IDE graph canvas x coordinate
+	 * of the center.
 	 * 
-	 * @param x0
-	 *            the new value to set.
+	 * @param x0 the new value to set.
 	 */
 	public void setX0(int x0) {
 		X0 = x0;
 	}
 
 	/**
-	 * Returns the value of the ACIDE - A Configurable IDE graph canvas y
-	 * coordinate of the center.
+	 * Returns the value of the ACIDE - A Configurable IDE graph canvas y coordinate
+	 * of the center.
 	 * 
-	 * @return the value of the ACIDE - A Configurable IDE graph canvas y
-	 *         coordinate of the center.
+	 * @return the value of the ACIDE - A Configurable IDE graph canvas y coordinate
+	 *         of the center.
 	 */
 	public int getY0() {
 		return Y0;
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE graph canvas y
-	 * coordinate of the center.
+	 * Sets a new value to the ACIDE - A Configurable IDE graph canvas y coordinate
+	 * of the center.
 	 * 
-	 * @param x0
-	 *            the new value to set.
+	 * @param x0 the new value to set.
 	 */
 	public void setY0(int y0) {
 		Y0 = y0;
@@ -754,8 +704,7 @@ public class AcideGraphCanvas extends Canvas {
 	/**
 	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas layout.
 	 * 
-	 * @param layout
-	 *            the new value to set.
+	 * @param layout the new value to set.
 	 */
 	public void setLayout(GraphLayout layout) {
 		this._layout = layout;
@@ -771,19 +720,16 @@ public class AcideGraphCanvas extends Canvas {
 	}
 
 	/**
-	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas node
-	 * shape.
+	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas node shape.
 	 * 
-	 * @param nodeShape
-	 *            the new value to set.
+	 * @param nodeShape the new value to set.
 	 */
 	public void setNodeShape(int nodeShape) {
 		this._nodeShape = nodeShape;
 	}
 
 	/**
-	 * Returns the value of the ACIDE - A Configurable IDE graph canvas arrow
-	 * shape.
+	 * Returns the value of the ACIDE - A Configurable IDE graph canvas arrow shape.
 	 * 
 	 * @return the arrow shape of the ACIDE - A Configurable IDE canvas.
 	 */
@@ -795,16 +741,14 @@ public class AcideGraphCanvas extends Canvas {
 	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas arrow
 	 * shape.
 	 * 
-	 * @param arrowShape
-	 *            the new value to set.
+	 * @param arrowShape the new value to set.
 	 */
 	public void setArrowShape(int arrowShape) {
 		this._arrowShape = arrowShape;
 	}
 
 	/**
-	 * Returns the value of the ACIDE - A Configurable IDE graph canvas node
-	 * color.
+	 * Returns the value of the ACIDE - A Configurable IDE graph canvas node color.
 	 * 
 	 * @return the node shape of the ACIDE - A Configurable IDE canvas.
 	 */
@@ -813,11 +757,9 @@ public class AcideGraphCanvas extends Canvas {
 	}
 
 	/**
-	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas node
-	 * color.
+	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas node color.
 	 * 
-	 * @param nodeColor
-	 *            the new value to set.
+	 * @param nodeColor the new value to set.
 	 */
 	public void setNodeColor(Color nodeColor) {
 		this._nodeColor = nodeColor;
@@ -834,11 +776,10 @@ public class AcideGraphCanvas extends Canvas {
 	}
 
 	/**
-	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas
-	 * positive link color.
+	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas positive
+	 * link color.
 	 * 
-	 * @param linkColor1
-	 *            the new value to set.
+	 * @param linkColor1 the new value to set.
 	 */
 	public void setLinkColor1(Color linkColor1) {
 		this._linkColor1 = linkColor1;
@@ -855,27 +796,23 @@ public class AcideGraphCanvas extends Canvas {
 	}
 
 	/**
-	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas
-	 * negative link color.
+	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas negative
+	 * link color.
 	 * 
-	 * @param linkColor2
-	 *            the new value to set.
+	 * @param linkColor2 the new value to set.
 	 */
 	public void setLinkColor2(Color linkColor2) {
 		this._linkColor2 = linkColor2;
 	}
 
 	/**
-	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas node
-	 * size.
+	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas node size.
 	 * 
-	 * @param nodeSize
-	 *            the new value to set.
+	 * @param nodeSize the new value to set.
 	 */
 	public void setNodeSize(int nodeSize) {
 		this._nodeSize = nodeSize;
-		AcideResourceManager.getInstance().setProperty("graphPanel.nodeSize",
-				Integer.toString(this._nodeSize));
+		AcideResourceManager.getInstance().setProperty("graphPanel.nodeSize", Integer.toString(this._nodeSize));
 	}
 
 	/**
@@ -892,8 +829,7 @@ public class AcideGraphCanvas extends Canvas {
 	 * Sets the new value to the ACIDE - A Configurable IDE graph canvas showing
 	 * labels.
 	 * 
-	 * @param showingLabels
-	 *            the new value to set.
+	 * @param showingLabels the new value to set.
 	 */
 	public void setShowingLabels(boolean showingLabels) {
 		this._showingLabels = showingLabels;
@@ -903,8 +839,7 @@ public class AcideGraphCanvas extends Canvas {
 	 * Parses the ACIDE - A Configurable IDE graph canvas from a input stream
 	 * generated by the instruction /tapi /pdg.
 	 * 
-	 * @param input
-	 *            input stream to parse.
+	 * @param input input stream to parse.
 	 * @return the {@link #DirectedWeightedGraph} generated by parsing the input
 	 *         stream.
 	 */
@@ -921,14 +856,11 @@ public class AcideGraphCanvas extends Canvas {
 		boolean parseLinks = false;
 
 		// Puts the wait cursor
-		AcideDataViewReplaceWindow.getInstance().setCursor(
-				Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		AcideDataViewReplaceWindow.getInstance().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 		try {
 			// reads the next line
-			while (reader.hasNextLine()
-					&& !((line = reader.nextLine().replaceAll("\\p{Space}", ""))
-							.equals("$eot"))
+			while (reader.hasNextLine() && !((line = reader.nextLine().replaceAll("\\p{Space}", "")).equals("$eot"))
 					&& !(line.replaceAll("\\p{Space}", "").equals("$error"))) {
 				if (line.equals("$")) {
 					parseLinks = true;
@@ -938,8 +870,7 @@ public class AcideGraphCanvas extends Canvas {
 				if (parseLinks) {
 					if (line.equals("+") || line.equals("-")) {
 						if (link != null)
-							throw new Exception(
-									"entrada incorrecta. No se puede a�adir un nuevo arco");
+							throw new Exception("entrada incorrecta. No se puede a�adir un nuevo arco");
 						// creates a new link
 						link = new DirectedWeightedLink();
 						link.setOrigin(null);
@@ -992,8 +923,7 @@ public class AcideGraphCanvas extends Canvas {
 		}
 
 		// Puts the default cursor
-		AcideDataViewReplaceWindow.getInstance().setCursor(
-				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		AcideDataViewReplaceWindow.getInstance().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 		return g;
 	}
@@ -1002,8 +932,7 @@ public class AcideGraphCanvas extends Canvas {
 	 * Parses the ACIDE - A Configurable IDE graph canvas from a input stream
 	 * generated by the instruction /pdg.
 	 * 
-	 * @param input
-	 *            input stream to parse.
+	 * @param input input stream to parse.
 	 * @return the {@link #DirectedWeightedGraph} generated by parsing the input
 	 *         stream.
 	 */
@@ -1019,9 +948,7 @@ public class AcideGraphCanvas extends Canvas {
 		String linea = "";
 		try {
 			// reads the next line
-			while (reader.hasNextLine()
-					&& !((linea = reader.nextLine()
-							.replaceAll("\\p{Space}", "")).equals("$eot"))) {
+			while (reader.hasNextLine() && !((linea = reader.nextLine().replaceAll("\\p{Space}", "")).equals("$eot"))) {
 				// checks if the line starts with nodes word
 				if (linea.startsWith("Nodes:")) {
 					// replaces the words that have no use for the parser
@@ -1064,10 +991,8 @@ public class AcideGraphCanvas extends Canvas {
 						// nodes to the link and adds the link
 						// to the list
 						if (index > 0) {
-							l.setOrigin(nodes.get(arcDesc[i]
-									.substring(index + 1)));
-							l.setDestiny(nodes.get(arcDesc[i].substring(0,
-									index)));
+							l.setOrigin(nodes.get(arcDesc[i].substring(index + 1)));
+							l.setDestiny(nodes.get(arcDesc[i].substring(0, index)));
 							links.add(l);
 						}
 					}
@@ -1093,8 +1018,7 @@ public class AcideGraphCanvas extends Canvas {
 	/**
 	 * Changes the new value to the ACIDE - A Configurable IDE graph canvas zoom
 	 * 
-	 * @param zoom
-	 *            the new value to change.
+	 * @param zoom the new value to change.
 	 */
 	public void changeZoom(float zoom) {
 		float prop = zoom / (float) this._zoom;

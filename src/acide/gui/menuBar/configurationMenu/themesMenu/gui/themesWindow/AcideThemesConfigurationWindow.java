@@ -74,9 +74,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
+import javax.swing.SwingUtilities;
 
 import acide.configuration.project.AcideProjectConfiguration;
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
+import acide.gui.graphPanel.AcideGraphUtil;
 import acide.gui.listeners.AcideWindowClosingListener;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
@@ -685,9 +687,12 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			// Apply changes to debugPanel
 			AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(_displayArea.getBackground(),
 					_displayArea.getForeground());
+			
+			// Apply changes to graph panel
 			AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(_displayArea.getBackground(),
 					_displayArea.getForeground());
-
+			SwingUtilities.invokeLater(() -> AcideGraphUtil.refreshGraphPanel());
+			
 			// Apply changes to the console panel
 			AcideMainWindow.getInstance().getConsolePanel().changeColor(_displayArea.getBackground(),
 					_displayArea.getForeground());

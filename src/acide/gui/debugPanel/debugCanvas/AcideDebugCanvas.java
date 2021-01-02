@@ -258,7 +258,9 @@ public class AcideDebugCanvas extends AcideGraphCanvas {
 		// gets the image graphics
 		Graphics g = image.getGraphics();
 		// fill the graphics with white color
-		g.setColor(Color.WHITE);
+		Color colorB = AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor();
+		g.setColor(colorB);
+		
 		g.fillRect(0, 0, _width, _height);
 		// checks if the graph exist
 		if (_graph == null)

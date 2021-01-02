@@ -325,8 +325,8 @@ public class AcideWorkbenchConfiguration {
 		String colorB;
 		try {
 
-			colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
-			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
+			colorB = AcideResourceManager.getInstance().getProperty("explorerPanel.backgroundColor");
+			String colorF = AcideResourceManager.getInstance().getProperty("explorerPanel.foregroundColor");
 			AcideMainWindow.getInstance().getMenu().paintMenuBar(new Color(Integer.parseInt(colorB)).darker(),
 					new Color(Integer.parseInt(colorF)));
 			AcideMainWindow.getInstance().getStatusBar().changeColor(new Color(Integer.parseInt(colorB)).darker(),
@@ -337,9 +337,9 @@ public class AcideWorkbenchConfiguration {
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(new Color(Integer.parseInt(colorB)).darker());
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(new Color(Integer.parseInt(colorF)));
-			AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)).darker(),
+			AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)),
 					new Color(Integer.parseInt(colorF)));
-			AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)).darker(),
+			AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)),
 					new Color(Integer.parseInt(colorF)));
 			//Apply themes configuration to file editor panel
 			for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()

@@ -52,6 +52,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import acide.configuration.project.AcideProjectConfiguration;
+import acide.gui.fileEditor.fileEditorManager.utils.gui.AcideDragAndDropTabbedPane;
 import acide.gui.graphCanvas.AcideGraphCanvas;
 import acide.gui.graphPanel.listeners.AcideGraphPanelRefreshListener;
 import acide.gui.graphPanel.listeners.AcideGraphPanelShowLabelsListener;
@@ -502,6 +503,9 @@ public class AcideGraphPanel extends JPanel {
 		this.setBackground(backgroundColor);
 		this._menuBar.setBackColor(backgroundColor.darker());
 		this._menuBar.setForeground(foregroundColor);
+		for(Component m:this._menuBar.getComponents()) {
+			m.setForeground(foregroundColor);
+		}
 		this._menuBar.repaint();
 		this._buttonPanel.setBackground(backgroundColor.darker());
 		this._buttonPanel.setForeground(foregroundColor);
@@ -511,8 +515,14 @@ public class AcideGraphPanel extends JPanel {
 			if(c1 instanceof JLabel)
 				((JLabel)c1).setForeground(foregroundColor);
 		}
+		
 		}catch(Exception e) {}
 	}
+	
+	public AcideGraphCanvas getGraphCanvas() {
+		return _canvas;
+	}
+	
 	class graphPanellBar extends JMenuBar{
 		private static final long serialVersionUID = 1L;
 		private Color background;

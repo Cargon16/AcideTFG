@@ -30,6 +30,7 @@ import java.util.Properties;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 import acide.configuration.menu.AcideInsertedItem;
 import acide.configuration.menu.AcideInsertedItemListener;
@@ -40,6 +41,8 @@ import acide.configuration.menu.AcideMenuItemsConfiguration;
 import acide.configuration.menu.AcideMenuObjectConfiguration;
 import acide.configuration.menu.AcideMenuSubmenuConfiguration;
 import acide.configuration.project.AcideProjectConfiguration;
+import acide.gui.debugPanel.utils.AcideDebugHelper;
+import acide.gui.graphPanel.AcideGraphUtil;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
 import acide.language.AcideLanguageManager;
@@ -377,6 +380,8 @@ public class AcideThemesMenu extends JMenu {
 							foregroundColor);
 					AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(backgroundColor,
 							foregroundColor);
+					SwingUtilities.invokeLater(() -> AcideGraphUtil.refreshGraphPanel());
+					
 
 					// Apply changes to the console panel
 					AcideMainWindow.getInstance().getConsolePanel().changeColor(backgroundColor, foregroundColor);
@@ -384,7 +389,7 @@ public class AcideThemesMenu extends JMenu {
 							Integer.toString(backgroundColor.getRGB()));
 					AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
 							Integer.toString(foregroundColor.getRGB()));
-
+					
 					// Notify that main configuration has been changed
 					AcideProjectConfiguration.getInstance().setIsModified(true);
 	}

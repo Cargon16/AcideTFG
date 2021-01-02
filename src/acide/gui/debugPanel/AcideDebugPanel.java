@@ -509,12 +509,7 @@ public class AcideDebugPanel extends JPanel {
 	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
 		this.getTabbedPane().setOpaque(true);
 		this.getTabbedPane().setBackground(backgroundColor.darker());
-		//this.getTabbedPane().setForeground(foregroundColor);
-		for(int i =0; i < this.getTabbedPane().getTabCount(); ++i) {
-			//this.getTabbedPane().setBackgroundAt(i, backgroundColor);
-		}
-		
-		//this.getTabbedPane().repaint();
+	
 		this._menuBar.setBackColor(backgroundColor.darker());
 		this._menuBar.setForeground(foregroundColor);
 		for(Component m:this._menuBar.getComponents()) {
@@ -524,7 +519,6 @@ public class AcideDebugPanel extends JPanel {
 		this._debugSQLPanel.setBackgroundColor(backgroundColor, foregroundColor);
 		this._traceSQLPanel.setBackgroundColor(backgroundColor, foregroundColor);
 		this._traceDatalogPanel.setBackgroundColor(backgroundColor, foregroundColor);
-		repaint();
 	}
 	
 	class debugPanelBar extends JMenuBar{
