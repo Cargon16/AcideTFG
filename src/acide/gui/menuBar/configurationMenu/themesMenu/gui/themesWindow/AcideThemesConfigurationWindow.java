@@ -180,10 +180,6 @@ public class AcideThemesConfigurationWindow extends JFrame {
 	 */
 	private JButton _cancelButton;
 	/**
-	 * ACIDE - A Configurable IDE file editor display options window cancel button.
-	 */
-	private JButton _saveButton;
-	/**
 	 * ACIDE - A Configurable IDE file editor display options window background
 	 * color label.
 	 */
@@ -502,11 +498,6 @@ public class AcideThemesConfigurationWindow extends JFrame {
 		// Adds the cancel button to the button panel
 		_SavePanel.add(_themeName);
 
-		// Creates the save button
-		_saveButton = new JButton(AcideLanguageManager.getInstance().getLabels().getString("s40"));
-
-		// Adds the save button
-		_SavePanel.add(_saveButton);
 
 	}
 
@@ -527,9 +518,6 @@ public class AcideThemesConfigurationWindow extends JFrame {
 
 		// Sets the cancel button action listener
 		_cancelButton.addActionListener(new CancelButtonAction());
-
-		// Sets the save button action listener
-		_saveButton.addActionListener(new SaveButtonAction());
 
 		// Sets the restore default configuration action listener
 		_restoreDefaultConfiguration.addActionListener(new RestoreDefaultConfigurationButtonAction());
@@ -643,6 +631,14 @@ public class AcideThemesConfigurationWindow extends JFrame {
 
 			// Updates the log
 			AcideLog.getLog().info("1043");
+			if(!_themeName.getText().isEmpty()){
+				int ventanaYesNotCancel = JOptionPane.showConfirmDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2385")
+						, "Javadesde0.com", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				
+				if(ventanaYesNotCancel == 0) {
+					saveTheme();
+				}
+			}
 
 			// Apply the changes to the opened file editor panels
 			AcideMainWindow.getInstance().getFileEditorManager().setBackground(_displayArea.getBackground());
@@ -651,6 +647,7 @@ public class AcideThemesConfigurationWindow extends JFrame {
 					.setBackground(_displayArea.getBackground().darker());
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane()
 					.setForeground(_displayArea.getForeground());
+			if(!AcideProjectConfiguration.getInstance().isFileEditorIsModified())
 			for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
 					.getNumberOfFileEditorPanels(); index++) {
 
@@ -694,12 +691,14 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			SwingUtilities.invokeLater(() -> AcideGraphUtil.refreshGraphPanel());
 			
 			// Apply changes to the console panel
+			if(!AcideProjectConfiguration.getInstance().isConsoleIsModified()) {
 			AcideMainWindow.getInstance().getConsolePanel().changeColor(_displayArea.getBackground(),
 					_displayArea.getForeground());
 			AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
 					Integer.toString(_displayArea.getBackground().getRGB()));
 			AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
 					Integer.toString(_displayArea.getForeground().getRGB()));
+			}
 
 			// Notify that main configuration has been changed
 			AcideProjectConfiguration.getInstance().setIsModified(true);
@@ -894,45 +893,56 @@ public class AcideThemesConfigurationWindow extends JFrame {
 		}
 	}
 
-	class SaveButtonAction implements ActionListener {
+	public void saveTheme() {
+		File folder = new File("./configuration/themes");
+		File[] themesFiles = folder.listFiles();
+		int i = 0; boolean enUso = false;
+		while (i < themesFiles.length && !enUso) {
+			String name = themesFiles[i].getName();
+			String newTheme = _themeName.getText() + ".properties";
+			if(name.equalsIgnoreCase(newTheme)) enUso = true;
+			i++;
+		}
+		if (enUso) {
+			JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2384"));
+		} else {
+			try {
+				File file = new File("./configuration/themes/" + _themeName.getText() + ".properties");
 
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if (_themeName.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2383"));
-			} else {
-				File folder = new File("./configuration/themes");
-				File[] themesFiles = folder.listFiles();
-				int i = 0; boolean enUso = false;
-				while (i < themesFiles.length && !enUso) {
-					String name = themesFiles[i].getName();
-					String newTheme = _themeName.getText() + ".properties";
-					if(name.equalsIgnoreCase(newTheme)) enUso = true;
-					i++;
+				Properties prop = new Properties();
+
+				// set the properties value
+				prop.setProperty("backgroundColor", String.valueOf(_displayArea.getBackground().getRGB()));
+				prop.setProperty("foregroundColor", String.valueOf(_displayArea.getForeground().getRGB()));
+				prop.setProperty("ConsolebackgroundColor", String.valueOf(_displayArea.getBackground().getRGB()));
+				prop.setProperty("ConsoleforegroundColor", String.valueOf(_displayArea.getForeground().getRGB()));
+				prop.setProperty("FileEditorbackgroundColor", String.valueOf(_displayArea.getBackground().getRGB()));
+				prop.setProperty("FileEditorforegroundColor", String.valueOf(_displayArea.getForeground().getRGB()));
+				
+				if(AcideProjectConfiguration.getInstance().isConsoleIsModified()) {
+					prop.setProperty("ConsolebackgroundColor", String.valueOf(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getBackground().getRGB()));
+					prop.setProperty("ConsoleforegroundColor", String.valueOf(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getForeground().getRGB()));
 				}
-				if (enUso) {
-					JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2384"));
-				} else {
-					try {
-						File file = new File("./configuration/themes/" + _themeName.getText() + ".properties");
-
-						Properties prop = new Properties();
-
-						// set the properties value
-						prop.setProperty("backgroundColor", String.valueOf(_displayArea.getBackground().getRGB()));
-						prop.setProperty("foregroundColor", String.valueOf(_displayArea.getForeground().getRGB()));
-
-						// save properties to project root folder
-						prop.store(new FileOutputStream(file.getPath()), null);
-						AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
-								.addComponents();
-						AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
-					} catch (IOException io) {
-
-					}
+				
+				if(AcideProjectConfiguration.getInstance().isFileEditorIsModified()) {
+					prop.setProperty("FileEditorbackgroundColor", String.valueOf(AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(0)
+							.getActiveTextEditionArea().getBackground().getRGB()));
+					prop.setProperty("FileEditorforegroundColor", String.valueOf(AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(0)
+							.getActiveTextEditionArea().getForeground().getRGB()));
 				}
+				
+
+				// save properties to project root folder
+				prop.store(new FileOutputStream(file.getPath()), null);
+				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
+						.addComponents();
+				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
+				// Apply changes to menuBar
+				AcideMainWindow.getInstance().getMenu().paintMenuBar(AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getBackground().darker(),
+						AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getForeground());
+			} catch (IOException io) {
+
 			}
 		}
-
 	}
 }

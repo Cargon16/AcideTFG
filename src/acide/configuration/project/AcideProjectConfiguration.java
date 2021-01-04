@@ -255,7 +255,9 @@ public class AcideProjectConfiguration {
 	 */
 	private int _position;
 	
-	private Color _databasePanelBackgroundColor;
+	private boolean fileEditorIsModified;
+	
+	private boolean consoleIsModified;
 
 	/**
 	 * Creates a new project configuration.
@@ -273,6 +275,10 @@ public class AcideProjectConfiguration {
 		
 		// Creates the panels list
 		_panelList = new ArrayList<>();
+		
+		fileEditorIsModified = false;
+		
+		consoleIsModified = false;
 	}
 
 	/**
@@ -2023,5 +2029,23 @@ public class AcideProjectConfiguration {
 		_position = finalPosition + 1;
 		return property;
 	}
+
+	public boolean isFileEditorIsModified() {
+		return fileEditorIsModified;
+	}
+
+	public void setFileEditorIsModified(boolean fileEditorIsModified) {
+		this.fileEditorIsModified = fileEditorIsModified;
+	}
+
+	public boolean isConsoleIsModified() {
+		return consoleIsModified;
+	}
+
+	public void setConsoleIsModified(boolean consoleIsModified) {
+		this.consoleIsModified = consoleIsModified;
+	}
+	
+	
 
 }

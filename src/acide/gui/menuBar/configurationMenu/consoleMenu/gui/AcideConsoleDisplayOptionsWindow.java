@@ -835,6 +835,9 @@ public class AcideConsoleDisplayOptionsWindow extends JFrame {
 
 				// The project has been modified
 				AcideProjectConfiguration.getInstance().setIsModified(true);
+			
+			//The console panel display has been change
+			AcideProjectConfiguration.getInstance().setConsoleIsModified(true);
 
 			// Closes the window
 			closeWindow();

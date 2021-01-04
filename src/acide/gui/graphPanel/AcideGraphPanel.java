@@ -515,7 +515,6 @@ public class AcideGraphPanel extends JPanel {
 			if(c1 instanceof JLabel)
 				((JLabel)c1).setForeground(foregroundColor);
 		}
-		
 		}catch(Exception e) {}
 	}
 	

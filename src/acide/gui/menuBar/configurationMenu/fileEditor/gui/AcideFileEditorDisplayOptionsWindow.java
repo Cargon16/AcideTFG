@@ -66,6 +66,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import acide.configuration.project.AcideProjectConfiguration;
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
 import acide.gui.listeners.AcideWindowClosingListener;
 import acide.gui.mainWindow.AcideMainWindow;
@@ -805,7 +806,8 @@ public class AcideFileEditorDisplayOptionsWindow extends JFrame {
 				AcideMainWindow.getInstance().getFileEditorManager()
 						.getSelectedFileEditorPanel().resetStyledDocument();
 			}
-
+			// Set fileEditor display has been changed
+			AcideProjectConfiguration.getInstance().setFileEditorIsModified(true);
 			// Closes the window
 			closeWindow();
 		}

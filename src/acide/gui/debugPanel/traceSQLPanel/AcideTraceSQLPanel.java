@@ -552,7 +552,7 @@ public class AcideTraceSQLPanel extends JPanel {
 			if(c1 instanceof JLabel)
 				((JLabel)c1).setForeground(foregroundColor);
 		}
-		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
+		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasTrace(_canvas));
 	}
 
 }

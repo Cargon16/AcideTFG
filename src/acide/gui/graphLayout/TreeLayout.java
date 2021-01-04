@@ -76,8 +76,7 @@ public class TreeLayout implements GraphLayout {
 	 * .DirectedWeightedGraph, int, int, int)
 	 */
 	@Override
-	public void calculateNodesPosition(DirectedWeightedGraph graph, int width,
-			int height, int nodeSize) {
+	public void calculateNodesPosition(DirectedWeightedGraph graph, int width, int height, int nodeSize) {
 		if (graph.get_nodes().size() == 0)
 			return;
 		for (Node n : graph.get_nodes()) {
@@ -100,7 +99,9 @@ public class TreeLayout implements GraphLayout {
 			}
 		}
 		int xdiv = (width - 2 * MARGIN) / disp;
-		int ydiv = (height - 2 * MARGIN) / maxDepth[0];
+		int ydiv = (height - 2 * MARGIN);
+		if (maxDepth[0] != 0)
+			ydiv = (height - 2 * MARGIN) / maxDepth[0];
 		if (Math.min(xdiv, ydiv) * 0.5 < nodeSize) {
 			xdiv = xdiv * (int) (2 * nodeSize / Math.min(xdiv, ydiv));
 			ydiv = ydiv * (int) (2 * nodeSize / Math.min(xdiv, ydiv));
@@ -122,8 +123,7 @@ public class TreeLayout implements GraphLayout {
 	 * @param disp
 	 * @return
 	 */
-	private int setNodePosition(Node node, DirectedWeightedGraph graph,
-			int[] maxDepth, int level, int disp) {
+	private int setNodePosition(Node node, DirectedWeightedGraph graph, int[] maxDepth, int level, int disp) {
 		if (node.isPosicionado())
 			return disp;
 		else {
@@ -136,14 +136,10 @@ public class TreeLayout implements GraphLayout {
 				for (DirectedWeightedLink l : links) {
 					if (l.getOrigin().equals(null))
 						children.add(l.getDestiny());
-					if (_mode.equals(INVERSE_MODE)
-							&& l.getDestiny().equals(node)
-							&& !l.getOrigin().equals(node)
+					if (_mode.equals(INVERSE_MODE) && l.getDestiny().equals(node) && !l.getOrigin().equals(node)
 							&& !l.getOrigin().isPosicionado())
 						children.add(l.getOrigin());
-					else if (_mode.equals(DIRECT_MODE)
-							&& l.getOrigin().equals(node)
-							&& !l.getDestiny().equals(node)
+					else if (_mode.equals(DIRECT_MODE) && l.getOrigin().equals(node) && !l.getDestiny().equals(node)
 							&& !l.getDestiny().isPosicionado())
 						children.add(l.getDestiny());
 				}
@@ -156,26 +152,21 @@ public class TreeLayout implements GraphLayout {
 				int numChildren = children.size();
 				if (numChildren % 2 == 0) {
 					for (int i = 0; i < numChildren / 2; i++)
-						disp = setNodePosition(children.get(i), graph,
-								maxDepth, level + 1, disp);
+						disp = setNodePosition(children.get(i), graph, maxDepth, level + 1, disp);
 					node.setX(disp);
 					node.setY(level);
 					disp++;
 					for (int i = numChildren / 2; i < numChildren; i++)
-						disp = setNodePosition(children.get(i), graph,
-								maxDepth, level + 1, disp);
+						disp = setNodePosition(children.get(i), graph, maxDepth, level + 1, disp);
 				} else {
 					int half = Math.round(numChildren / 2f);
 					for (int i = 0; i < half - 1; i++)
-						disp = setNodePosition(children.get(i), graph,
-								maxDepth, level + 1, disp);
-					disp = setNodePosition(children.get(half - 1), graph,
-							maxDepth, level + 1, disp);
+						disp = setNodePosition(children.get(i), graph, maxDepth, level + 1, disp);
+					disp = setNodePosition(children.get(half - 1), graph, maxDepth, level + 1, disp);
 					node.setX(children.get(half - 1).getX());
 					node.setY(level);
 					for (int i = half; i < numChildren; i++)
-						disp = setNodePosition(children.get(i), graph,
-								maxDepth, level + 1, disp);
+						disp = setNodePosition(children.get(i), graph, maxDepth, level + 1, disp);
 				}
 				return disp;
 			}

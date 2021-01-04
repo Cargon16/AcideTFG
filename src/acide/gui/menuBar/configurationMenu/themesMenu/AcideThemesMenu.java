@@ -1,6 +1,10 @@
 package acide.gui.menuBar.configurationMenu.themesMenu;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -28,8 +32,13 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import acide.configuration.menu.AcideInsertedItem;
@@ -49,6 +58,7 @@ import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
 import acide.resources.AcideResourceManager;
 import acide.utils.IconsUtils;
+import javafx.util.Pair;
 
 /**
  * ACIDE - A Configurable IDE tool bar menu.
@@ -109,6 +119,8 @@ public class AcideThemesMenu extends JMenu {
 
 		_insertedObjects = new ArrayList<AcideMenuObjectConfiguration>();
 
+		this.getPopupMenu().setLayout(new GridLayout(0, 2));
+
 		// Builds the menu components
 		buildComponents();
 
@@ -123,7 +135,6 @@ public class AcideThemesMenu extends JMenu {
 	 * Adds the components to the ACIDE - A Configurable IDE tool bar menu.
 	 */
 	public void addComponents() {
-
 		File folder = new File("./configuration/themes");
 		File[] themesFiles = folder.listFiles();
 		Properties prop = new Properties();
@@ -134,15 +145,89 @@ public class AcideThemesMenu extends JMenu {
 					public void actionPerformed(ActionEvent e) {
 						try {
 							prop.load(new FileInputStream(arch.getPath()));
+
 							String colorB = prop.getProperty("backgroundColor");
 							String colorF = prop.getProperty("foregroundColor");
-							changeTheme(new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
-						} catch (IOException e1) {}
+							Pair<Color, Color> colorGeneral = new Pair<Color, Color>(
+									new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
+							colorB = prop.getProperty("ConsolebackgroundColor");
+							colorF = prop.getProperty("ConsoleforegroundColor");
+							Pair<Color, Color> colorConsole = new Pair<Color, Color>(
+									new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
+							colorB = prop.getProperty("FileEditorbackgroundColor");
+							colorF = prop.getProperty("FileEditorforegroundColor");
+							Pair<Color, Color> colorFileEditor = new Pair<Color, Color>(
+									new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
+							changeTheme(colorGeneral, colorConsole, colorFileEditor);
+						} catch (IOException e1) {
+						}
 					}
 				});
-				if(!_insertedItems.containsKey(arch.getName().replaceFirst("[.][^.]+$", ""))) {
-				add(openMenuItem);
-				_insertedItems.put(arch.getName().replaceFirst("[.][^.]+$", ""), null);
+				if (!_insertedItems.containsKey(arch.getName().replaceFirst("[.][^.]+$", ""))) {
+					add(openMenuItem);
+					JMenuItem b = new JMenuItem(AcideLanguageManager.getInstance().getLabels().getString("s2386"));
+					b.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							Object[] options1 = { AcideLanguageManager.getInstance().getLabels().getString("s2051"),
+									AcideLanguageManager.getInstance().getLabels().getString("s950"),
+									AcideLanguageManager.getInstance().getLabels().getString("s42") };
+
+							JPanel panel = new JPanel();
+							panel.add(new JLabel(AcideLanguageManager.getInstance().getLabels().getString("s2382")));
+							JTextField textField = new JTextField(10);
+							textField.setText(arch.getName().replaceFirst("[.][^.]+$", ""));
+							panel.add(textField);
+							boolean opcionesValidas = false;
+							while(!opcionesValidas) {
+							int result = JOptionPane.showOptionDialog(null, panel, "Enter a Number",
+									JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
+							if (result == JOptionPane.YES_OPTION) {
+								File folder = new File("./configuration/themes");
+								File[] themesFiles = folder.listFiles();
+								int i = 0;
+								boolean enUso = false;
+								while (i < themesFiles.length && !enUso) {
+									String name = themesFiles[i].getName();
+									String newTheme = textField.getText() + ".properties";
+									if (name.equalsIgnoreCase(newTheme))
+										enUso = true;
+									i++;
+								}
+								if (enUso) {
+									JOptionPane.showMessageDialog(null,
+											AcideLanguageManager.getInstance().getLabels().getString("s2384"));
+								} else {
+									File file = new File(
+											"./configuration/themes/" + textField.getText() + ".properties");
+									arch.renameTo(file);
+									opcionesValidas = true;
+
+								}
+							}
+							if (result == JOptionPane.NO_OPTION) {
+								arch.delete();
+								opcionesValidas = true;
+							}
+							if(result == JOptionPane.CANCEL_OPTION)
+								opcionesValidas = true;
+							if(result == JOptionPane.CLOSED_OPTION) {
+								opcionesValidas = true;
+							}
+							}
+							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().removeAll();
+							_insertedItems.clear();
+							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
+							.addComponents();
+							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
+							// Apply changes to menuBar
+							AcideMainWindow.getInstance().getMenu().paintMenuBar(
+									AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getBackground(),
+									AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getForeground());
+						}
+					});
+
+					add(b);
+					_insertedItems.put(arch.getName().replaceFirst("[.][^.]+$", ""), null);
 				}
 			}
 		}
@@ -157,6 +242,9 @@ public class AcideThemesMenu extends JMenu {
 				// Adds the new tool bar menu item to the menu
 				add(themesConfiguration);
 				_themesConfigurationInserted = true;
+				JMenuItem jn = new JMenuItem("");
+				jn.setEnabled(false);
+				add(jn);
 			} else {
 				if (ob.isSubmenu()) {
 					add(_insertedMenus.get(ob.getName()));
@@ -336,62 +424,68 @@ public class AcideThemesMenu extends JMenu {
 	public JMenuItem getThemeMenuItem() {
 		return themesConfiguration;
 	}
-	
-	private void changeTheme(Color backgroundColor, Color foregroundColor) {
+
+	private void changeTheme(Pair<Color, Color> colorGeneral, Pair<Color, Color> colorConsole,
+			Pair<Color, Color> colorFileEditor) {
 		// Updates the log
-					AcideLog.getLog().info("1043");
+		AcideLog.getLog().info("1043");
 
-					// Apply the changes to the opened file editor panels
-					AcideMainWindow.getInstance().getFileEditorManager().setBackground(backgroundColor);
-					AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
-					AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(backgroundColor.darker());
-					AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(foregroundColor);
-					for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
-							.getNumberOfFileEditorPanels(); index++) {
+		Color backgroundColor = colorGeneral.getKey();
+		Color foregroundColor = colorGeneral.getValue();
 
-						// Updates the ACIDE - A Configurable IDE file editor
+		Color consoleBack = colorConsole.getKey();
+		Color consoleFore = colorConsole.getValue();
 
-						AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index)
-								.getActiveTextEditionArea().setBackground(backgroundColor);
-						AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index)
-								.getActiveTextEditionArea().setForeground(foregroundColor);
-						AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(backgroundColor, foregroundColor);
-					}
-					
-					//Apply changes to toolbar
-					AcideMainWindow.getInstance().getToolBarPanel().changeColor(backgroundColor.darker(), foregroundColor);
-					
-					//Apply changes to statusBar
-					AcideMainWindow.getInstance().getStatusBar().changeColor(backgroundColor.darker(), foregroundColor);
-					
-					// Apply changes to menuBar
-					AcideMainWindow.getInstance().getMenu().paintMenuBar(backgroundColor.darker(), foregroundColor);
+		Color fileBack = colorFileEditor.getKey();
+		Color fileFore = colorFileEditor.getValue();
 
-					// Apply changes to the database panel
-					AcideMainWindow.getInstance().getDataBasePanel().changeColor(backgroundColor,
-							foregroundColor);
+		// Apply the changes to the opened file editor panels
+		AcideMainWindow.getInstance().getFileEditorManager().setBackground(backgroundColor);
+		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
+		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(backgroundColor.darker());
+		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(foregroundColor);
+		for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
+				.getNumberOfFileEditorPanels(); index++) {
 
-					// Apply changes to the explorer panel
-					AcideMainWindow.getInstance().getExplorerPanel().setBackgroundColor(backgroundColor,
-							foregroundColor);
+			// Updates the ACIDE - A Configurable IDE file editor
 
-					// Apply changes to debugPanel
-					AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(backgroundColor,
-							foregroundColor);
-					AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(backgroundColor,
-							foregroundColor);
-					SwingUtilities.invokeLater(() -> AcideGraphUtil.refreshGraphPanel());
-					
+			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).getActiveTextEditionArea()
+					.setBackground(fileBack);
+			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).getActiveTextEditionArea()
+					.setForeground(fileFore);
+			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(fileBack,
+					fileFore);
+		}
 
-					// Apply changes to the console panel
-					AcideMainWindow.getInstance().getConsolePanel().changeColor(backgroundColor, foregroundColor);
-					AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
-							Integer.toString(backgroundColor.getRGB()));
-					AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
-							Integer.toString(foregroundColor.getRGB()));
-					
-					// Notify that main configuration has been changed
-					AcideProjectConfiguration.getInstance().setIsModified(true);
+		// Apply changes to toolbar
+		AcideMainWindow.getInstance().getToolBarPanel().changeColor(backgroundColor.darker(), foregroundColor);
+
+		// Apply changes to statusBar
+		AcideMainWindow.getInstance().getStatusBar().changeColor(backgroundColor.darker(), foregroundColor);
+
+		// Apply changes to menuBar
+		AcideMainWindow.getInstance().getMenu().paintMenuBar(backgroundColor.darker(), foregroundColor);
+
+		// Apply changes to the database panel
+		AcideMainWindow.getInstance().getDataBasePanel().changeColor(backgroundColor, foregroundColor);
+
+		// Apply changes to the explorer panel
+		AcideMainWindow.getInstance().getExplorerPanel().setBackgroundColor(backgroundColor, foregroundColor);
+
+		// Apply changes to debugPanel
+		AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(backgroundColor, foregroundColor);
+		AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(backgroundColor, foregroundColor);
+		SwingUtilities.invokeLater(() -> AcideGraphUtil.refreshGraphPanel());
+
+		// Apply changes to the console panel
+		AcideMainWindow.getInstance().getConsolePanel().changeColor(consoleBack, consoleFore);
+		AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
+				Integer.toString(consoleBack.getRGB()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
+				Integer.toString(consoleFore.getRGB()));
+
+		// Notify that main configuration has been changed
+		AcideProjectConfiguration.getInstance().setIsModified(true);
 	}
 
 }
