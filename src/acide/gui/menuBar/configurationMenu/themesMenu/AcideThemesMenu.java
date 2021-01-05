@@ -1,9 +1,6 @@
 package acide.gui.menuBar.configurationMenu.themesMenu;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,13 +29,13 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import acide.configuration.menu.AcideInsertedItem;
@@ -50,7 +47,6 @@ import acide.configuration.menu.AcideMenuItemsConfiguration;
 import acide.configuration.menu.AcideMenuObjectConfiguration;
 import acide.configuration.menu.AcideMenuSubmenuConfiguration;
 import acide.configuration.project.AcideProjectConfiguration;
-import acide.gui.debugPanel.utils.AcideDebugHelper;
 import acide.gui.graphPanel.AcideGraphUtil;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
@@ -141,6 +137,7 @@ public class AcideThemesMenu extends JMenu {
 		if (themesFiles.length != 0) {
 			for (File arch : themesFiles) {
 				JMenuItem openMenuItem = new JMenuItem(arch.getName().replaceFirst("[.][^.]+$", ""), null);
+				openMenuItem.setHorizontalAlignment(SwingConstants.CENTER);
 				openMenuItem.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						try {
@@ -166,6 +163,7 @@ public class AcideThemesMenu extends JMenu {
 				if (!_insertedItems.containsKey(arch.getName().replaceFirst("[.][^.]+$", ""))) {
 					add(openMenuItem);
 					JMenuItem b = new JMenuItem(AcideLanguageManager.getInstance().getLabels().getString("s2386"));
+					b.setHorizontalAlignment(SwingConstants.CENTER);
 					b.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							Object[] options1 = { AcideLanguageManager.getInstance().getLabels().getString("s2051"),
@@ -486,6 +484,10 @@ public class AcideThemesMenu extends JMenu {
 
 		// Notify that main configuration has been changed
 		AcideProjectConfiguration.getInstance().setIsModified(true);
+	}
+	
+	public HashMap<String, AcideInsertedItem> getInsertedItem(){
+		return this._insertedItems;
 	}
 
 }

@@ -934,6 +934,8 @@ public class AcideThemesConfigurationWindow extends JFrame {
 
 				// save properties to project root folder
 				prop.store(new FileOutputStream(file.getPath()), null);
+				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().removeAll();
+				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().getInsertedItem().clear();
 				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
 						.addComponents();
 				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
