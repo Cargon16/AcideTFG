@@ -115,8 +115,6 @@ public class AcideThemesMenu extends JMenu {
 
 		_insertedObjects = new ArrayList<AcideMenuObjectConfiguration>();
 
-		this.getPopupMenu().setLayout(new GridLayout(0, 2));
-
 		// Builds the menu components
 		buildComponents();
 
@@ -136,7 +134,8 @@ public class AcideThemesMenu extends JMenu {
 		Properties prop = new Properties();
 		if (themesFiles.length != 0) {
 			for (File arch : themesFiles) {
-				JMenuItem openMenuItem = new JMenuItem(arch.getName().replaceFirst("[.][^.]+$", ""), null);
+				JMenu sub = new JMenu(arch.getName().replaceFirst("[.][^.]+$", ""));
+				JMenuItem openMenuItem = new JMenuItem(AcideLanguageManager.getInstance().getLabels().getString("s335"), null);
 				openMenuItem.setHorizontalAlignment(SwingConstants.CENTER);
 				openMenuItem.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -161,7 +160,7 @@ public class AcideThemesMenu extends JMenu {
 					}
 				});
 				if (!_insertedItems.containsKey(arch.getName().replaceFirst("[.][^.]+$", ""))) {
-					add(openMenuItem);
+					sub.add(openMenuItem);
 					JMenuItem b = new JMenuItem(AcideLanguageManager.getInstance().getLabels().getString("s2386"));
 					b.setHorizontalAlignment(SwingConstants.CENTER);
 					b.addActionListener(new ActionListener() {
@@ -224,7 +223,8 @@ public class AcideThemesMenu extends JMenu {
 						}
 					});
 
-					add(b);
+					sub.add(b);
+					add(sub);
 					_insertedItems.put(arch.getName().replaceFirst("[.][^.]+$", ""), null);
 				}
 			}
@@ -240,9 +240,6 @@ public class AcideThemesMenu extends JMenu {
 				// Adds the new tool bar menu item to the menu
 				add(themesConfiguration);
 				_themesConfigurationInserted = true;
-				JMenuItem jn = new JMenuItem("");
-				jn.setEnabled(false);
-				add(jn);
 			} else {
 				if (ob.isSubmenu()) {
 					add(_insertedMenus.get(ob.getName()));
