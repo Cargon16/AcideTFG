@@ -330,7 +330,13 @@ public class AcideAboutUsWindow extends JFrame {
 
 		_developersPanel.add(new JLabel(AcideLanguageManager.getInstance()
 				.getLabels().getString("s1107")), constraints);
-
+		
+		constraints.gridx = 0;
+		constraints.gridy = 14;
+		
+		_developersPanel.add(new JLabel(AcideLanguageManager.getInstance()
+				.getLabels().getString("s1108")), constraints);
+		
 		constraints.insets = new Insets(5, 5, 5, 5);
 		constraints.gridx = 0;
 		constraints.gridy = 0;

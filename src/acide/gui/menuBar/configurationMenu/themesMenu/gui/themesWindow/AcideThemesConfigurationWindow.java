@@ -52,6 +52,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -633,7 +634,7 @@ public class AcideThemesConfigurationWindow extends JFrame {
 			AcideLog.getLog().info("1043");
 			if(!_themeName.getText().isEmpty()){
 				int ventanaYesNotCancel = JOptionPane.showConfirmDialog(null, AcideLanguageManager.getInstance().getLabels().getString("s2385")
-						, "Javadesde0.com", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						, AcideLanguageManager.getInstance().getLabels().getString("s2385") , JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				
 				if(ventanaYesNotCancel == 0) {
 					saveTheme();
@@ -933,7 +934,9 @@ public class AcideThemesConfigurationWindow extends JFrame {
 				
 
 				// save properties to project root folder
-				prop.store(new FileOutputStream(file.getPath()), null);
+				FileOutputStream in = new FileOutputStream(file.getPath());
+				prop.store(in, null);
+				in.close();
 				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().removeAll();
 				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().getInsertedItem().clear();
 				AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()

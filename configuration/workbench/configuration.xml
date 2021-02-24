@@ -92,15 +92,15 @@
     <__fontStyle>0</__fontStyle>
     <__fontSize>12</__fontSize>
     <__foregroundColor>
-      <red>0</red>
-      <green>0</green>
-      <blue>0</blue>
-      <alpha>255</alpha>
-    </__foregroundColor>
-    <__backgroundColor>
       <red>255</red>
       <green>255</green>
       <blue>255</blue>
+      <alpha>255</alpha>
+    </__foregroundColor>
+    <__backgroundColor>
+      <red>102</red>
+      <green>102</green>
+      <blue>102</blue>
       <alpha>255</alpha>
     </__backgroundColor>
     <__editionMode>false</__editionMode>
@@ -213,7 +213,7 @@
       </__list>
     </__list>
     <__consoleLexiconConfiguration>./configuration/lexicon/default.xml</__consoleLexiconConfiguration>
-    <__applyLexiconToConsole>false</__applyLexiconToConsole>
+    <__applyLexiconToConsole>true</__applyLexiconToConsole>
   </__lexiconAssignerConfiguration>
   <__recentFilesConfiguration>
     <__list>

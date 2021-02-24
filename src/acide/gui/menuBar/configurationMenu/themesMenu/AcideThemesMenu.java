@@ -1,7 +1,6 @@
 package acide.gui.menuBar.configurationMenu.themesMenu;
 
 import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -140,7 +139,8 @@ public class AcideThemesMenu extends JMenu {
 				openMenuItem.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						try {
-							prop.load(new FileInputStream(arch.getPath()));
+							FileInputStream in= new FileInputStream(arch.getPath());
+							prop.load(in);
 
 							String colorB = prop.getProperty("backgroundColor");
 							String colorF = prop.getProperty("foregroundColor");
@@ -155,6 +155,7 @@ public class AcideThemesMenu extends JMenu {
 							Pair<Color, Color> colorFileEditor = new Pair<Color, Color>(
 									new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
 							changeTheme(colorGeneral, colorConsole, colorFileEditor);
+							in.close();
 						} catch (IOException e1) {
 						}
 					}
@@ -166,7 +167,7 @@ public class AcideThemesMenu extends JMenu {
 					b.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							Object[] options1 = { AcideLanguageManager.getInstance().getLabels().getString("s2051"),
-									AcideLanguageManager.getInstance().getLabels().getString("s950"),
+									AcideLanguageManager.getInstance().getLabels().getString("s2387"),
 									AcideLanguageManager.getInstance().getLabels().getString("s42") };
 
 							JPanel panel = new JPanel();

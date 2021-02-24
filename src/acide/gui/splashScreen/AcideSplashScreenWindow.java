@@ -59,7 +59,7 @@ public class AcideSplashScreenWindow extends JWindow {
 	 * ACIDE - A Configurable IDE splash screen window images resource path.
 	 */
 	private static final ImageIcon IMAGE = new ImageIcon(
-			"./resources/images/splashScreen.png");
+			"./resources/images/splashScreenActual.png");
 	/**
 	 * ACIDE - A Configurable IDE splash screen window unique class instance.
 	 */
