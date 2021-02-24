@@ -177,7 +177,7 @@ public class AcideThemesMenu extends JMenu {
 							panel.add(textField);
 							boolean opcionesValidas = false;
 							while(!opcionesValidas) {
-							int result = JOptionPane.showOptionDialog(null, panel, "Enter a Number",
+							int result = JOptionPane.showOptionDialog(null, panel, AcideLanguageManager.getInstance().getLabels().getString("s2386"),
 									JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
 							if (result == JOptionPane.YES_OPTION) {
 								File folder = new File("./configuration/themes");
