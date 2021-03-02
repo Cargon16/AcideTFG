@@ -39,15 +39,25 @@
  */
 package acide.gui.debugPanel.debugCanvas.listeners;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Iterator;
+import javax.swing.border.BevelBorder;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.ImageIcon;
 
 import acide.gui.debugPanel.debugCanvas.AcideDebugCanvas;
 import acide.gui.graphUtils.DirectedWeightedGraph;
 import acide.gui.graphUtils.Node;
+import acide.language.AcideLanguageManager;
+import acide.gui.mainWindow.AcideMainWindow;
+import acide.gui.debugPanel.debugSQLPanel.AcideDebugSQLDebugWindow;
 
 /**
  * ACIDE - A Configurable IDE debug canvas mouse motion listener.
@@ -75,6 +85,15 @@ public class AcideDebugCanvasMouseMotionListener implements MouseMotionListener 
 	 * ACIDE - A Configurable IDE debug canvas mouse motion listener the mouse was clicking a node.
 	 */
 	private boolean _nodeClicked=false;
+	/**
+	 * ACIDE - A Configurable IDE debug canvas mouse motion listener node tooltip.
+	 */
+	private JPopupMenu _nodeToolTip=new JPopupMenu();
+	/**
+	 * ACIDE - A Configurable IDE debug canvas mouse motion listener node info icon
+	 */
+	private final static ImageIcon NODE_INFO = new ImageIcon("./resources/icons/panels/info.png");
+
 	/**
 	 * Creates a new ACIDE - A Configurable IDE debug canvas mouse motion listener.
 	 * @param canvas the canvas to listen.
@@ -150,6 +169,49 @@ public class AcideDebugCanvasMouseMotionListener implements MouseMotionListener 
 		_nodeClicked=false;
 		_selected =null;
 
-	}
+		if(AcideMainWindow.getInstance().getDebugPanel().getTabbedPane().getSelectedIndex()==2){
+			// Gets the graphs of the canvas
+			DirectedWeightedGraph graph = _canvas.get_graph();
+			// Gets the nodes of the graph
+			ArrayList<Node> nodes = graph.get_nodes();
+			for(int i=0;i<_nodeToolTip.getComponentCount();i++){
+				_nodeToolTip.remove(i);
+			}
+			if(_nodeToolTip.isVisible())_nodeToolTip.setVisible(false);
+			// Searches if a mouse is over a node
+			for (Node n : nodes) {
+				if (arg0.getX() >= n.getX() && arg0.getX() <= n.getX() + (int) (_canvas.getNodeSize() * _canvas.getZoom())
+						&& arg0.getY() >= n.getY() && arg0.getY() <= n.getY() +
+								(int) (_canvas.getNodeSize() * _canvas.getZoom())) {
+					JMenuItem item;
+					String status=AcideLanguageManager.getInstance().getLabels().getString("s2395");// Gray or yellow
+					if(n.getNodeColor().equals(Color.GREEN))
+						status=AcideLanguageManager.getInstance().getLabels().getString("s2396");
+					else if(n.getNodeColor().equals(Color.ORANGE))
+						status=AcideLanguageManager.getInstance().getLabels().getString("s2397");
+					else if(n.getNodeColor().equals(Color.RED))
+						status=AcideLanguageManager.getInstance().getLabels().getString("s2398");
+					LinkedList<String> errors=AcideDebugSQLDebugWindow.getInstance().getErrors();
+					Iterator<String> it=errors.iterator();
+					String error="";
+					boolean find=false;
+					while(!find && it.hasNext()){
+						error=it.next();
+						if(error.substring(error.lastIndexOf(" ")+1).equals(n.getLabel()
+								.substring(0,n.getLabel().indexOf("/")))){
+							find=true;
+						}
+					}
+					if(find)item=new JMenuItem("<html><div>"+status+"</div><div>"+error.substring(0,error.indexOf(")")+1)
+							+"</div></html>",NODE_INFO);
+					else item=new JMenuItem("<html><div>"+status+"</div></html>",NODE_INFO);
+					_nodeToolTip.add(item);
+					_nodeToolTip.setBorder(new BevelBorder(BevelBorder.RAISED));
+					_nodeToolTip.show(arg0.getComponent(),arg0.getX()+10,arg0.getY()+10);
+					break;
+				}
+			}
+		}
 
+	}
 }

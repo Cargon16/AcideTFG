@@ -1583,6 +1583,10 @@ public class AcideDataBasePanel extends JPanel {
 	public void setTextMenuBar() {
 		String name = AcideLanguageManager.getInstance().getLabels().getString("s2023");
 		((JLabel) menuBar.getComponent(1)).setText(" " + name);
+		refreshDB.setToolTipText(AcideLanguageManager.getInstance().getLabels()
+				.getString("s2044"));
+		resetDB.setToolTipText(AcideLanguageManager.getInstance().getLabels()
+				.getString("s987"));
 	}
 	
 	/*

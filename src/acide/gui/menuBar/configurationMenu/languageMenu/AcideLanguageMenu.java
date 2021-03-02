@@ -52,6 +52,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.ImageIcon;
 
 import acide.configuration.menu.AcideInsertedItem;
 import acide.configuration.menu.AcideInsertedMenu;
@@ -413,7 +414,7 @@ public class AcideLanguageMenu extends JMenu {
                 
 				String iconPath = ResourceBundle.getBundle(filePath.substring(0, filePath.lastIndexOf("."))
 									, Locale.ENGLISH, loadder).getString("sconfig4");
-				if(iconPath!= null && !iconPath.equals("") && new File(new File(iconPath).toURI().toURL().getPath()).exists())
+				if(iconPath!= null && !iconPath.equals("") && new ImageIcon(iconPath).getIconWidth()>0)
 					languageFileMenuItem.setIcon(IconsUtils.getIcon(iconPath));
                                 
 				// Adds the action listener to the menu item

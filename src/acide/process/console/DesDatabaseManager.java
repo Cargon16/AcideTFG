@@ -767,7 +767,8 @@ public class DesDatabaseManager extends AcideDatabaseManager {
 
 		ret = executeCommand("/tapi /use_db " + database);
 
-		ret = executeCommand("/dbschema " + view);
+		//ret = executeCommand("/dbschema " + view);
+		ret = executeCommand("/tapi /dbschema " +'"'+view+'"');
 
 		String result = "";
 
@@ -777,7 +778,7 @@ public class DesDatabaseManager extends AcideDatabaseManager {
 
 		while (!foundSQL && i < ret.size()) {
 
-			if (ret.get(i).contains("    - Defining SQL statement:")) {
+			if (ret.get(i).equals("$")) {
 
 				foundSQL = true;
 
@@ -787,8 +788,7 @@ public class DesDatabaseManager extends AcideDatabaseManager {
 
 		}
 
-
-		while (i < ret.size() && !ret.get(i).contains("- Datalog equivalent rules:")) {
+		while (i < ret.size() && !ret.get(i).equals("$")) {
 
 			result +=  ret.get(i) + "\n";
 

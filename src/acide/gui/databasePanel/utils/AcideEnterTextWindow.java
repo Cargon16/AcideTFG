@@ -39,6 +39,11 @@
  */
 package acide.gui.databasePanel.utils;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -97,6 +102,10 @@ public class AcideEnterTextWindow extends JDialog {
 	private boolean _editable;
 	
 	private String _database;
+
+	private JCheckBox _wordWrapMenuItem;
+
+	private JPanel _optionPanel;
 	
 	public AcideEnterTextWindow(String prompt, String title, boolean editable){
 		
@@ -157,13 +166,26 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 		_text = new JTextArea();
 		
 		//Datalog window is not editable
-		if (_title.contains("Datalog")) _text.setEditable(false);
-			else _text.setEditable(true);
+		if (_title.contains("Datalog"))_text.setEditable(false);
+		else _text.setEditable(true);
 		
 		_text.setText(_prompt);
 		_text.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
 		if (!_title.contains("Datalog")) {
+
+			// builds the word wrap check box
+			_wordWrapMenuItem = new JCheckBox();
+			// sets the default selected option
+			_wordWrapMenuItem.setSelected(false);
+			// sets the text of the word wrap check box
+			_wordWrapMenuItem.setText(AcideLanguageManager.getInstance()
+					.getLabels().getString("s2014"));
+			_wordWrapMenuItem.setFont(_wordWrapMenuItem.getFont().deriveFont(
+					10f));
+			// adds the word wrap check box to the option panel
+			_optionPanel=new JPanel();
+			_optionPanel.add(_wordWrapMenuItem);
 			
 			_applyButton = new JButton(AcideLanguageManager.getInstance().getLabels().getString("s154"));
 			if (AcideLanguageManager.getInstance().getCurrentLocale().equals(new Locale("en", "EN"))){
@@ -192,7 +214,10 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 	private void setLookAndFeel(){
 		_panel.add(_scrollPane, BorderLayout.CENTER);
 
-		if (!_title.contains("Datalog")) _panel.add(_buttonPanel, BorderLayout.SOUTH);
+		if (!_title.contains("Datalog")){
+			_panel.add(_optionPanel, BorderLayout.NORTH);
+			_panel.add(_buttonPanel, BorderLayout.SOUTH);
+		}
 
 		getContentPane().add(_panel,BorderLayout.CENTER);
 		setLocationRelativeTo(null);
@@ -205,6 +230,18 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 	private void addListeners() {
 
 		if (!_title.contains("Datalog")){
+			_wordWrapMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(_text.getLineWrap()){
+						_text.setLineWrap(false);
+						_text.setWrapStyleWord(false);
+					}
+					else{
+						_text.setLineWrap(true);
+						_text.setWrapStyleWord(true);
+					}
+				}
+			});
 			_applyButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					save();

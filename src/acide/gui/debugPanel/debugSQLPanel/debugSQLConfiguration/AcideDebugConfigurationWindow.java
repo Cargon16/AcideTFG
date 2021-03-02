@@ -5,6 +5,7 @@ import acide.files.utils.AcideFileOperation;
 import acide.files.utils.AcideFileTarget;
 import acide.files.utils.AcideFileType;
 import acide.gui.debugPanel.debugSQLPanel.AcideDebugSQLDebugWindow;
+import acide.gui.debugPanel.utils.AcideDebugHelper;
 import acide.gui.listeners.AcideWindowClosingListener;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
@@ -514,10 +515,13 @@ public class AcideDebugConfigurationWindow extends JFrame {
          */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            if (trust_tablesYesRadio.isSelected())
+            if (trust_tablesYesRadio.isSelected()) {
                 configuration.setTrust_tables(AcideDebugConfiguration.Trust_tables.YES);
-            else
+                AcideDebugHelper.setTrustedTableNodes();
+            }else{
                 configuration.setTrust_tables(AcideDebugConfiguration.Trust_tables.NO);
+                AcideDebugHelper.resetColorTableNodes();
+            }
 
             configuration.setTrust_file(trust_fileTextField.getText());
 

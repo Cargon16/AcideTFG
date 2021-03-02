@@ -267,10 +267,14 @@ public class AcideDebugPanel extends JPanel {
 			if (_tabbedPane.getTitleAt(_traceSQLPanelIndex) != null)
 				_tabbedPane.setTitleAt(_traceSQLPanelIndex, AcideLanguageManager
 						.getInstance().getLabels().getString("s2276"));
+			if(_traceSQLPanel!=null)
+				_traceSQLPanel.setComponentsText();
 			if (_tabbedPane.getTitleAt(_debugSQLPanelIndex) != null)
 				_tabbedPane.setTitleAt(_debugSQLPanelIndex, AcideLanguageManager
 						.getInstance().getLabels().getString("s2277"));
-			
+			if(_debugSQLPanel!=null)
+				_debugSQLPanel.setComponentsText();
+
 		}
 	}
 
@@ -557,5 +561,31 @@ public class AcideDebugPanel extends JPanel {
 			g2d.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
 
 		}
+	}
+
+	/**
+	 * Disable components assigned to the ACIDE - A Configurable IDE debug panel.
+	 */
+	public void disableComponents(){
+		for(Component m:_menuBar.getComponents()) {
+			m.setEnabled(false);
+		}
+		_tabbedPane.setEnabled(false);
+		_debugSQLPanel.disableComponents();
+		_traceSQLPanel.disableComponents();
+		_traceDatalogPanel.disableComponents();
+	}
+
+	/**
+	 * Enable components assigned to the ACIDE - A Configurable IDE debug panel.
+	 */
+	public void enableComponents(){
+		for(Component m:_menuBar.getComponents()) {
+			m.setEnabled(true);
+		}
+		_tabbedPane.setEnabled(true);
+		_debugSQLPanel.enableComponents();
+		_traceSQLPanel.enableComponents();
+		_traceDatalogPanel.enableComponents();
 	}
 }

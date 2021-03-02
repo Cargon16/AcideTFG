@@ -126,6 +126,35 @@ public class AcideTraceDatalogPanel extends JPanel {
 	 */
 	private JButton _locateButton;
 	/**
+	 * ACIDE - A Configurable IDE trace datalog panel zoom in button.
+	 */
+	private JButton _zoomin;
+
+	/**
+	 * ACIDE - A Configurable IDE trace datalog panel zoom out button.
+	 */
+	private JButton _zoomout;
+
+	/**
+	 * ACIDE - A Configurable IDE trace datalog panel first node button.
+	 */
+	private JButton _firstNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE trace datalog panel prev node button.
+	 */
+	private JButton _prevNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE trace datalog panel next node button.
+	 */
+	private JButton _nextNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE trace datalog panel last node button.
+	 */
+	private JButton _lastNodeButton;
+	/**
 	 * ACIDE - A Configurable IDE trace datalog panel to the first button icon
 	 */
 	private final static ImageIcon TO_THE_FIRST_IMAGE = new ImageIcon(
@@ -237,21 +266,21 @@ public class AcideTraceDatalogPanel extends JPanel {
 		// adds the zoom spinner to the button panel
 		subButtonPanel1.add(_zoomSpinner);
 		// creates the zoom in button
-		JButton zoomin = new JButton(ADD_IMAGE);
-		zoomin.setPreferredSize(new Dimension((int) (1.5 * zoomin.getIcon()
-				.getIconWidth()), (int) zoomin.getPreferredSize().getHeight()));
+		_zoomin = new JButton(ADD_IMAGE);
+		_zoomin.setPreferredSize(new Dimension((int) (1.5 * _zoomin.getIcon()
+				.getIconWidth()), (int) _zoomin.getPreferredSize().getHeight()));
 		// adds the zoom in action listener
-		zoomin.addActionListener(new AcideTraceDatalogPanelZoomInListener());
+		_zoomin.addActionListener(new AcideTraceDatalogPanelZoomInListener());
 		// adds the zoom in button to the button panel
-		subButtonPanel1.add(zoomin);
+		subButtonPanel1.add(_zoomin);
 		// creates the zoom out button
-		JButton zoomout = new JButton(MINUS_IMAGE);
-		zoomout.setPreferredSize(new Dimension((int) (1.5 * zoomout.getIcon()
-				.getIconWidth()), (int) zoomout.getPreferredSize().getHeight()));
+		_zoomout = new JButton(MINUS_IMAGE);
+		_zoomout.setPreferredSize(new Dimension((int) (1.5 * _zoomout.getIcon()
+				.getIconWidth()), (int) _zoomout.getPreferredSize().getHeight()));
 		// adds the zoom out action listener
-		zoomout.addActionListener(new AcideTraceDatalogPanelZoomOutListener());
+		_zoomout.addActionListener(new AcideTraceDatalogPanelZoomOutListener());
 		// adds the zoom out button to the button panel
-		subButtonPanel1.add(zoomout);
+		subButtonPanel1.add(_zoomout);
 		// builds the show labels check box
 		_showLabelsMenuItem = new JCheckBox();
 		// sets the default selected option
@@ -294,45 +323,45 @@ public class AcideTraceDatalogPanel extends JPanel {
 		});
 		subButtonPanel2.add(_datalogQueryButton);
 		// Creates the first node button
-		JButton firstNodeButton = new JButton(TO_THE_FIRST_IMAGE);
-		firstNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * firstNodeButton.getIcon().getIconWidth()),
-				(int) firstNodeButton.getPreferredSize().getHeight()));
+		_firstNodeButton = new JButton(TO_THE_FIRST_IMAGE);
+		_firstNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _firstNodeButton.getIcon().getIconWidth()),
+				(int) _firstNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the first node button
-		firstNodeButton
+		_firstNodeButton
 				.addActionListener(new AcideTraceDatalogPanelFirstNodeListener());
 		// adds the first node button to the button panel
-		subButtonPanel2.add(firstNodeButton);
+		subButtonPanel2.add(_firstNodeButton);
 		// creates the previous node button
-		JButton prevNodeButton = new JButton(TO_THE_LEFT_IMAGE);
-		prevNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * prevNodeButton.getIcon().getIconWidth()),
-				(int) prevNodeButton.getPreferredSize().getHeight()));
+		_prevNodeButton = new JButton(TO_THE_LEFT_IMAGE);
+		_prevNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _prevNodeButton.getIcon().getIconWidth()),
+				(int) _prevNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the previous node button
-		prevNodeButton
+		_prevNodeButton
 				.addActionListener(new AcideTraceDatalogPanelPreviousNodeListener());
 		// adds the previous node button to the button panel
-		subButtonPanel2.add(prevNodeButton);
+		subButtonPanel2.add(_prevNodeButton);
 		// creates the next node button
-		JButton nextNodeButton = new JButton(TO_THE_RIGHT_IMAGE);
-		nextNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * nextNodeButton.getIcon().getIconWidth()),
-				(int) nextNodeButton.getPreferredSize().getHeight()));
+		_nextNodeButton = new JButton(TO_THE_RIGHT_IMAGE);
+		_nextNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _nextNodeButton.getIcon().getIconWidth()),
+				(int) _nextNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the next node button
-		nextNodeButton
+		_nextNodeButton
 				.addActionListener(new AcideTraceDatalogPanelNexNodeListener());
 		// adds the next node button to the button panel
-		subButtonPanel2.add(nextNodeButton);
+		subButtonPanel2.add(_nextNodeButton);
 		// Creates the last node button
-		JButton lastNodeButton = new JButton(TO_THE_LAST_IMAGE);
-		lastNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * lastNodeButton.getIcon().getIconWidth()),
-				(int) lastNodeButton.getPreferredSize().getHeight()));
+		_lastNodeButton = new JButton(TO_THE_LAST_IMAGE);
+		_lastNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _lastNodeButton.getIcon().getIconWidth()),
+				(int) _lastNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the last node button
-		lastNodeButton
+		_lastNodeButton
 				.addActionListener(new AcideTraceDatalogPanelLastNodeListener());
 		// adds the last node button to the button panel
-		subButtonPanel2.add(lastNodeButton);
+		subButtonPanel2.add(_lastNodeButton);
 		// Creates locate button
 		_locateButton = new JButton(AcideLanguageManager.getInstance()
 				.getLabels().getString("s2295"));
@@ -485,6 +514,18 @@ public class AcideTraceDatalogPanel extends JPanel {
 				.getLabels().getString("s2279"));
 		_locateButton.setText(AcideLanguageManager.getInstance()
 				.getLabels().getString("s2295"));
+		_zoomin.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2389"));
+		_zoomout.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2390"));
+		_firstNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2391"));
+		_prevNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2392"));
+		_nextNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2393"));
+		_lastNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2394"));
 	}
 
 	/**
@@ -502,4 +543,27 @@ public class AcideTraceDatalogPanel extends JPanel {
 		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
 	}
 
+	/**
+	 * Disable components assigned to the ACIDE - A Configurable IDE trace Datalog panel.
+	 */
+	public void disableComponents(){
+		_canvas.setEnabled(false);
+		for(Component p:_mainButtonPanel.getComponents()){
+			for(Component b:((JPanel)p).getComponents()){
+				b.setEnabled(false);
+			}
+		}
+	}
+
+	/**
+	 * Enable components assigned to the ACIDE - A Configurable IDE trace Datalog panel.
+	 */
+	public void enableComponents(){
+		_canvas.setEnabled(true);
+		for(Component p:_mainButtonPanel.getComponents()){
+			for(Component b:((JPanel)p).getComponents()){
+				b.setEnabled(true);
+			}
+		}
+	}
 }

@@ -244,6 +244,7 @@ public class AcideDebugSQLDebugWindow extends JFrame {
                 AcideDebugHelper.performDebug("abort");
         }
         AcideDebugHelper.refreshDebugGraph();
+        resetErrors();
 
         // Enables the main window again
         AcideMainWindow.getInstance().setEnabled(true);
@@ -421,9 +422,8 @@ public class AcideDebugSQLDebugWindow extends JFrame {
                         .getLabels().getString("s2379"));
             } else {
                 addError(AcideLanguageManager.getInstance()
-                        .getLabels().getString("s2363") + " " + AcideDebugSQLDebugWindow.getInstance().getView() + " " +
-                        AcideLanguageManager.getInstance()
-                                .getLabels().getString("s2364") + " (" + data + ")");
+                        .getLabels().getString("s2350") + " (" + data + ") " + AcideLanguageManager.getInstance()
+                        .getLabels().getString("s2399") +" "+ AcideDebugSQLDebugWindow.getInstance().getView());
                 AcideDebugHelper.performDebug("missing(" +
                         AcideDebugSQLDebugWindow.getInstance().getView() + "(" + data + "))");
                 if (AcideMainWindow.getInstance().getDebugPanel().getDebugSQLPanel().isDebuging())
@@ -442,9 +442,9 @@ public class AcideDebugSQLDebugWindow extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             addError(AcideLanguageManager.getInstance()
-                    .getLabels().getString("s2361") + " " + AcideDebugSQLDebugWindow.getInstance().getView() + " " +
-                    AcideLanguageManager.getInstance()
-                            .getLabels().getString("s2362") + " (" + AcideDebugHelper.getDataFromSelectedTuple(jTable) + ")");
+                    .getLabels().getString("s2351") + " (" + AcideDebugHelper.getDataFromSelectedTuple(jTable) + ") "+
+                    AcideLanguageManager.getInstance().getLabels().getString("s2399") +" "+
+                    AcideDebugSQLDebugWindow.getInstance().getView());
             AcideDebugHelper.performDebug("wrong(" +
                     AcideDebugSQLDebugWindow.getInstance().getView() + "(" + AcideDebugHelper.getDataFromSelectedTuple(jTable) +"))");
             if(AcideMainWindow.getInstance().getDebugPanel().getDebugSQLPanel().isDebuging())

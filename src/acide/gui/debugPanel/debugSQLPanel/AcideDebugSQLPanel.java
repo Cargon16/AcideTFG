@@ -150,14 +150,47 @@ public class AcideDebugSQLPanel extends JPanel {
 	 * ACIDE - A Configurable IDE debug SQL panel Color Node.
 	 */
 	private JMenuItem _colorNodeOrange;
-	
 	/**
-	 * ACIDE - A Configurable IDE debug datalog panel to the first button icon
+	 * ACIDE - A Configurable IDE debug SQL panel show label view label.
+	 */
+	private JLabel _viewLabel;
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel zoom in button.
+	 */
+	private JButton _zoomin;
+
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel zoom out button.
+	 */
+	private JButton _zoomout;
+
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel first node button.
+	 */
+	private JButton _firstNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel prev node button.
+	 */
+	private JButton _prevNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel next node button.
+	 */
+	private JButton _nextNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel last node button.
+	 */
+	private JButton _lastNodeButton;
+
+	/**
+	 * ACIDE - A Configurable IDE debug SQL panel to the first button icon
 	 */
 	private final static ImageIcon TO_THE_FIRST_IMAGE = new ImageIcon(
 			"./resources/icons/menu/configuration/menu/double_left_arrow.png");
 	/**
-	 * ACIDE - A Configurable IDE debug datalog panel to the last button icon
+	 * ACIDE - A Configurable IDE debug SQL panel to the last button icon
 	 */
 	private final static ImageIcon TO_THE_LAST_IMAGE = new ImageIcon(
 			"./resources/icons/menu/configuration/menu/double_right_arrow.png");
@@ -334,21 +367,21 @@ public class AcideDebugSQLPanel extends JPanel {
 				.addChangeListener(new AcideDebugSQLPanelZoomSpinnerListener());
 		subButtonPanel1.add(_zoomSpinner);
 		// creates the zoom in button
-		JButton zoomin = new JButton(ADD_IMAGE);
-		zoomin.setPreferredSize(new Dimension((int) (1.5 * zoomin.getIcon()
-				.getIconWidth()), (int) zoomin.getPreferredSize().getHeight()));
+		_zoomin = new JButton(ADD_IMAGE);
+		_zoomin.setPreferredSize(new Dimension((int) (1.5 * _zoomin.getIcon()
+				.getIconWidth()), (int) _zoomin.getPreferredSize().getHeight()));
 		// adds the zoom in action listener
-		zoomin.addActionListener(new AcideDebugSQLPanelZoomInListener());
+		_zoomin.addActionListener(new AcideDebugSQLPanelZoomInListener());
 		// adds the zoom in button to the button panel
-		subButtonPanel1.add(zoomin);
+		subButtonPanel1.add(_zoomin);
 		// creates the zoom out button
-		JButton zoomout = new JButton(MINUS_IMAGE);
-		zoomout.setPreferredSize(new Dimension((int) (1.5 * zoomout.getIcon()
-				.getIconWidth()), (int) zoomout.getPreferredSize().getHeight()));
+		_zoomout = new JButton(MINUS_IMAGE);
+		_zoomout.setPreferredSize(new Dimension((int) (1.5 * _zoomout.getIcon()
+				.getIconWidth()), (int) _zoomout.getPreferredSize().getHeight()));
 		// adds the zoom out action listener
-		zoomout.addActionListener(new AcideDebugSQLPanelZoomOutListener());
+		_zoomout.addActionListener(new AcideDebugSQLPanelZoomOutListener());
 		// adds the zoom out button to the button panel
-		subButtonPanel1.add(zoomout);
+		subButtonPanel1.add(_zoomout);
 		// builds the show labels check box
 		_showLabelsMenuItem = new JCheckBox();
 		// sets the default selected option
@@ -371,10 +404,10 @@ public class AcideDebugSQLPanel extends JPanel {
 		// adds the sub button panel to the main button panel
 		_mainButtonPanel.add(subButtonPanel2, BorderLayout.SOUTH);
 		// Builds the view label
-		JLabel viewLabel = new JLabel(AcideLanguageManager.getInstance()
+		_viewLabel = new JLabel(AcideLanguageManager.getInstance()
 				.getLabels().getString("s2287"));
-		viewLabel.setFont(viewLabel.getFont().deriveFont(10f));
-		subButtonPanel2.add(viewLabel);
+		_viewLabel.setFont(_viewLabel.getFont().deriveFont(10f));
+		subButtonPanel2.add(_viewLabel);
 		// Builds the views combo box
 		_viewBox = new JComboBox();
 		_viewBox.addItem("          ");
@@ -427,45 +460,45 @@ public class AcideDebugSQLPanel extends JPanel {
 		});
 		subButtonPanel2.add(_viewBox);
 		// Creates the first node button
-		JButton firstNodeButton = new JButton(TO_THE_FIRST_IMAGE);
-		firstNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * firstNodeButton.getIcon().getIconWidth()),
-				(int) firstNodeButton.getPreferredSize().getHeight()));
+		_firstNodeButton = new JButton(TO_THE_FIRST_IMAGE);
+		_firstNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _firstNodeButton.getIcon().getIconWidth()),
+				(int) _firstNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the first node button
-		firstNodeButton
+		_firstNodeButton
 				.addActionListener(new AcideDebugSQLPanelFirstNodeListener());
 		// adds the firs node button to the button panel
-		subButtonPanel2.add(firstNodeButton);
+		subButtonPanel2.add(_firstNodeButton);
 		// creates the previous node button
-		JButton prevNodeButton = new JButton(TO_THE_LEFT_IMAGE);
-		prevNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * prevNodeButton.getIcon().getIconWidth()),
-				(int) prevNodeButton.getPreferredSize().getHeight()));
+		_prevNodeButton = new JButton(TO_THE_LEFT_IMAGE);
+		_prevNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _prevNodeButton.getIcon().getIconWidth()),
+				(int) _prevNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the previous node button
-		prevNodeButton
+		_prevNodeButton
 				.addActionListener(new AcideDebugSQLPanelPreviousNodeListener());
 		// adds the previous node button to the button panel
-		subButtonPanel2.add(prevNodeButton);
+		subButtonPanel2.add(_prevNodeButton);
 		// creates the next node button
-		JButton nextNodeButton = new JButton(TO_THE_RIGHT_IMAGE);
-		nextNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * nextNodeButton.getIcon().getIconWidth()),
-				(int) nextNodeButton.getPreferredSize().getHeight()));
+		_nextNodeButton = new JButton(TO_THE_RIGHT_IMAGE);
+		_nextNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _nextNodeButton.getIcon().getIconWidth()),
+				(int) _nextNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the next node button
-		nextNodeButton
+		_nextNodeButton
 				.addActionListener(new AcideDebugSQLPanelNextNodeListener());
 		// adds the next node button to the button panel
-		subButtonPanel2.add(nextNodeButton);
+		subButtonPanel2.add(_nextNodeButton);
 		// Creates the last node button
-		JButton lastNodeButton = new JButton(TO_THE_LAST_IMAGE);
-		lastNodeButton.setPreferredSize(new Dimension(
-				(int) (1.5 * lastNodeButton.getIcon().getIconWidth()),
-				(int) lastNodeButton.getPreferredSize().getHeight()));
+		_lastNodeButton = new JButton(TO_THE_LAST_IMAGE);
+		_lastNodeButton.setPreferredSize(new Dimension(
+				(int) (1.5 * _lastNodeButton.getIcon().getIconWidth()),
+				(int) _lastNodeButton.getPreferredSize().getHeight()));
 		// adds the action listener to the last node button
-		lastNodeButton
+		_lastNodeButton
 				.addActionListener(new AcideDebugSQLPanelLastNodeListener());
 		// adds the last node button to the button panel
-		subButtonPanel2.add(lastNodeButton);
+		subButtonPanel2.add(_lastNodeButton);
 		// Builds the show rules check box
 		_showSQLMenuItem = new JCheckBox();
 		// sets the default selected option
@@ -852,5 +885,73 @@ public class AcideDebugSQLPanel extends JPanel {
 		}
 		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
 	}
+	/**
+	 * Sets the text of the components assigned to the ACIDE - A Configurable
+	 * IDE debug SQL panel.
+	 */
+	public void setComponentsText() {
+		// sets the text of the show labels check box
+		_showLabelsMenuItem.setText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2263"));
+		// sets the text of the show rules check box
+		_showSQLMenuItem.setText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2141"));
+		// Set the text of view label
+		_viewLabel.setText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2287"));
+		// sets tooltip button
+		refreshSQL.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2044"));
+		// sets tooltip button
+		showView.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2323"));
+		// sets tooltip button
+		startDebug.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2325"));
+		// sets tooltip button
+		configurationDebug.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2326"));
+		// sets tooltip button
+		_zoomin.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2389"));
+		// sets tooltip button
+		_zoomout.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2390"));
+		// sets tooltip button
+		_firstNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2391"));
+		// sets tooltip button
+		_prevNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2392"));
+		// sets tooltip button
+		_nextNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2393"));
+		// sets tooltip button
+		_lastNodeButton.setToolTipText(AcideLanguageManager.getInstance()
+				.getLabels().getString("s2394"));
+	}
 
+	/**
+	 * Disable components assigned to the ACIDE - A Configurable IDE debug SQL panel.
+	 */
+	public void disableComponents(){
+		_canvas.setEnabled(false);
+		for(Component p:_mainButtonPanel.getComponents()){
+			for(Component b:((JPanel)p).getComponents()){
+				b.setEnabled(false);
+			}
+		}
+	}
+
+	/**
+	 * Enable components assigned to the ACIDE - A Configurable IDE debug SQL panel.
+	 */
+	public void enableComponents(){
+		_canvas.setEnabled(true);
+		for(Component p:_mainButtonPanel.getComponents()){
+			for(Component b:((JPanel)p).getComponents()){
+				b.setEnabled(true);
+			}
+		}
+	}
 }

@@ -188,6 +188,44 @@ public class AcideDebugHelper {
         }
     }
 
+    public static void setTrustedTableNodes(){
+        if(!AcideMainWindow.getInstance().getDebugPanel().getDebugSQLPanel().isDebuging()) {
+            String db = DesDatabaseManager.getInstance().currentDB();
+            AcideDebugCanvas debugCanvas = AcideMainWindow.getInstance()
+                    .getDebugPanel().getDebugSQLPanel().getCanvas();
+            Node rootNode=debugCanvas.getRootNode();
+            if(rootNode!=null){
+                for (Node n : debugCanvas.get_graph().get_nodes()) {
+                    if (DesDatabaseManager.getInstance().isTable(db, n.getLabel().split("/")[0])) {
+                        debugCanvas.setSelectedNode(n);
+                        debugCanvas.setColorSelectedNode(Color.GREEN);
+                    }
+                }
+                debugCanvas.setSelectedNode(rootNode);
+                updateCanvasDebug(debugCanvas);
+            }
+        }
+    }
+
+    public static void resetColorTableNodes(){
+        if(!AcideMainWindow.getInstance().getDebugPanel().getDebugSQLPanel().isDebuging()) {
+            String db = DesDatabaseManager.getInstance().currentDB();
+            AcideDebugCanvas debugCanvas = AcideMainWindow.getInstance()
+                    .getDebugPanel().getDebugSQLPanel().getCanvas();
+            Node rootNode=debugCanvas.getRootNode();
+            if(rootNode!=null){
+                for (Node n : debugCanvas.get_graph().get_nodes()) {
+                    if (DesDatabaseManager.getInstance().isTable(db, n.getLabel().split("/")[0])) {
+                        debugCanvas.setSelectedNode(n);
+                        debugCanvas.setColorSelectedNode(Color.GRAY);
+                    }
+                }
+                debugCanvas.setSelectedNode(rootNode);
+                updateCanvasDebug(debugCanvas);
+            }
+        }
+    }
+
     public static void startDebug(){
         try {
             // Gets the canvas
