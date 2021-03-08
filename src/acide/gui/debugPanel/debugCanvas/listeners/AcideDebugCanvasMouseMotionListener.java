@@ -170,31 +170,45 @@ public class AcideDebugCanvasMouseMotionListener implements MouseMotionListener 
 		_selected =null;
 
 		if(AcideMainWindow.getInstance().getDebugPanel().getTabbedPane().getSelectedIndex()==2){
+
 			// Gets the graphs of the canvas
 			DirectedWeightedGraph graph = _canvas.get_graph();
+
 			// Gets the nodes of the graph
 			ArrayList<Node> nodes = graph.get_nodes();
+
 			for(int i=0;i<_nodeToolTip.getComponentCount();i++){
 				_nodeToolTip.remove(i);
 			}
-			if(_nodeToolTip.isVisible())_nodeToolTip.setVisible(false);
+
+			if(_nodeToolTip.isVisible())
+				_nodeToolTip.setVisible(false);
+
 			// Searches if a mouse is over a node
 			for (Node n : nodes) {
 				if (arg0.getX() >= n.getX() && arg0.getX() <= n.getX() + (int) (_canvas.getNodeSize() * _canvas.getZoom())
 						&& arg0.getY() >= n.getY() && arg0.getY() <= n.getY() +
 								(int) (_canvas.getNodeSize() * _canvas.getZoom())) {
+
 					JMenuItem item;
 					String status=AcideLanguageManager.getInstance().getLabels().getString("s2395");// Gray or yellow
+
 					if(n.getNodeColor().equals(Color.GREEN))
 						status=AcideLanguageManager.getInstance().getLabels().getString("s2396");
-					else if(n.getNodeColor().equals(Color.ORANGE))
-						status=AcideLanguageManager.getInstance().getLabels().getString("s2397");
-					else if(n.getNodeColor().equals(Color.RED))
-						status=AcideLanguageManager.getInstance().getLabels().getString("s2398");
+					else{
+						if(n.getNodeColor().equals(Color.ORANGE))
+							status=AcideLanguageManager.getInstance().getLabels().getString("s2397");
+						else {
+							if(n.getNodeColor().equals(Color.RED))
+								status=AcideLanguageManager.getInstance().getLabels().getString("s2398");
+						}
+					}
+					
 					LinkedList<String> errors=AcideDebugSQLDebugWindow.getInstance().getErrors();
 					Iterator<String> it=errors.iterator();
 					String error="";
 					boolean find=false;
+					
 					while(!find && it.hasNext()){
 						error=it.next();
 						if(error.substring(error.lastIndexOf(" ")+1).equals(n.getLabel()
@@ -202,12 +216,16 @@ public class AcideDebugCanvasMouseMotionListener implements MouseMotionListener 
 							find=true;
 						}
 					}
-					if(find)item=new JMenuItem("<html><div>"+status+"</div><div>"+error.substring(0,error.indexOf(")")+1)
+					if(find)
+						item=new JMenuItem("<html><div>"+status+"</div><div>"+error.substring(0,error.indexOf(")")+1)
 							+"</div></html>",NODE_INFO);
-					else item=new JMenuItem("<html><div>"+status+"</div></html>",NODE_INFO);
+					else 
+						item=new JMenuItem("<html><div>"+status+"</div></html>",NODE_INFO);
+					
 					_nodeToolTip.add(item);
 					_nodeToolTip.setBorder(new BevelBorder(BevelBorder.RAISED));
 					_nodeToolTip.show(arg0.getComponent(),arg0.getX()+10,arg0.getY()+10);
+					
 					break;
 				}
 			}
