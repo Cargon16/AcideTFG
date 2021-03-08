@@ -24,13 +24,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba1a32ba-e127-4e7f-a837-8434e318ca72" name="Default Changelist" comment="Aplicadas el resto de tareas SQL implementadas hasta el momento.">
+    <list default="true" id="ba1a32ba-e127-4e7f-a837-8434e318ca72" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/configuration.properties" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/configuration.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/console/default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/console/default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/debug/last.debugConfig" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/debug/last.debugConfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/workbench/configuration.xml" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/workbench/configuration.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/acide/gui/debugPanel/debugCanvas/listeners/AcideDebugCanvasMouseMotionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/acide/gui/debugPanel/debugCanvas/listeners/AcideDebugCanvasMouseMotionListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/language/English.properties" beforeDir="false" afterPath="$PROJECT_DIR$/language/English.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/language/Español.properties" beforeDir="false" afterPath="$PROJECT_DIR$/language/Español.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/language/Français.properties" beforeDir="false" afterPath="$PROJECT_DIR$/language/Français.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,7 +160,7 @@
       <workItem from="1615076285807" duration="151000" />
       <workItem from="1615083999927" duration="48000" />
       <workItem from="1615115182256" duration="86000" />
-      <workItem from="1615186623233" duration="148000" />
+      <workItem from="1615186623233" duration="1348000" />
     </task>
     <task id="LOCAL-00001" summary="wrong and missing options first version">
       <created>1590405880925</created>
@@ -332,7 +330,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615033491527</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Optimización formateo de código">
+      <created>1615187015920</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1615187015920</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -414,7 +419,8 @@
     <MESSAGE value="Aplicado: Comprobar que aparece el reloj de arena cuando se estén procesando los comandos TAPI, bloqueando el cuadro de depuración." />
     <MESSAGE value="Aplicado: Indicar con un tooltip el estado del nodo y la información aportada por el usuario (tuplas incorrectas o faltantes)" />
     <MESSAGE value="Aplicadas el resto de tareas SQL implementadas hasta el momento." />
-    <option name="LAST_COMMIT_MESSAGE" value="Aplicadas el resto de tareas SQL implementadas hasta el momento." />
+    <MESSAGE value="Optimización formateo de código" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimización formateo de código" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
