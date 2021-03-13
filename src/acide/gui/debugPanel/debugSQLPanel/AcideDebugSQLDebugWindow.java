@@ -477,7 +477,8 @@ public class AcideDebugSQLDebugWindow extends JFrame {
             LinkedList<String> info = DesDatabaseManager.getInstance().getDebugStats();
             if(info.size() > 0 && info.get(0).equals("$error")){
                 JOptionPane.showMessageDialog(null, AcideLanguageManager.getInstance()
-                        .getLabels().getString("s2357"));
+                        .getLabels().getString("s2357"), AcideLanguageManager.getInstance()
+                        .getLabels().getString("s2316"), JOptionPane.INFORMATION_MESSAGE);
             }else {
                 String[] columnNames = {AcideLanguageManager.getInstance()
                         .getLabels().getString("s2358"), AcideLanguageManager.getInstance()
@@ -747,5 +748,30 @@ public class AcideDebugSQLDebugWindow extends JFrame {
 
     public void setSubsetView(){
         subsetView = null;
+    }
+
+    /**
+     * Sets the text of the components assigned to the ACIDE - A Configurable
+     * IDE debug SQL debug Window.
+     */
+    public void setComponentsText() {
+        validButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2348"));
+        nonValidButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2349"));
+        missingTupleButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2350"));
+        wrongTupleButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2351"));
+        abortButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2352"));
+        okButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2353"));
+        showStatsButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2354"));
+        editTableButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2355"));
+        editViewButton.setText(AcideLanguageManager.getInstance()
+                .getLabels().getString("s2360"));
     }
 }

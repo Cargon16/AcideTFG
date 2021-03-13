@@ -63,6 +63,7 @@ import acide.gui.debugPanel.listeners.AcideDebugPanelTabbedPaneChangeListener;
 import acide.gui.debugPanel.traceDatalogPanel.AcideTraceDatalogPanel;
 import acide.gui.debugPanel.traceSQLPanel.AcideTraceSQLPanel;
 import acide.gui.debugPanel.debugSQLPanel.AcideDebugSQLPanel;
+import acide.gui.debugPanel.debugSQLPanel.AcideDebugSQLDebugWindow;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
 import acide.resources.AcideResourceManager;
@@ -274,6 +275,7 @@ public class AcideDebugPanel extends JPanel {
 						.getInstance().getLabels().getString("s2277"));
 			if(_debugSQLPanel!=null)
 				_debugSQLPanel.setComponentsText();
+			AcideDebugSQLDebugWindow.getInstance().setComponentsText();
 
 		}
 	}
