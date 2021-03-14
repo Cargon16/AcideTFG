@@ -503,29 +503,29 @@ public class AcideConsolePanel extends JPanel {
 			// Avoids exceptions
 			if (finalText != null && !finalText.equals("")) {
 
-				// Updates the text in the text pane
-				_textPane.setText(finalText);
+				String shellPath=AcideProjectConfiguration.getInstance().getShellPath();
 
-				//	Enable debug panel components
-				if(finalText.lastIndexOf("\n")!=-1
-						&& finalText.substring(finalText.lastIndexOf("\n"),finalText.length())
-						.trim().equals("DES>")){
-					AcideMainWindow.getInstance().getDebugPanel()
-							.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					AcideMainWindow.getInstance()
-							.getDebugPanel().enableComponents();
-				}
-				else{
-					//	Disable debug panel components
-					if(finalText.lastIndexOf("\n")!=-1
-							&& !finalText.substring(finalText.lastIndexOf("\n"),finalText.length())
-							.trim().equals("DES>")){
+				if(shellPath.trim().toLowerCase().endsWith("des.exe")
+						|| shellPath.trim().toLowerCase().endsWith("des")){
+
+					String lastLine=finalText.substring(finalText.lastIndexOf("\n"),finalText.length()).trim();
+
+					// Enable debug panel components
+					if(lastLine.startsWith("DES") && lastLine.endsWith(">")){
+						AcideMainWindow.getInstance().getDebugPanel()
+								.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						AcideMainWindow.getInstance().getDebugPanel().enableComponents();
+					}
+					else{
+						//	Disable debug panel components
 						AcideMainWindow.getInstance().getDebugPanel()
 								.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						AcideMainWindow.getInstance()
-								.getDebugPanel().disableComponents();
+						AcideMainWindow.getInstance().getDebugPanel().disableComponents();
 					}
 				}
+
+				// Updates the text in the text pane
+				_textPane.setText(finalText);
 
 				// Adjust the content to the buffer size
 				adjustContentToBufferSize();
