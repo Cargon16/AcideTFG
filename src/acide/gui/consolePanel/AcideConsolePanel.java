@@ -940,23 +940,41 @@ public class AcideConsolePanel extends JPanel {
 
 			if (_consoleProcess.getWriter() != null) {
 
+				// Get the current shell
+				String shellPath=AcideProjectConfiguration.getInstance().getShellPath();
+
 				// If the parameter is not ""
 				if (!parameter.matches("")) {
 
 					// Updates the command to be executed
 					_command = command + " " + parameter;
 
-					// Sends the command to the output process
-					_consoleProcess.getWriter().write(
-							command + " " + parameter + '\n');
+					if((shellPath.trim().toLowerCase().endsWith("des.exe")
+							|| shellPath.trim().toLowerCase().endsWith("des"))
+							|| ((!shellPath.trim().toLowerCase().endsWith("des.exe")
+							&& !shellPath.trim().toLowerCase().endsWith("des"))
+							&& (!command.startsWith("/tapi") && !command.matches("/pdg")
+							&& !command.matches("/show_compilations")))) {
+
+						// Sends the command to the output process
+						_consoleProcess.getWriter().write(command + " " + parameter + '\n');
+					}
 
 				} else {
 
 					// Updates the command to be executed
 					_command = command;
 
-					// Sends the command to the output shell
-					_consoleProcess.getWriter().write(command + "\n");
+					if((shellPath.trim().toLowerCase().endsWith("des.exe")
+							|| shellPath.trim().toLowerCase().endsWith("des"))
+							|| ((!shellPath.trim().toLowerCase().endsWith("des.exe")
+							&& !shellPath.trim().toLowerCase().endsWith("des"))
+							&& (!command.startsWith("/tapi") && !command.matches("/pdg")
+							&& !command.matches("/show_compilations")))) {
+
+						// Sends the command to the output shell
+						_consoleProcess.getWriter().write(command + "\n");
+					}
 				}
 
 				// Gets the OS name
