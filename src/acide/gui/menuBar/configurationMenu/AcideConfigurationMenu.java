@@ -52,6 +52,7 @@ import javax.swing.JSeparator;
 import acide.configuration.menu.AcideInsertedItem;
 import acide.configuration.menu.AcideInsertedItemListener;
 import acide.configuration.menu.AcideInsertedMenu;
+import acide.configuration.menu.AcideMenuConfiguration;
 import acide.configuration.menu.AcideMenuItemConfiguration;
 import acide.configuration.menu.AcideMenuItemsConfiguration;
 import acide.configuration.menu.AcideMenuObjectConfiguration;
@@ -69,6 +70,7 @@ import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemesMenu;
 import acide.gui.menuBar.configurationMenu.toolBarMenu.AcideToolBarMenu;
 import acide.gui.menuBar.listeners.AcideMenuBarMouseClickListener;
 import acide.language.AcideLanguageManager;
+import acide.resources.AcideResourceManager;
 import acide.utils.IconsUtils;
 import jdk.nashorn.internal.runtime.Context.ThrowErrorManager;
 
@@ -113,8 +115,7 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	public static final String CONSOLE_NAME = "Shell";
 	/**
-	 * ACIDE - A Configurable IDE configuration menu database panel menu item
-	 * name.
+	 * ACIDE - A Configurable IDE configuration menu database panel menu item name.
 	 */
 	public static final String DATABASE_PANEL_NAME = "Database Panel";
 	/**
@@ -134,27 +135,23 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	public static final String GRAPH_PANEL_NAME = "Graph Panel";
 	/**
-	 * ACIDE - A Configurable IDE configuration menu console line wrapping menu
-	 * item name.
+	 * ACIDE - A Configurable IDE configuration menu console line wrapping menu item
+	 * name.
 	 */
 	public static final String CONSOLE_LINE_WRAPPING_NAME = "Console Line Wrapping";
 
 	/**
 	 * ACIDE - A Configurable IDE configuration menu debug panel menu item name.
-	 */	
+	 */
 	public static final String DEBUG_PANEL_NAME = "Debug Panel";
 	/**
-	 * ACIDE - A Configurable IDE configuration menu compiler menu item image
-	 * icon.
+	 * ACIDE - A Configurable IDE configuration menu compiler menu item image icon.
 	 */
-	public static final ImageIcon COMPILER_IMAGE = new ImageIcon(
-			"./resources/icons/menu/configuration/compiler.png");
+	public static final ImageIcon COMPILER_IMAGE = new ImageIcon("./resources/icons/menu/configuration/compiler.png");
 	/**
-	 * ACIDE - A Configurable IDE configuration menu theme menu item image
-	 * icon.
+	 * ACIDE - A Configurable IDE configuration menu theme menu item image icon.
 	 */
-	public static final ImageIcon THEME_IMAGE = new ImageIcon(
-			"./resources/icons/menu/configuration/paleta.gif");
+	public static final ImageIcon THEME_IMAGE = new ImageIcon("./resources/icons/menu/configuration/paleta.gif");
 	/**
 	 * ACIDE - A Configurable IDE configuration menu menu menu item.
 	 */
@@ -178,8 +175,8 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	private AcideThemesMenu _themeMenu;
 	/**
-	 * ACIDE - A Configurable IDE configuration theme configuration menu menu item has
-	 * been inserted.
+	 * ACIDE - A Configurable IDE configuration theme configuration menu menu item
+	 * has been inserted.
 	 */
 	private boolean _themeInserted;
 	/**
@@ -187,8 +184,8 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	private AcideFileEditorMenu _fileEditorMenu;
 	/**
-	 * ACIDE - A Configurable IDE configuration file editor menu menu item has
-	 * been inserted.
+	 * ACIDE - A Configurable IDE configuration file editor menu menu item has been
+	 * inserted.
 	 */
 	private boolean _fileEditorInserted;
 	/**
@@ -206,8 +203,8 @@ public class AcideConfigurationMenu extends JMenu {
 	private AcideGraphPanelMenu _graphPanelMenu;
 
 	/**
-	 * ACIDE - A Configurable IDE configuration graph panel menu menu item has
-	 * been inserted.
+	 * ACIDE - A Configurable IDE configuration graph panel menu menu item has been
+	 * inserted.
 	 */
 	private boolean _graphPanelInserted;
 	/**
@@ -215,8 +212,8 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	private AcideDebugPanelMenu _debugPanelMenu;
 	/**
-	 * ACIDE - A Configurable IDE configuration debug panel menu menu has
-	 * been inserted.
+	 * ACIDE - A Configurable IDE configuration debug panel menu menu has been
+	 * inserted.
 	 */
 	private boolean _debugPanelInserted;
 
@@ -225,8 +222,8 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	private AcideDatabasePanelMenu _databasePanelMenu;
 	/**
-	 * ACIDE - A Configurable IDE configuration database panel menu menu item
-	 * has been inserted.
+	 * ACIDE - A Configurable IDE configuration database panel menu menu item has
+	 * been inserted.
 	 */
 	private boolean _databasePanelInserted;
 	/**
@@ -266,8 +263,7 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	private boolean _compilerInserted;
 	/**
-	 * ACIDE - A Configurable IDE configuration menu compiler file editor
-	 * separator.
+	 * ACIDE - A Configurable IDE configuration menu compiler file editor separator.
 	 */
 	private JSeparator _compilerFileEditorSeparator;
 	/**
@@ -331,68 +327,69 @@ public class AcideConfigurationMenu extends JMenu {
 	 * Adds the components to the ACIDE - A Configurable IDE configuration menu.
 	 */
 	private void addComponents() {
-		
-		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().getSubmenu(CONFIGURATION_MENU_NAME).getItemsManager().managerIterator();
-		while (it.hasNext()){
+
+		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance().getMenuItemsManager()
+				.getSubmenu(CONFIGURATION_MENU_NAME).getItemsManager().managerIterator();
+		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it.next();
 			String name = ob.getName();
-			if (name.equals(LEXICON_NAME)){
+			if (name.equals(LEXICON_NAME)) {
 				// Adds the lexicon menu to the menu
 				add(_lexiconMenu);
 				_lexiconInserted = true;
-			}else if (name.equals(GRAMMAR_NAME)){
+			} else if (name.equals(GRAMMAR_NAME)) {
 				// Adds the grammar menu to the menu
 				add(_grammarMenu);
 				_grammarInserted = true;
-			}else if (name.equals(COMPILER_NAME)){
+			} else if (name.equals(COMPILER_NAME)) {
 				// Adds the compiler menu item to the menu
 				add(_compilerMenuItem);
 				_compilerInserted = true;
 				// Adds the compiler file editor separator
 				add(_compilerFileEditorSeparator);
-			}else if (name.equals(FILE_EDITOR_NAME)){
+			} else if (name.equals(FILE_EDITOR_NAME)) {
 				// Adds the file editor menu to the menu
 				add(_fileEditorMenu);
 				_fileEditorInserted = true;
-			}else if (name.equals(CONSOLE_NAME)){
+			} else if (name.equals(CONSOLE_NAME)) {
 				// Adds the console menu to the menu
 				add(_consoleMenu);
 				_consoleInserted = true;
-			}else if (name.equals(DATABASE_PANEL_NAME)){
+			} else if (name.equals(DATABASE_PANEL_NAME)) {
 				// Adds the database panel menu to the menu
-				add(_databasePanelMenu);
-				_databasePanelInserted = true;				
-			}else if(name.equals(GRAPH_PANEL_NAME)){
+				//if (AcideMenuConfiguration.getInstance()) {
+					add(_databasePanelMenu);
+					_databasePanelInserted = true;
+				//}
+					
+			} else if (name.equals(GRAPH_PANEL_NAME)) {
 				// Adds the database panel menu to the menu
 				add(_graphPanelMenu);
-				_graphPanelInserted = true;				
-			}else if(name.equals(DEBUG_PANEL_NAME)){
+				_graphPanelInserted = true;
+			} else if (name.equals(DEBUG_PANEL_NAME)) {
 				add(_debugPanelMenu);
 				_debugPanelInserted = true;
 				// Adds the console language separator to the menu
 				add(_debugLanguageSeparator);
-			}else if (name.equals(LANGUAGE_NAME)){
+			} else if (name.equals(LANGUAGE_NAME)) {
 				// Adds the language menu to the menu
 				add(_languageMenu);
 				_languageInserted = true;
-			}else if (name.equals(MENU_NAME)){
+			} else if (name.equals(MENU_NAME)) {
 				// Adds the menu menu to the menu
 				add(_menuMenu);
 				_menuInserted = true;
-			}else if (name.equals(TOOLBAR_NAME)){
+			} else if (name.equals(TOOLBAR_NAME)) {
 				// Adds the tool bar menu to the menu
 				add(_toolBarMenu);
 				_toolbarInserted = true;
-			}
-			else if(name.equals(THEME_NAME)) {
+			} else if (name.equals(THEME_NAME)) {
 				add(_themeMenu);
 				_themeInserted = true;
-			}
-			else {				
-				if (ob.isSubmenu()){
+			} else {
+				if (ob.isSubmenu()) {
 					add(_insertedMenus.get(ob.getName()));
-				}else{
+				} else {
 					add(_insertedItems.get(ob.getName()));
 				}
 			}
@@ -410,19 +407,19 @@ public class AcideConfigurationMenu extends JMenu {
 			add(_consoleMenu);
 		if (!_databasePanelInserted)
 			add(_databasePanelMenu);
-		if(!_graphPanelInserted)
+		if (!_graphPanelInserted)
 			add(_graphPanelMenu);
 		if (!_languageInserted)
 			add(_languageMenu);
 		if (!_menuInserted)
 			add(_menuMenu);
-		 if (!_toolbarInserted)
-			 add(_toolBarMenu);
-		 if(!_debugPanelInserted)
-			 add(_debugPanelMenu);
-		 if(!_themeInserted)
+		if (!_toolbarInserted)
+			add(_toolBarMenu);
+		if (!_debugPanelInserted)
+			add(_debugPanelMenu);
+		if (!_themeInserted)
 			add(_themeMenu);
-		
+
 	}
 
 	/**
@@ -430,30 +427,26 @@ public class AcideConfigurationMenu extends JMenu {
 	 */
 	private void buildComponents() {
 
-		if (!AcideMenuItemsConfiguration.getInstance().getMenuItemsManager()
-				.hasSubmenu(CONFIGURATION_MENU_NAME)) {
-			AcideMenuItemsConfiguration.getInstance().insertObject(
-					new AcideMenuSubmenuConfiguration(CONFIGURATION_MENU_NAME));
+		if (!AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().hasSubmenu(CONFIGURATION_MENU_NAME)) {
+			AcideMenuItemsConfiguration.getInstance()
+					.insertObject(new AcideMenuSubmenuConfiguration(CONFIGURATION_MENU_NAME));
 		}
 
-		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().getSubmenu(CONFIGURATION_MENU_NAME)
-				.getItemsManager().managerIterator();
+		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance().getMenuItemsManager()
+				.getSubmenu(CONFIGURATION_MENU_NAME).getItemsManager().managerIterator();
 
 		while (it.hasNext()) {
-			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it
-					.next();
+			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it.next();
 			String name = ob.getName();
 			if (isOriginal(name)) {
 				_insertedObjects.add(ob);
 				if (ob.isSubmenu()) {
 					AcideMenuSubmenuConfiguration obSubmenu = (AcideMenuSubmenuConfiguration) ob;
-					_insertedMenus.put(ob.getName(), new AcideInsertedMenu(
-							obSubmenu));
+					_insertedMenus.put(ob.getName(), new AcideInsertedMenu(obSubmenu));
 				} else {
 					AcideMenuItemConfiguration obItem = (AcideMenuItemConfiguration) ob;
-					_insertedItems.put(obItem.getName(), new AcideInsertedItem(
-							IconsUtils.getIcon(obItem.getImage()), obItem));
+					_insertedItems.put(obItem.getName(),
+							new AcideInsertedItem(IconsUtils.getIcon(obItem.getImage()), obItem));
 				}
 			}
 		}
@@ -517,19 +510,17 @@ public class AcideConfigurationMenu extends JMenu {
 
 		// Sets the grammar menu menu name
 		_grammarMenu.setName(GRAMMAR_NAME);
-		
-		//Creates the themes menu
+
+		// Creates the themes menu
 		_themeMenu = new AcideThemesMenu();
-		
-		//Sets the theme menu menu name
+
+		// Sets the theme menu menu name
 		_themeMenu.setName(THEME_NAME);
 
 		// Creates the compiler menu item
-		ImageIcon icon = IconsUtils.getIcon(AcideMenuItemsConfiguration
-				.getInstance().getMenuItemsManager()
-				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-				.getItem(COMPILER_NAME).getImage());
-		
+		ImageIcon icon = IconsUtils.getIcon(AcideMenuItemsConfiguration.getInstance().getMenuItemsManager()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getItem(COMPILER_NAME).getImage());
+
 		if (icon != null)
 			_compilerMenuItem = new JMenuItem(icon);
 		else
@@ -546,91 +537,79 @@ public class AcideConfigurationMenu extends JMenu {
 	}
 
 	/**
-	 * Sets the text of the ACIDE - A Configurable IDE configuration menu
-	 * components with the labels in the selected language to display.
+	 * Sets the text of the ACIDE - A Configurable IDE configuration menu components
+	 * with the labels in the selected language to display.
 	 */
 	public void setTextOfMenuComponents() {
 
 		// Sets the language menu text
-		_languageMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s6"));
+		_languageMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s6"));
 
 		// Sets the language menu items text
 		_languageMenu.setTextOfMenuComponents();
 
 		// Sets the console menu text
-		_consoleMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s332"));
+		_consoleMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s332"));
 
 		// Sets the console menu items text
 		_consoleMenu.setTextOfMenuComponents();
 
 		// Sets the graph panel menu text
-		_graphPanelMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s2231"));
+		_graphPanelMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s2231"));
 
 		// Sets the graph panel menu items text
 		_graphPanelMenu.setTextOfMenuComponents();
 
 		// Sets the debug panel menu text
-		_debugPanelMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s2243"));
+		_debugPanelMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s2243"));
 
 		// Sets the debug panel menu items text
 		_debugPanelMenu.setTextOfMenuComponents();
 
 		// Sets the database panel menu text
-		_databasePanelMenu.setText(AcideLanguageManager.getInstance()
-				.getLabels().getString("s2159"));
+		_databasePanelMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s2159"));
 
 		// Sets the console menu items text
 		_databasePanelMenu.setTextOfMenuComponents();
 
 		// Sets the file editor menu text
-		_fileEditorMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s1045"));
+		_fileEditorMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s1045"));
 
 		// Sets the file editor menu items text
 		_fileEditorMenu.setTextOfMenuComponets();
 
 		// Sets the menu menu text
-		_menuMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s34"));
+		_menuMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s34"));
 
 		// Sets the menu menu items text
 		_menuMenu.setTextOfMenuComponents();
 
 		// Sets the tool bar menu text
-		_toolBarMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s169"));
+		_toolBarMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s169"));
 
 		// Sets the tool bar menu items text
 		_toolBarMenu.setTextOfMenuComponents();
-		
+
 		// Sets the theme menu text
-		_themeMenu.setText(AcideLanguageManager.getInstance()
-				.getLabels().getString("s2380"));
-		
+		_themeMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s2380"));
+
 		// Sets the theme menu items text
 		_themeMenu.setTextOfMenuComponents();
-		
+
 		// Sets the lexicon menu text
-		_lexiconMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s224"));
+		_lexiconMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s224"));
 
 		// Sets the lexicon menu items text
 		_lexiconMenu.setTextOfMenuComponents();
 
 		// Sets the grammar menu text
-		_grammarMenu.setText(AcideLanguageManager.getInstance().getLabels()
-				.getString("s225"));
+		_grammarMenu.setText(AcideLanguageManager.getInstance().getLabels().getString("s225"));
 
 		// Sets the grammar menu items text
 		_grammarMenu.setTextOfMenuComponents();
 
 		// Sets the compiler menu item text
-		_compilerMenuItem.setText(AcideLanguageManager.getInstance()
-				.getLabels().getString("s240"));
+		_compilerMenuItem.setText(AcideLanguageManager.getInstance().getLabels().getString("s240"));
 
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
 		while (it.hasNext()) {
@@ -652,69 +631,60 @@ public class AcideConfigurationMenu extends JMenu {
 
 		AcideMenuItemConfiguration compilerConfiguration;
 		AcideMenuItemConfiguration themesConfiguration;
-		_configurationSubmenuConfiguration = AcideMenuItemsConfiguration
-				.getInstance().getSubmenu(
-						AcideConfigurationMenu.CONFIGURATION_MENU_NAME);
+		_configurationSubmenuConfiguration = AcideMenuItemsConfiguration.getInstance()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME);
 
 		// Builds the lexicon menu
 		_lexiconMenu.build();
 
 		// Sets the lexicon menu to visible or not visible
-		_lexiconMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideLexiconMenu.LEXICON_MENU_NAME).isVisible());
+		_lexiconMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideLexiconMenu.LEXICON_MENU_NAME).isVisible());
 
 		// Builds the grammar menu
 		_grammarMenu.updateComponentsVisibility();
 
 		// Sets the grammar menu to visible or not visible
-		_grammarMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideGrammarMenu.GRAMMAR_MENU_NAME).isVisible());
+		_grammarMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideGrammarMenu.GRAMMAR_MENU_NAME).isVisible());
 
 		// Sets the compiler menu item to visible or not visible
 		// Sets the show log tab menu item to visible or not visible
-		compilerConfiguration = _configurationSubmenuConfiguration
-				.getItem(COMPILER_NAME);
+		compilerConfiguration = _configurationSubmenuConfiguration.getItem(COMPILER_NAME);
 		_compilerMenuItem.setVisible(compilerConfiguration.isVisible());
-		
+
 		// Builds the theme menu
-				_themeMenu.updateComponentsVisibility();
+		_themeMenu.updateComponentsVisibility();
 
-				// Sets the theme menu to visible or not visible
-				_themeMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-						.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-						AcideThemesMenu.THEME_MENU_NAME).isVisible());
+		// Sets the theme menu to visible or not visible
+		_themeMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideThemesMenu.THEME_MENU_NAME).isVisible());
 
-		
 		// Builds the file editor menu
 		_fileEditorMenu.updateComponentsVisibility();
 
 		// Sets the file editor menu to visible or not visible
-		_fileEditorMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).isVisible());
+		_fileEditorMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideFileEditorMenu.FILE_EDITOR_MENU_NAME).isVisible());
 
 		// builds the console menu
 		_consoleMenu.updateComponentsVisibility();
 
 		// Sets the console menu to visible or not visible
-		_consoleMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideConsoleMenu.CONSOLE_MENU_NAME).isVisible());
-
-		// Sets the graph menu to visible or not visible
-		_graphPanelMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideGraphPanelMenu.GRAPH_MENU_NAME).isVisible());
+		_consoleMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideConsoleMenu.CONSOLE_MENU_NAME).isVisible());
 
 		// builds the graph panel menu
 		_graphPanelMenu.updateComponentsVisibility();
+		
+		// Sets the graph menu to visible or not visible
+		_graphPanelMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME).isVisible());
+
 
 		// Sets the debug menu to visible or not visible
-		_debugPanelMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideDebugPanelMenu.DEBUG_MENU_NAME).isVisible());
+		_debugPanelMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideDebugPanelMenu.DEBUG_MENU_NAME).isVisible());
 
 		// builds the debug panel menu
 		_debugPanelMenu.updateComponentsVisibility();
@@ -723,69 +693,51 @@ public class AcideConfigurationMenu extends JMenu {
 		_databasePanelMenu.updateComponentsVisibility();
 
 		// Sets the console menu to visible or not visible
-		_databasePanelMenu.setVisible((AcideMenuItemsConfiguration
-				.getInstance().getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideDatabasePanelMenu.DATABASE_MENU_NAME).isVisible());
+		_databasePanelMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME).isVisible());
 
 		// Sets the compiler filer editor separator to visible or not visible
-		_compilerFileEditorSeparator
-				.setVisible((_lexiconMenu.getDocumentLexiconMenuItem()
-						.isVisible()
-						|| _lexiconMenu.getModifyLexiconMenuItem().isVisible()
-						|| _grammarMenu.getNewGrammarMenuItem().isVisible()
-						|| _grammarMenu.getLoadGrammarMenuItem().isVisible()
-						|| _grammarMenu.getModifyGrammarMenuItem().isVisible()
-						|| _themeMenu.isVisible()
-						|| _compilerMenuItem.isVisible()
-						|| _lexiconMenu.getNewLexiconMenuItem().isVisible() || _grammarMenu
-						.getSaveGrammarMenuItem().isVisible())
-						&& (_consoleMenu.getConfigureMenuItem().isVisible() || _consoleMenu
-								.getExternalCommandMenuItem().isVisible()));
+		_compilerFileEditorSeparator.setVisible((_lexiconMenu.getDocumentLexiconMenuItem().isVisible()
+				|| _lexiconMenu.getModifyLexiconMenuItem().isVisible()
+				|| _grammarMenu.getNewGrammarMenuItem().isVisible() || _grammarMenu.getLoadGrammarMenuItem().isVisible()
+				|| _grammarMenu.getModifyGrammarMenuItem().isVisible() || _themeMenu.isVisible()
+				|| _compilerMenuItem.isVisible() || _lexiconMenu.getNewLexiconMenuItem().isVisible()
+				|| _grammarMenu.getSaveGrammarMenuItem().isVisible())
+				&& (_consoleMenu.getConfigureMenuItem().isVisible()
+						|| _consoleMenu.getExternalCommandMenuItem().isVisible()));
 
 		// Builds the language menu
 		_languageMenu.updateComponentsVisibility();
 
 		// Sets the language menu to visible or not visible
-		_languageMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideLanguageMenu.LANGUAGE_MENU_NAME).isVisible());
+		_languageMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideLanguageMenu.LANGUAGE_MENU_NAME).isVisible());
 
 		// Builds the menu menu
 		_menuMenu.updateComponentsVisibility();
 
 		// Sets the menu menu to visible or not visible
-		_menuMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideMenuMenu.MENU_MENU_NAME).isVisible());
+		_menuMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideMenuMenu.MENU_MENU_NAME).isVisible());
 
 		// Builds the tool bar menu
 		_toolBarMenu.updateComponentsVisibility();
 
 		// Sets the tool bar menu to visible or not visible
-		_toolBarMenu.setVisible((AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(CONFIGURATION_MENU_NAME)).getSubmenu(
-				AcideToolBarMenu.TOOLBAR_MENU_NAME).isVisible());
+		_toolBarMenu.setVisible((AcideMenuItemsConfiguration.getInstance().getSubmenu(CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideToolBarMenu.TOOLBAR_MENU_NAME).isVisible());
 
 		// Sets the console language separator to visible or not visible
-		_debugLanguageSeparator
-				.setVisible((_lexiconMenu.getDocumentLexiconMenuItem()
-						.isVisible()
-						|| _lexiconMenu.getModifyLexiconMenuItem().isVisible()
-						|| _grammarMenu.getNewGrammarMenuItem().isVisible()
-						|| _grammarMenu.getLoadGrammarMenuItem().isVisible()
-						|| _grammarMenu.getModifyGrammarMenuItem().isVisible()
-						|| _compilerMenuItem.isVisible()
-						|| _themeMenu.isVisible()
-						|| _consoleMenu.getConfigureMenuItem().isVisible()
-						|| _consoleMenu.getExternalCommandMenuItem()
-								.isVisible()
-						|| _consoleMenu.getConsoleDisplayOptionsMenuItem()
-								.isVisible()
-						|| _lexiconMenu.getNewLexiconMenuItem().isVisible() || _grammarMenu
-						.getSaveGrammarMenuItem().isVisible())
-						|| _graphPanelMenu.isVisible()
-						|| _debugPanelMenu.isVisible()
-						&& (_menuMenu.isVisible() || _toolBarMenu.isVisible()));
+		_debugLanguageSeparator.setVisible((_lexiconMenu.getDocumentLexiconMenuItem().isVisible()
+				|| _lexiconMenu.getModifyLexiconMenuItem().isVisible()
+				|| _grammarMenu.getNewGrammarMenuItem().isVisible() || _grammarMenu.getLoadGrammarMenuItem().isVisible()
+				|| _grammarMenu.getModifyGrammarMenuItem().isVisible() || _compilerMenuItem.isVisible()
+				|| _themeMenu.isVisible() || _consoleMenu.getConfigureMenuItem().isVisible()
+				|| _consoleMenu.getExternalCommandMenuItem().isVisible()
+				|| _consoleMenu.getConsoleDisplayOptionsMenuItem().isVisible()
+				|| _lexiconMenu.getNewLexiconMenuItem().isVisible()
+				|| _grammarMenu.getSaveGrammarMenuItem().isVisible()) || _graphPanelMenu.isVisible()
+				|| _debugPanelMenu.isVisible() && (_menuMenu.isVisible() || _toolBarMenu.isVisible()));
 
 		_configurationSubmenuConfiguration.setVisible(true);
 		_configurationSubmenuConfiguration.setErasable(false);
@@ -805,20 +757,14 @@ public class AcideConfigurationMenu extends JMenu {
 	/**
 	 * Gets if the menu name given as parameter is original
 	 * 
-	 * @param name
-	 *            the name we want to check
+	 * @param name the name we want to check
 	 * @return if the name given as parameter is original
 	 */
 	public boolean isOriginal(String name) {
-		if (!(name.equals(LEXICON_NAME)) && !(name.equals(GRAMMAR_NAME))
-				&& !(name.equals(FILE_EDITOR_NAME))
-				&& !(name.equals(CONSOLE_NAME))
-				&& !(name.equals(DATABASE_PANEL_NAME))
-				&& !(name.equals(THEME_NAME))
-				&& !(name.equals(MENU_NAME)) && !(name.equals(LANGUAGE_NAME))
-				&& !(name.equals(TOOLBAR_NAME))
-				&& !(name.equals(COMPILER_NAME))
-				&& !(name.equals(GRAPH_PANEL_NAME))
+		if (!(name.equals(LEXICON_NAME)) && !(name.equals(GRAMMAR_NAME)) && !(name.equals(FILE_EDITOR_NAME))
+				&& !(name.equals(CONSOLE_NAME)) && !(name.equals(DATABASE_PANEL_NAME)) && !(name.equals(THEME_NAME))
+				&& !(name.equals(MENU_NAME)) && !(name.equals(LANGUAGE_NAME)) && !(name.equals(TOOLBAR_NAME))
+				&& !(name.equals(COMPILER_NAME)) && !(name.equals(GRAPH_PANEL_NAME))
 				&& !(name.equals(DEBUG_PANEL_NAME))) {
 			return true;
 		} else
@@ -826,8 +772,7 @@ public class AcideConfigurationMenu extends JMenu {
 	}
 
 	/**
-	 * Sets the ACIDE - A Configurable IDE configuration menu menu item
-	 * listeners.
+	 * Sets the ACIDE - A Configurable IDE configuration menu menu item listeners.
 	 */
 	public void setListeners() {
 
@@ -845,7 +790,7 @@ public class AcideConfigurationMenu extends JMenu {
 
 		// Sets the graph menu listeners
 		_graphPanelMenu.setListeners();
-		
+
 		// Sets the debug menu listeners
 		_debugPanelMenu.setListeners();
 
@@ -864,13 +809,9 @@ public class AcideConfigurationMenu extends JMenu {
 		// Sets the compiler menu item listener
 		_compilerMenuItem
 
-		.addActionListener(new AcideInsertedItemListener(
-				AcideMenuItemsConfiguration
-						.getInstance()
-						.getSubmenu(
-								AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
-						.getItem(COMPILER_NAME)));
-		
+				.addActionListener(new AcideInsertedItemListener(AcideMenuItemsConfiguration.getInstance()
+						.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getItem(COMPILER_NAME)));
+
 		// Sets the theme menu item listener
 		_themeMenu.setListeners();
 
@@ -878,8 +819,7 @@ public class AcideConfigurationMenu extends JMenu {
 		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = it.next();
 			if (ob.isSubmenu()) {
-				_insertedMenus.get(ob.getName()).addMouseListener(
-						new AcideMenuBarMouseClickListener());
+				_insertedMenus.get(ob.getName()).addMouseListener(new AcideMenuBarMouseClickListener());
 				_insertedMenus.get(ob.getName()).setListeners();
 			} else {
 				AcideInsertedItem aux = _insertedItems.get(ob.getName());
@@ -932,13 +872,13 @@ public class AcideConfigurationMenu extends JMenu {
 	public AcideGraphPanelMenu getGraphPanelMenu() {
 		return _graphPanelMenu;
 	}
-	
+
 	/**
 	 * Returns the ACIDE - A Configurable IDE configuration menu debug menu.
 	 * 
 	 * @return the ACIDE - A Configurable IDE configuration menu debug menu.
-	 */	
-	public AcideDebugPanelMenu getDebugPanelMenu(){
+	 */
+	public AcideDebugPanelMenu getDebugPanelMenu() {
 		return _debugPanelMenu;
 	}
 
@@ -952,11 +892,9 @@ public class AcideConfigurationMenu extends JMenu {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE configuration menu file editor
-	 * menu.
+	 * Returns the ACIDE - A Configurable IDE configuration menu file editor menu.
 	 * 
-	 * @return the ACIDE - A Configurable IDE configuration menu file editor
-	 *         menu.
+	 * @return the ACIDE - A Configurable IDE configuration menu file editor menu.
 	 */
 	public AcideFileEditorMenu getFileEditorMenu() {
 		return _fileEditorMenu;
@@ -981,27 +919,23 @@ public class AcideConfigurationMenu extends JMenu {
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE configuration menu compiler menu
-	 * item.
+	 * Returns the ACIDE - A Configurable IDE configuration menu compiler menu item.
 	 * 
-	 * @return the ACIDE - A Configurable IDE configuration menu compiler menu
-	 *         item.
+	 * @return the ACIDE - A Configurable IDE configuration menu compiler menu item.
 	 */
 	public JMenuItem getCompilerMenuItem() {
 		return _compilerMenuItem;
 	}
-	
+
 	/**
-	 * Returns the ACIDE - A Configurable IDE configuration menu theme menu
-	 * item.
+	 * Returns the ACIDE - A Configurable IDE configuration menu theme menu item.
 	 * 
-	 * @return the ACIDE - A Configurable IDE configuration menu theme menu
-	 *         item.
+	 * @return the ACIDE - A Configurable IDE configuration menu theme menu item.
 	 */
 	public AcideThemesMenu getThemeMenuItem() {
 		return _themeMenu;
 	}
-	
+
 	public void setThemeMenuItem(AcideThemesMenu newThemesMenu) {
 		this._themeMenu = newThemesMenu;
 	}

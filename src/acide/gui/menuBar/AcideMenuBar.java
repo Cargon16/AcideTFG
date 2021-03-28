@@ -50,6 +50,7 @@ import java.util.Iterator;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.MenuElement;
 
@@ -217,33 +218,31 @@ public class AcideMenuBar extends JMenuBar {
 	 */
 	public void modifyMenuBar() {
 
-		removeAll();
-
-		_fileInserted = false;
-		_editInserted = false;
-		_projectInserted = false;
-		_viewInserted = false;
-		_configurationInserted = false;
-		_helpInserted = false;
-
-		_insertedMenus = new HashMap<String, AcideInsertedMenu>();
-
-		_insertedObjects = new ArrayList<AcideMenuObjectConfiguration>();
+		
+		 removeAll();
+		 
+		 _fileInserted = false; _editInserted = false; _projectInserted = false;
+		 _viewInserted = false; _configurationInserted = false; _helpInserted = false;
+		 
+		 _insertedMenus = new HashMap<String, AcideInsertedMenu>();
+		 
+		 _insertedObjects = new ArrayList<AcideMenuObjectConfiguration>();
+		 
 
 		// Build the menu configuration
 		buildMenuConfiguration();
 
 		// Build the menu components
-		buildComponents();
+		 buildComponents();
 
 		// Adds the components to the menu
-		addComponents();
+		 addComponents();
 
 		// Sets the text for the menu bar components
-		setTextOfMenuComponents();
+		 setTextOfMenuComponents();
 
 		// Set the listeners for the menu bar components
-		setListeners();
+		 setListeners();
 
 		// Builds the menu bar
 		updateComponentsVisibility();
@@ -1218,6 +1217,8 @@ public class AcideMenuBar extends JMenuBar {
 				AcideMenuSubmenuConfiguration database = configuration
 						.getSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME);
 
+				AcideMenuConfiguration.getInstance().setIsDisplayed(AcideDatabasePanelMenu.DATABASE_MENU_NAME,
+						database.isVisible());
 				AcideMenuItemConfiguration des;
 				if (database.hasItem(AcideDatabasePanelMenu.DES_PANEL_NAME)) {
 					des = database.getItem(AcideDatabasePanelMenu.DES_PANEL_NAME);

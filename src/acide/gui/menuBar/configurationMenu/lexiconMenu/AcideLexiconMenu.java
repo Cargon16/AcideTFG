@@ -477,10 +477,12 @@ public class AcideLexiconMenu extends JMenu {
 		}
 		
 		// Sets the lexicon menu to visible or not visible
-		_lexiconSubmenuConfiguration.setVisible(_documentLexiconMenuItem.isVisible()
+		Boolean b = AcideMenuItemsConfiguration.getInstance()
+		.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getSubmenu(LEXICON_MENU_NAME).isVisible();
+		_lexiconSubmenuConfiguration.setVisible((_documentLexiconMenuItem.isVisible()
 				|| _modifyLexiconMenuItem.isVisible()
 				|| _newLexiconMenuItem.isVisible()
-				|| _defaultLexiconsMenuItem.isVisible());
+				|| _defaultLexiconsMenuItem.isVisible()) && b);
 		_lexiconSubmenuConfiguration.setErasable(false);
 
 		

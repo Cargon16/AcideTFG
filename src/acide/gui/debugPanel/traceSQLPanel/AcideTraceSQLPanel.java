@@ -576,9 +576,9 @@ public class AcideTraceSQLPanel extends JPanel {
 		return _canvas;
 	}
 	
-	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor, Color darker) {
 		this.setBackground(backgroundColor);
-		this._mainButtonPanel.setBackground(backgroundColor.darker());
+		this._mainButtonPanel.setBackground(darker);
 		this._mainButtonPanel.setForeground(foregroundColor);
 		Component[] c = this._mainButtonPanel.getComponents();
 		for(Component c1:((JPanel)c[1]).getComponents()) {

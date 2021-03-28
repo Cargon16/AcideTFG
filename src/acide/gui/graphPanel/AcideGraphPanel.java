@@ -499,15 +499,15 @@ public class AcideGraphPanel extends JPanel {
 		return _RDGButton;
 	}
 	
-	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor, Color darker) {
 		this.setBackground(backgroundColor);
-		this._menuBar.setBackColor(backgroundColor.darker());
+		this._menuBar.setBackColor(darker);
 		this._menuBar.setForeground(foregroundColor);
 		for(Component m:this._menuBar.getComponents()) {
 			m.setForeground(foregroundColor);
 		}
 		this._menuBar.repaint();
-		this._buttonPanel.setBackground(backgroundColor.darker());
+		this._buttonPanel.setBackground(darker);
 		this._buttonPanel.setForeground(foregroundColor);
 		Component[] c = this._buttonPanel.getComponents();
 		try {
@@ -532,7 +532,9 @@ public class AcideGraphPanel extends JPanel {
 			try {
 			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
 			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
-			this.background = new Color(Integer.parseInt(colorB)).darker();
+			Color b = new Color(Integer.parseInt(colorB));
+			Color darker = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
+			this.background = darker;
 			this.foreground = (new Color(Integer.parseInt(colorF)));
 			}catch(Exception e){
 				this.background = Color.WHITE;

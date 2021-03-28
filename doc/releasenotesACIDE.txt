@@ -1,19 +1,27 @@
 //------------------------------//
-//  ACIDE 0.17 Release Notes    //
-//    December, 26th 2015       //
+//  ACIDE 0.18.1 Release Notes  //
+//     March, 21st    2021      //
 //------------------------------//
 
   
 * Enhancements, changes and fixed bugs:
-  o Localization to French
-  o Multiple editors for new files
-  o New Reset and Refresh buttons for the Database panel
-  o The Datalog query for Trace Datalog becomes single-lined
-  o Keyboard shortcut (F9) for Play
-  o Rule (SQL statement, resp.) location  becomes disabled by-default in Trace Datalog (Trace SQL, resp.)
-  o New Debug SQL panel but with incomplete functionality
-  o Added lexicon for NASM 80x86 assembler
-  o Bug fixes in several panels (Console, Database, ...) but presumably others added.
+  o Added menu item themes to the configuration menu on the menu bar.
+  o Added configuration themes panel to create a new theme on the application.
+  o Added edit panel for each theme to let users delete and rename them.
+  o When pressing apply in one of the saved themes, it applies to all of the displayed panels.
+  o Upon closing a project, the user is asked for saving it if the style has been changed.
+  o Fixed an error when drawing graphs on the PDG panel, which threw a divide-by-0 exception in some cases.
+  o The debugging panel is disabled while TAPI commands are being processed.
+  o Fix: Language change in trace and debug panels without restarting ACIDE.
+  o Fix: Language icons are displayed in folders with spaces.
+  o SQL Text box does Word Wrapping.
+  o The status of the node and the information provided by the user are indicated with a tooltip.
+  o When the option to trust tables is selected, the color of the table nodes is updated
+  o Fix: Corrupt characters in labels.
+  o Descriptive labels are added to the buttons of the trace and debug panels.
+  o Fix: Modify menu bar option now hides and display items correctly.
+  o Fix: Access to the DES help manual in the help menu now works.
+  o The theme section has been changed to match the original colours with softer tones.
 
 
 IMPORTANT CAVEATS / KNOWN BUGS:

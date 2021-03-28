@@ -49,6 +49,7 @@ import javax.swing.JMenu;
 import acide.configuration.menu.AcideInsertedItem;
 import acide.configuration.menu.AcideInsertedItemListener;
 import acide.configuration.menu.AcideInsertedMenu;
+import acide.configuration.menu.AcideMenuConfiguration;
 import acide.configuration.menu.AcideMenuItemConfiguration;
 import acide.configuration.menu.AcideMenuItemsConfiguration;
 import acide.configuration.menu.AcideMenuObjectConfiguration;
@@ -56,6 +57,8 @@ import acide.configuration.menu.AcideMenuSubmenuConfiguration;
 
 import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
 import acide.language.AcideLanguageManager;
+import acide.log.AcideLog;
+import acide.resources.AcideResourceManager;
 
 /**
  * ACIDE - A Configurable IDE graph panel node shape menu.
@@ -321,6 +324,79 @@ public class AcideGraphPanelNodeShapeMenu extends JMenu {
 
 
 	}
+	public void updateComponentsVisibility() {
+		AcideMenuItemConfiguration circleConfiguration;
+		AcideMenuItemConfiguration squareConfiguration;
+
+		_NodeShapeSubmenuConfiguration = AcideMenuItemsConfiguration.getInstance()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+				.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME).getSubmenu(NODE_SHAPE_MENU_NAME);
+		
+		// Sets the circle menu item to visible or not visible
+		circleConfiguration = _NodeShapeSubmenuConfiguration.getItem(NODE_SHAPE_CIRCLE);
+		_nodeShapeCircleMenuItem.setVisible(circleConfiguration.isVisible());
+		
+		// Sets the square menu item to visible or not visible
+		squareConfiguration = _NodeShapeSubmenuConfiguration.getItem(NODE_SHAPE_SQUARE);
+		_nodeShapeSquareMenuItem.setVisible(squareConfiguration.isVisible());
+
+		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
+		while (it.hasNext()){
+			AcideMenuObjectConfiguration ob = it.next();
+			if (ob.isSubmenu()){
+				_insertedMenus.get(ob.getName()).updateComponentsVisibility();
+				_insertedMenus.get(ob.getName()).setVisible(ob.isVisible());
+			}else{
+				_insertedItems.get(ob.getName()).setVisible(ob.isVisible());
+			}
+		}
+		
+		// Sets the console menu to visible or not visible
+		Boolean b = (AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideGraphPanelMenu.GRAPH_MENU_NAME).getSubmenu(NODE_SHAPE_MENU_NAME).isVisible();
+		_NodeShapeSubmenuConfiguration.setVisible((_nodeShapeCircleMenuItem.isVisible()
+				|| _nodeShapeSquareMenuItem.isVisible()) && b);
+		_NodeShapeSubmenuConfiguration.setErasable(false);
+					
+				try{			
+					//Save the configuration for the menu that could have been modified
+					AcideMenuConfiguration.getInstance()
+						.saveMenuConfigurationFile("./configuration/menu/lastModified.menuConfig");
+					
+					// Gets the the ACIDE - A Configurable IDE current menu
+					// configuration
+					String currentMenuConfiguration = AcideResourceManager
+							.getInstance().getProperty("currentMenuConfiguration");
+
+					if (!currentMenuConfiguration
+							.endsWith("lastModified.menuConfig")
+							&& !currentMenuConfiguration
+									.endsWith("newMenu.menuConfig")) {
+
+						// Updates the the ACIDE - A Configurable IDE previous
+						// menu
+						// configuration
+						AcideResourceManager.getInstance().setProperty(
+								"previousMenuConfiguration",
+								currentMenuConfiguration);
+					}
+					
+					// Updates the the ACIDE - A Configurable IDE current menu
+					// configuration
+					AcideResourceManager.getInstance().setProperty(
+							"currentMenuConfiguration", "./configuration/menu/lastModified.menuConfig");
+				}		
+				catch (Exception exception2) {
+
+					// Updates the log
+					AcideLog.getLog().error(exception2.getMessage());
+					exception2.printStackTrace();
+				}
+		
+		
+	}
+	
+	
 
 
 }

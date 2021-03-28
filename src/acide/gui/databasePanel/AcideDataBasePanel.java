@@ -1254,7 +1254,7 @@ public class AcideDataBasePanel extends JPanel {
 					_popUp = ((AcideDataBaseNodes)selectedNode).getPopUp();
 					Component[] men = _popUp.getComponents();
 					for(Component c:men) {
-						c.getClass().cast(c).setBackground(menuBar.getBackColor().darker());
+						c.getClass().cast(c).setBackground(menuBar.getBackColor());
 						c.getClass().cast(c).setForeground(menuBar.getColorFont());
 						((JComponent) c.getClass().cast(c)).setOpaque(true);
 					}
@@ -1674,12 +1674,13 @@ public class AcideDataBasePanel extends JPanel {
 	public void changeColor(Color backGroundColor, Color foreGroundColor) {
 		this._tree.setBackground(backGroundColor);
 		this._tree.setForeground(foreGroundColor);
-		this.menuBar.setBackColor(backGroundColor.darker());
+		Color darker = new Color((int) (backGroundColor.getRed() *0.9), (int) (backGroundColor.getGreen() *0.9), (int) (backGroundColor.getBlue() *0.9));
+		this.menuBar.setBackColor(darker);
 		for(Component m:this.menuBar.getComponents()) {
 			m.setForeground(foreGroundColor);
 		}
 		this.menuBar.repaint();
-		this._mainButtonPanel.setBackground(backGroundColor.darker());
+		this._mainButtonPanel.setBackground(darker);
 		((AcideDataBaseTreeCellRenderer)this._tree.getCellRenderer()).setForegroundColor(foreGroundColor);
 		repaint();
 	}
@@ -1702,7 +1703,8 @@ public class AcideDataBasePanel extends JPanel {
 			try {
 			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
 			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
-			this.background = new Color(Integer.parseInt(colorB)).darker();
+			Color b = new Color(Integer.parseInt(colorB));
+			this.background = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
 			this.foreground = (new Color(Integer.parseInt(colorF)));
 			}catch(Exception e){
 				this.background = Color.WHITE;

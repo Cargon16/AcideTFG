@@ -1937,17 +1937,17 @@ public class AcideConsolePanel extends JPanel {
 		}
 	}
 	
-	public void changeColor(Color background, Color foreground) {
+	public void changeColor(Color background, Color foreground, Color darker) {
 		this._textPane.setBackground(background);
 		this._textPane.setForeground(foreground);
-		this.menuBar.setBackColor(background.darker());
+		this.menuBar.setBackColor(darker);
 		for(Component m:this.menuBar.getComponents()) {
 			m.setForeground(foreground);
 		}
 		this.menuBar.repaint();
 		Component[] men = this._popupMenu.getComponents();
 		for(Component c:men) {
-			c.getClass().cast(c).setBackground(background.darker());
+			c.getClass().cast(c).setBackground(darker);
 			c.getClass().cast(c).setForeground(foreground);
 			((JComponent) c.getClass().cast(c)).setOpaque(true);
 		}
@@ -1963,7 +1963,9 @@ public class AcideConsolePanel extends JPanel {
 			try {
 			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
 			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
-			this.background = new Color(Integer.parseInt(colorB)).darker();
+			Color b = new Color(Integer.parseInt(colorB));
+			Color darker = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
+			this.background = darker;
 			this.foreground = (new Color(Integer.parseInt(colorF)));
 			}catch(Exception e){
 				this.background = Color.WHITE;

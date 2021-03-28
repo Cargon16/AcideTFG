@@ -367,10 +367,12 @@ public class AcideChangeCaseMenu extends JMenu{
 		}
 		
 		// Sets the change case menu to visible or not visible
-		_changeCaseSubmenuConfiguration.setVisible(_upperCaseMenuItem.isVisible()
+		Boolean b= AcideMenuItemsConfiguration.getInstance()
+		.getSubmenu(AcideEditMenu.EDIT_MENU_NAME).getSubmenu(CHANGE_CASE_MENU_NAME).isVisible();
+		_changeCaseSubmenuConfiguration.setVisible((_upperCaseMenuItem.isVisible()
 						|| _lowerCaseMenuItem.isVisible()
 						|| _capitalizeMenuItem.isVisible()
-						|| _invertCaseMenuItem.isVisible());
+						|| _invertCaseMenuItem.isVisible()) && b);
 
 		_changeCaseSubmenuConfiguration.setErasable(false);
 		

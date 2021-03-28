@@ -640,11 +640,13 @@ public class AcideGrammarMenu extends JMenu {
 		}
 		
 		// Sets the grammar menu to visible or not visible
-		_grammarSubmenuConfiguration.setVisible(_newGrammarMenuItem.isVisible()
+		Boolean b = AcideMenuItemsConfiguration.getInstance()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getSubmenu(GRAMMAR_MENU_NAME).isVisible();
+		_grammarSubmenuConfiguration.setVisible((_newGrammarMenuItem.isVisible()
 						|| _loadGrammarMenuItem.isVisible()
 						|| _modifyGrammarMenuItem.isVisible()
 						|| _saveGrammarMenuItem.isVisible()
-						|| _saveGrammarAsMenuItem.isVisible());
+						|| _saveGrammarAsMenuItem.isVisible()) && b);
 		_grammarSubmenuConfiguration.setErasable(false);
 		
 				

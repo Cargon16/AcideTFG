@@ -512,19 +512,19 @@ public class AcideDebugPanel extends JPanel {
 		return _tabbedPane;
 	}
 
-	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor, Color darker) {
 		this.getTabbedPane().setOpaque(true);
-		this.getTabbedPane().setBackground(backgroundColor.darker());
+		this.getTabbedPane().setBackground(darker);
 	
-		this._menuBar.setBackColor(backgroundColor.darker());
+		this._menuBar.setBackColor(darker);
 		this._menuBar.setForeground(foregroundColor);
 		for(Component m:this._menuBar.getComponents()) {
 			m.setForeground(foregroundColor);
 		}
 		this._menuBar.repaint();
-		this._debugSQLPanel.setBackgroundColor(backgroundColor, foregroundColor);
-		this._traceSQLPanel.setBackgroundColor(backgroundColor, foregroundColor);
-		this._traceDatalogPanel.setBackgroundColor(backgroundColor, foregroundColor);
+		this._debugSQLPanel.setBackgroundColor(backgroundColor, foregroundColor, darker);
+		this._traceSQLPanel.setBackgroundColor(backgroundColor, foregroundColor, darker);
+		this._traceDatalogPanel.setBackgroundColor(backgroundColor, foregroundColor, darker);
 	}
 	
 	class debugPanelBar extends JMenuBar{
@@ -537,7 +537,9 @@ public class AcideDebugPanel extends JPanel {
 			try {
 			String colorB = AcideResourceManager.getInstance().getProperty("databasePanel.backgroundColor");
 			String colorF = AcideResourceManager.getInstance().getProperty("databasePanel.foregroundColor");
-			this.background = new Color(Integer.parseInt(colorB)).darker();
+			Color b = new Color(Integer.parseInt(colorB));
+			Color darker = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
+			this.background = darker;
 			this.foreground = (new Color(Integer.parseInt(colorF)));
 			}catch(Exception e){
 				this.background = Color.WHITE;

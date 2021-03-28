@@ -536,9 +536,9 @@ public class AcideTraceDatalogPanel extends JPanel {
 	public JCheckBox getShowLabelsMenuItem() {
 		return _showLabelsMenuItem;
 	}
-	public void setBackgroundColor(Color backgroundColor, Color foregroundColor) {
+	public void setBackgroundColor(Color backgroundColor, Color foregroundColor, Color darker) {
 		this.setBackground(backgroundColor);
-		this._mainButtonPanel.setBackground(backgroundColor.darker());
+		this._mainButtonPanel.setBackground(darker);
 		this._mainButtonPanel.setForeground(foregroundColor);
 		SwingUtilities.invokeLater(() -> AcideDebugHelper.updateCanvasDebug(_canvas));
 	}

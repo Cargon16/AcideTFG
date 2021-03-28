@@ -327,25 +327,24 @@ public class AcideWorkbenchConfiguration {
 
 			colorB = AcideResourceManager.getInstance().getProperty("explorerPanel.backgroundColor");
 			String colorF = AcideResourceManager.getInstance().getProperty("explorerPanel.foregroundColor");
-			AcideMainWindow.getInstance().getMenu().paintMenuBar(new Color(Integer.parseInt(colorB)).darker(),
-					new Color(Integer.parseInt(colorF)));
-			AcideMainWindow.getInstance().getStatusBar().changeColor(new Color(Integer.parseInt(colorB)).darker(),
-					new Color(Integer.parseInt(colorF)));
-			AcideMainWindow.getInstance().getToolBarPanel().changeColor(new Color(Integer.parseInt(colorB)).darker(),
-					new Color(Integer.parseInt(colorF)));
+			Color b = new Color(Integer.parseInt(colorB));
+			Color darker = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
+			AcideMainWindow.getInstance().getMenu().paintMenuBar(darker, new Color(Integer.parseInt(colorF)));
+			AcideMainWindow.getInstance().getStatusBar().changeColor(darker, new Color(Integer.parseInt(colorF)));
+			AcideMainWindow.getInstance().getToolBarPanel().changeColor(darker, new Color(Integer.parseInt(colorF)));
 			AcideMainWindow.getInstance().getFileEditorManager().setBackground(new Color(Integer.parseInt(colorB)));
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
-			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(new Color(Integer.parseInt(colorB)).darker());
+			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(darker);
 			AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(new Color(Integer.parseInt(colorF)));
 			AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)),
-					new Color(Integer.parseInt(colorF)));
+					new Color(Integer.parseInt(colorF)), darker);
 			AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)),
-					new Color(Integer.parseInt(colorF)));
+					new Color(Integer.parseInt(colorF)), darker);
 			//Apply themes configuration to file editor panel
 			for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
 					.getNumberOfFileEditorPanels(); index++) {
 
-				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
+				AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)), darker);
 			}
 
 		} catch (MissedPropertyException e) {
@@ -535,7 +534,9 @@ public class AcideWorkbenchConfiguration {
 				.getConsoleLineWrappingCheckBoxMenuItem().setSelected(true);
 		
 		//Apply themes configuration to console panel
-		AcideMainWindow.getInstance().getConsolePanel().changeColor(AcideProjectConfiguration.getInstance().getBackgroundColor(), AcideProjectConfiguration.getInstance().getForegroundColor());
+		Color b = AcideProjectConfiguration.getInstance().getBackgroundColor();
+		Color darker = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
+		AcideMainWindow.getInstance().getConsolePanel().changeColor(AcideProjectConfiguration.getInstance().getBackgroundColor(), AcideProjectConfiguration.getInstance().getForegroundColor(), darker);
 	}
 
 	/**
@@ -1224,8 +1225,10 @@ public class AcideWorkbenchConfiguration {
 
 				String colorB = AcideResourceManager.getInstance().getProperty("explorerPanel.backgroundColor");
 				String colorF = AcideResourceManager.getInstance().getProperty("explorerPanel.foregroundColor");
+				Color b = new Color(Integer.parseInt(colorB));
+				Color darker = new Color((int) (b.getRed() *0.9), (int) (b.getGreen() *0.9), (int) (b.getBlue() *0.9));
 				AcideMainWindow.getInstance().getExplorerPanel().setBackgroundColor(new Color(Integer.parseInt(colorB)),
-						new Color(Integer.parseInt(colorF)));
+						new Color(Integer.parseInt(colorF)), darker);
 			}
 		} catch (NumberFormatException exception) {
 

@@ -12,8 +12,8 @@ false
 /q
 true
 
+-16777216
 -1
--10066330
 Monospaced
 0
 12
@@ -22,7 +22,7 @@ true
 true
 true
 true
-true
+false
 1936
 1056
 -8
@@ -30,9 +30,9 @@ true
 238
 338
 1471
-527
-352
-Español
+551
+927
+English
 .\configuration\menu\lastModified.menuConfig
 ./configuration/menu/defaultAllOn.xml
 .\configuration\toolbar\des.toolbarConfig

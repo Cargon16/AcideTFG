@@ -824,7 +824,7 @@
                           <__command>$NODES_COLOR</__command>
                           <__parameter>None</__parameter>
                           <__name>Node Color</__name>
-                          <__visible>false</__visible>
+                          <__visible>true</__visible>
                           <__erasable>false</__erasable>
                           <__image>         </__image>
                         </acide.configuration.menu.AcideMenuItemConfiguration>
@@ -832,7 +832,7 @@
                           <__command>$SHOW_LABELS</__command>
                           <__parameter>None</__parameter>
                           <__name>Show Labels</__name>
-                          <__visible>false</__visible>
+                          <__visible>true</__visible>
                           <__erasable>false</__erasable>
                           <__image>         </__image>
                         </acide.configuration.menu.AcideMenuItemConfiguration>
@@ -840,7 +840,7 @@
                           <__command>$NODES_SIZE</__command>
                           <__parameter>None</__parameter>
                           <__name>Node Size</__name>
-                          <__visible>false</__visible>
+                          <__visible>true</__visible>
                           <__erasable>false</__erasable>
                           <__image>         </__image>
                         </acide.configuration.menu.AcideMenuItemConfiguration>
@@ -852,7 +852,7 @@
                                   <__command>$NODES_SHAPE_CIRCLE</__command>
                                   <__parameter>None</__parameter>
                                   <__name>Circle</__name>
-                                  <__visible>false</__visible>
+                                  <__visible>true</__visible>
                                   <__erasable>false</__erasable>
                                   <__image>      </__image>
                                 </acide.configuration.menu.AcideMenuItemConfiguration>
@@ -860,7 +860,7 @@
                                   <__command>$NODES_SHAPE_SQUARE</__command>
                                   <__parameter>None</__parameter>
                                   <__name>Square</__name>
-                                  <__visible>false</__visible>
+                                  <__visible>true</__visible>
                                   <__erasable>false</__erasable>
                                   <__image>      </__image>
                                 </acide.configuration.menu.AcideMenuItemConfiguration>
@@ -880,7 +880,7 @@
                                   <__command>$ARROW_COLOR_DIRECT</__command>
                                   <__parameter>None</__parameter>
                                   <__name>Direct</__name>
-                                  <__visible>false</__visible>
+                                  <__visible>true</__visible>
                                   <__erasable>false</__erasable>
                                   <__image>      </__image>
                                 </acide.configuration.menu.AcideMenuItemConfiguration>
@@ -1175,6 +1175,26 @@
                     </__list>
                   </__itemsManager>
                   <__name>Tool Bar</__name>
+                  <__visible>true</__visible>
+                  <__erasable>false</__erasable>
+                  <__image></__image>
+                </acide.configuration.menu.AcideMenuSubmenuConfiguration>
+                <acide.configuration.menu.AcideMenuSubmenuConfiguration>
+                  <__itemsManager>
+                    <__list>
+                      <__list>
+                        <acide.configuration.menu.AcideMenuItemConfiguration>
+                          <__command>$THEMES</__command>
+                          <__parameter>None</__parameter>
+                          <__name>Themes configuration</__name>
+                          <__visible>true</__visible>
+                          <__erasable>false</__erasable>
+                          <__image>./resources/icons/menu/configuration/paleta.gif</__image>
+                        </acide.configuration.menu.AcideMenuItemConfiguration>
+                      </__list>
+                    </__list>
+                  </__itemsManager>
+                  <__name>Themes</__name>
                   <__visible>true</__visible>
                   <__erasable>false</__erasable>
                   <__image></__image>

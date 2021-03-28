@@ -323,7 +323,8 @@ public class AcideDatabasePanelMenu extends JMenu{
 		
 		// builds the show details menu
 		_showDetailsMenu.updateComponentsVisibility();
-
+		_showDetailsMenu.setVisible(_databasePanelSubmenuConfiguration.getSubmenu(SHOW_DETAILS_NAME).isVisible());
+		
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
 		while (it.hasNext()){
 			AcideMenuObjectConfiguration ob = it.next();
@@ -336,9 +337,11 @@ public class AcideDatabasePanelMenu extends JMenu{
 		}
 		
 		// Sets the console menu to visible or not visible
-		_databasePanelSubmenuConfiguration.setVisible(_desPanelMenuItem.isVisible()
+		Boolean b = (AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME).isVisible();
+		_databasePanelSubmenuConfiguration.setVisible((_desPanelMenuItem.isVisible()
 				|| _odbcPanelMenuItem.isVisible()
-				|| _showDetailsMenu.isVisible());
+				|| _showDetailsMenu.isVisible()) && b);
 		_databasePanelSubmenuConfiguration.setErasable(false);
 		
 						

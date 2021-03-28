@@ -376,7 +376,9 @@ public class AcideThemesMenu extends JMenu {
 		}
 
 		// Sets the tool bar menu to visible or not visible
-		_themeSubmenuConfiguration.setVisible(themesConfiguration.isVisible());
+		Boolean b = AcideMenuItemsConfiguration.getInstance()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getSubmenu(THEME_MENU_NAME).isVisible();
+		_themeSubmenuConfiguration.setVisible(themesConfiguration.isVisible() && b);
 
 		_themeSubmenuConfiguration.setErasable(false);
 
@@ -436,9 +438,10 @@ public class AcideThemesMenu extends JMenu {
 		Color fileFore = colorFileEditor.getValue();
 
 		// Apply the changes to the opened file editor panels
+		Color darker = new Color((int) (fileBack.getRed() *0.9), (int) (fileBack.getGreen() *0.9), (int) (fileBack.getBlue() *0.9));
 		AcideMainWindow.getInstance().getFileEditorManager().setBackground(backgroundColor);
 		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
-		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(backgroundColor.darker());
+		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(darker);
 		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setForeground(foregroundColor);
 		for (int index = 0; index < AcideMainWindow.getInstance().getFileEditorManager()
 				.getNumberOfFileEditorPanels(); index++) {
@@ -450,31 +453,31 @@ public class AcideThemesMenu extends JMenu {
 			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).getActiveTextEditionArea()
 					.setForeground(fileFore);
 			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(fileBack,
-					fileFore);
+					fileFore, darker);
 		}
 
 		// Apply changes to toolbar
-		AcideMainWindow.getInstance().getToolBarPanel().changeColor(backgroundColor.darker(), foregroundColor);
+		AcideMainWindow.getInstance().getToolBarPanel().changeColor(darker, foregroundColor);
 
 		// Apply changes to statusBar
-		AcideMainWindow.getInstance().getStatusBar().changeColor(backgroundColor.darker(), foregroundColor);
+		AcideMainWindow.getInstance().getStatusBar().changeColor(darker, foregroundColor);
 
 		// Apply changes to menuBar
-		AcideMainWindow.getInstance().getMenu().paintMenuBar(backgroundColor.darker(), foregroundColor);
+		AcideMainWindow.getInstance().getMenu().paintMenuBar(darker, foregroundColor);
 
 		// Apply changes to the database panel
 		AcideMainWindow.getInstance().getDataBasePanel().changeColor(backgroundColor, foregroundColor);
 
 		// Apply changes to the explorer panel
-		AcideMainWindow.getInstance().getExplorerPanel().setBackgroundColor(backgroundColor, foregroundColor);
+		AcideMainWindow.getInstance().getExplorerPanel().setBackgroundColor(backgroundColor, foregroundColor, darker);
 
 		// Apply changes to debugPanel
-		AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(backgroundColor, foregroundColor);
-		AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(backgroundColor, foregroundColor);
+		AcideMainWindow.getInstance().getDebugPanel().setBackgroundColor(backgroundColor, foregroundColor, darker);
+		AcideMainWindow.getInstance().getGraphPanel().setBackgroundColor(backgroundColor, foregroundColor, darker);
 		SwingUtilities.invokeLater(() -> AcideGraphUtil.refreshGraphPanel());
 
 		// Apply changes to the console panel
-		AcideMainWindow.getInstance().getConsolePanel().changeColor(consoleBack, consoleFore);
+		AcideMainWindow.getInstance().getConsolePanel().changeColor(consoleBack, consoleFore, darker);
 		AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",
 				Integer.toString(consoleBack.getRGB()));
 		AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",

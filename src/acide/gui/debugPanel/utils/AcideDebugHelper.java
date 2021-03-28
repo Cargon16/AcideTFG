@@ -458,7 +458,9 @@ public class AcideDebugHelper {
 
     // Gets the view selected in the SQL Debug SQL panel canvas
     public static String getSelectedViewName(){
+    	if(AcideMainWindow.getInstance().getDebugPanel().getDebugSQLPanel().getCanvas().getSelectedNode() != null)
         return AcideMainWindow.getInstance().getDebugPanel().getDebugSQLPanel().getCanvas().getSelectedNode().getLabel().split("/")[0];
+    	else return "";
     }
 
     public static String getDataFromSelectedTuple(JTable table){

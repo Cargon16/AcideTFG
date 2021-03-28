@@ -39,8 +39,12 @@
  */
 package acide.gui.menuBar.helpMenu;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,6 +53,7 @@ import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
@@ -93,13 +98,13 @@ public class AcideHelpMenu extends JMenu {
 	/**
 	 * ACIDE - A Configurable IDE help menu show help menu item image icon.
 	 */
-	private final static ImageIcon SHOW_HELP_IMAGE = new ImageIcon(
-			"./resources/icons/menu/help/help.png");
+	private final static ImageIcon SHOW_HELP_IMAGE = new ImageIcon("./resources/icons/menu/help/help.png");
 	/**
 	 * ACIDE - A Configurable IDE help menu show about us menu item image icon.
 	 */
-	private final static ImageIcon SHOW_ABOUT_US_IMAGE = new ImageIcon(
-			"./resources/icons/menu/help/aboutUs.png");
+	private final static ImageIcon SHOW_ABOUT_US_IMAGE = new ImageIcon("./resources/icons/menu/help/aboutUs.png");
+	
+	private final static String DES_MANUAL_URL = "doc/manualDES.pdf";
 	/**
 	 * ACIDE - A Configurable IDE help menu show help menu item.
 	 */
@@ -113,7 +118,8 @@ public class AcideHelpMenu extends JMenu {
 	 */
 	private JMenuItem _showAboutUsMenuItem;
 	/**
-	 * ACIDE - A Configurable IDE help menu show about us menu item has been inserted.
+	 * ACIDE - A Configurable IDE help menu show about us menu item has been
+	 * inserted.
 	 */
 	private boolean _showAboutUsInserted;
 	/**
@@ -137,19 +143,18 @@ public class AcideHelpMenu extends JMenu {
 	 */
 	private ArrayList<AcideMenuObjectConfiguration> _insertedObjects;
 
-
 	/**
 	 * Creates a new ACIDE - A Configurable IDE help menu.
 	 */
 	public AcideHelpMenu() {
-		
+
 		_showAboutUsInserted = false;
 		_showHelpInserted = false;
-		
+
 		_insertedItems = new HashMap<String, AcideInsertedItem>();
-		
+
 		_insertedMenus = new HashMap<String, AcideInsertedMenu>();
-		
+
 		_insertedObjects = new ArrayList<AcideMenuObjectConfiguration>();
 
 		// Builds the menu components
@@ -166,26 +171,26 @@ public class AcideHelpMenu extends JMenu {
 	 * Adds the components to the ACIDE - A Configurable IDE help menu.
 	 */
 	private void addComponents() {
-		
-		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().getSubmenu(HELP_MENU_NAME).getItemsManager().managerIterator();
-		while (it.hasNext()){
+
+		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().getSubmenu(HELP_MENU_NAME)
+				.getItemsManager().managerIterator();
+		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it.next();
 			String name = ob.getName();
-			if (name.equals(SHOW_HELP_NAME)){
+			if (name.equals(SHOW_HELP_NAME)) {
 				// Adds the show help menu item to the menu
 				add(_showHelpMenuItem);
 				_showHelpInserted = true;
 				// Adds the show help show about us separator to the menu
 				add(_showHelpShowAboutUsSeparator);
-			}else if (name.equals(SHOW_ABOUT_US_NAME)){
+			} else if (name.equals(SHOW_ABOUT_US_NAME)) {
 				// Adds the show about us menu item to the menu
 				add(_showAboutUsMenuItem);
 				_showAboutUsInserted = true;
-			}else {
-				if (ob.isSubmenu()){
+			} else {
+				if (ob.isSubmenu()) {
 					add(_insertedMenus.get(ob.getName()));
-				}else{
+				} else {
 					add(_insertedItems.get(ob.getName()));
 				}
 			}
@@ -195,43 +200,41 @@ public class AcideHelpMenu extends JMenu {
 			add(_showHelpMenuItem);
 		if (!_showAboutUsInserted)
 			add(_showAboutUsMenuItem);
-		
+
 	}
 
 	/**
 	 * Builds the ACIDE - A Configurable IDE help menu components.
 	 */
 	private void buildComponents() {
-		
-		if (!AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().hasSubmenu(HELP_MENU_NAME)){
-			AcideMenuItemsConfiguration.getInstance()
-				.insertObject(new AcideMenuSubmenuConfiguration(HELP_MENU_NAME));
+
+		if (!AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().hasSubmenu(HELP_MENU_NAME)) {
+			AcideMenuItemsConfiguration.getInstance().insertObject(new AcideMenuSubmenuConfiguration(HELP_MENU_NAME));
 		}
-		
-		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().getSubmenu(HELP_MENU_NAME).getItemsManager().managerIterator();
-		
-		while (it.hasNext()){
+
+		Iterator<Object> it = AcideMenuItemsConfiguration.getInstance().getMenuItemsManager().getSubmenu(HELP_MENU_NAME)
+				.getItemsManager().managerIterator();
+
+		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = (AcideMenuObjectConfiguration) it.next();
 			String name = ob.getName();
-			if (isOriginal(name)){
+			if (isOriginal(name)) {
 				_insertedObjects.add(ob);
-				if (ob.isSubmenu()){
+				if (ob.isSubmenu()) {
 					AcideMenuSubmenuConfiguration obSubmenu = (AcideMenuSubmenuConfiguration) ob;
 					_insertedMenus.put(ob.getName(), new AcideInsertedMenu(obSubmenu));
-				}else {
+				} else {
 					AcideMenuItemConfiguration obItem = (AcideMenuItemConfiguration) ob;
-					_insertedItems.put(obItem.getName(), new AcideInsertedItem(IconsUtils.getIcon(
-							obItem.getImage()), obItem));
+					_insertedItems.put(obItem.getName(),
+							new AcideInsertedItem(IconsUtils.getIcon(obItem.getImage()), obItem));
 				}
 			}
 		}
 
 		// Creates the show help menu item
-		ImageIcon icon = IconsUtils.getIcon(AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().getSubmenu(HELP_MENU_NAME)
-				.getItem(SHOW_HELP_NAME).getImage());
-	
+		ImageIcon icon = IconsUtils.getIcon(AcideMenuItemsConfiguration.getInstance().getMenuItemsManager()
+				.getSubmenu(HELP_MENU_NAME).getItem(SHOW_HELP_NAME).getImage());
+
 		if (icon != null)
 			_showHelpMenuItem = new JMenuItem(icon);
 		else
@@ -244,10 +247,9 @@ public class AcideHelpMenu extends JMenu {
 		_showHelpShowAboutUsSeparator = new JSeparator();
 
 		// Creates the show about us menu item
-		icon = IconsUtils.getIcon(AcideMenuItemsConfiguration.getInstance()
-				.getMenuItemsManager().getSubmenu(HELP_MENU_NAME)
-				.getItem(SHOW_ABOUT_US_NAME).getImage());
-		
+		icon = IconsUtils.getIcon(AcideMenuItemsConfiguration.getInstance().getMenuItemsManager()
+				.getSubmenu(HELP_MENU_NAME).getItem(SHOW_ABOUT_US_NAME).getImage());
+
 		if (icon != null)
 			_showAboutUsMenuItem = new JMenuItem(icon);
 		else
@@ -258,38 +260,35 @@ public class AcideHelpMenu extends JMenu {
 	}
 
 	/**
-	 * Sets the text of the ACIDE - A Configurable IDE help menu components with
-	 * the labels in the selected language to display.
+	 * Sets the text of the ACIDE - A Configurable IDE help menu components with the
+	 * labels in the selected language to display.
 	 */
 	public void setTextOfMenuComponents() {
 
 		// Sets the show help menu item text
-		_showHelpMenuItem.setText(AcideLanguageManager.getInstance()
-				.getLabels().getString("s38"));
+		_showHelpMenuItem.setText(AcideLanguageManager.getInstance().getLabels().getString("s38"));
 
 		// Sets the show help menu item accelerator
-			_showHelpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H,
-				ActionEvent.CTRL_MASK));
-		
+		_showHelpMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+
 		// Sets the show about us menu item text
-		_showAboutUsMenuItem.setText(AcideLanguageManager.getInstance()
-				.getLabels().getString("s39"));
-		
+		_showAboutUsMenuItem.setText(AcideLanguageManager.getInstance().getLabels().getString("s39"));
+
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = it.next();
-			if (ob.isSubmenu()){
+			if (ob.isSubmenu()) {
 				_insertedMenus.get(ob.getName()).setText(ob.getName());
 				_insertedMenus.get(ob.getName()).setTextOfMenuComponents();
-			}else{
+			} else {
 				_insertedItems.get(ob.getName()).setText(ob.getName());
 			}
 		}
 	}
 
 	/**
-	 * Updates the ACIDE - A Configurable IDE help menu components visibility
-	 * with the menu configuration.
+	 * Updates the ACIDE - A Configurable IDE help menu components visibility with
+	 * the menu configuration.
 	 */
 	public void updateComponentsVisibility() {
 
@@ -297,85 +296,74 @@ public class AcideHelpMenu extends JMenu {
 		AcideMenuItemConfiguration showAboutUsConfiguration;
 
 		_helpSubmenuConfiguration = AcideMenuItemsConfiguration.getInstance().getSubmenu(HELP_MENU_NAME);
-			
+
 		// Sets the show help menu item to visible or not visible
 		showHelpConfiguration = _helpSubmenuConfiguration.getItem(SHOW_HELP_NAME);
 		_showHelpMenuItem.setVisible(showHelpConfiguration.isVisible());
-			
+
 		// Sets the show about us menu item to visible or not visible
 		showAboutUsConfiguration = _helpSubmenuConfiguration.getItem(SHOW_ABOUT_US_NAME);
 		_showAboutUsMenuItem.setVisible(showAboutUsConfiguration.isVisible());
-			
+
 		// Sets the show help show about us separator to visible or not visible
-		_showHelpShowAboutUsSeparator.setVisible(_showHelpMenuItem.isVisible()
-				&& _showAboutUsMenuItem.isVisible());
-				
+		_showHelpShowAboutUsSeparator.setVisible(_showHelpMenuItem.isVisible() && _showAboutUsMenuItem.isVisible());
+
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = it.next();
-			if (ob.isSubmenu()){
+			if (ob.isSubmenu()) {
 				_insertedMenus.get(ob.getName()).updateComponentsVisibility();
 				_insertedMenus.get(ob.getName()).setVisible(ob.isVisible());
-			}else{
+			} else {
 				_insertedItems.get(ob.getName()).setVisible(ob.isVisible());
 			}
 		}
-		
+
 		// Sets the help menu as visible or not visible
-		_helpSubmenuConfiguration.setVisible(_showHelpMenuItem.isVisible()
-				|| _showAboutUsMenuItem.isVisible());
-		
+		_helpSubmenuConfiguration.setVisible(_showHelpMenuItem.isVisible() || _showAboutUsMenuItem.isVisible());
+
 		_helpSubmenuConfiguration.setErasable(false);
-		
-		
-				try{			
-					//Save the configuration for the menu that could have been modified
-					AcideMenuConfiguration.getInstance()
-						.saveMenuConfigurationFile("./configuration/menu/lastModified.menuConfig");
-					
-					// Gets the the ACIDE - A Configurable IDE current menu
-					// configuration
-					String currentMenuConfiguration = AcideResourceManager
-							.getInstance().getProperty("currentMenuConfiguration");
 
-					if (!currentMenuConfiguration
-							.endsWith("lastModified.menuConfig")
-							&& !currentMenuConfiguration
-									.endsWith("newMenu.menuConfig")) {
+		try {
+			// Save the configuration for the menu that could have been modified
+			AcideMenuConfiguration.getInstance()
+					.saveMenuConfigurationFile("./configuration/menu/lastModified.menuConfig");
 
-						// Updates the the ACIDE - A Configurable IDE previous
-						// menu
-						// configuration
-						AcideResourceManager.getInstance().setProperty(
-								"previousMenuConfiguration",
-								currentMenuConfiguration);
-					}
-					
-					// Updates the the ACIDE - A Configurable IDE current menu
-					// configuration
-					AcideResourceManager.getInstance().setProperty(
-							"currentMenuConfiguration", "./configuration/menu/lastModified.menuConfig");
-				}		
-				catch (Exception exception2) {
+			// Gets the the ACIDE - A Configurable IDE current menu
+			// configuration
+			String currentMenuConfiguration = AcideResourceManager.getInstance()
+					.getProperty("currentMenuConfiguration");
 
-					// Updates the log
-					AcideLog.getLog().error(exception2.getMessage());
-					exception2.printStackTrace();
-				}		
-				
+			if (!currentMenuConfiguration.endsWith("lastModified.menuConfig")
+					&& !currentMenuConfiguration.endsWith("newMenu.menuConfig")) {
+
+				// Updates the the ACIDE - A Configurable IDE previous
+				// menu
+				// configuration
+				AcideResourceManager.getInstance().setProperty("previousMenuConfiguration", currentMenuConfiguration);
+			}
+
+			// Updates the the ACIDE - A Configurable IDE current menu
+			// configuration
+			AcideResourceManager.getInstance().setProperty("currentMenuConfiguration",
+					"./configuration/menu/lastModified.menuConfig");
+		} catch (Exception exception2) {
+
+			// Updates the log
+			AcideLog.getLog().error(exception2.getMessage());
+			exception2.printStackTrace();
+		}
 
 	}
-	
+
 	/**
 	 * Gets if the menu name given as parameter is original
-	 * @param name
-	 * 		the name we want to check
-	 * @return
-	 * 		if the name given as parameter is original
+	 * 
+	 * @param name the name we want to check
+	 * @return if the name given as parameter is original
 	 */
-	public boolean isOriginal(String name){
-		if (!(name.equals(SHOW_ABOUT_US_NAME))
-			&& !(name.equals(SHOW_HELP_NAME))){
+	public boolean isOriginal(String name) {
+		if (!(name.equals(SHOW_ABOUT_US_NAME)) && !(name.equals(SHOW_HELP_NAME))) {
 			return true;
 		} else {
 			return false;
@@ -388,26 +376,44 @@ public class AcideHelpMenu extends JMenu {
 	public void setListeners() {
 
 		// Sets the show help menu item action listener
-		_showAboutUsMenuItem//.addActionListener(new AcideShowAboutUsMenuItemListener());
-			.addActionListener(new AcideInsertedItemListener(
-				AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(HELP_MENU_NAME).getItem(SHOW_ABOUT_US_NAME)));
+		_showAboutUsMenuItem// .addActionListener(new AcideShowAboutUsMenuItemListener());
+				.addActionListener(new AcideInsertedItemListener(AcideMenuItemsConfiguration.getInstance()
+						.getSubmenu(HELP_MENU_NAME).getItem(SHOW_ABOUT_US_NAME)));
 
 		// Sets the show about us menu item text
-		_showHelpMenuItem//.addActionListener(new AcideShowHelpMenuItemListener());
-			.addActionListener(new AcideInsertedItemListener(
-				AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(HELP_MENU_NAME).getItem(SHOW_HELP_NAME)));
-		
+		_showHelpMenuItem// .addActionListener(new AcideShowHelpMenuItemListener());
+				.addActionListener(new AcideInsertedItemListener(
+						AcideMenuItemsConfiguration.getInstance().getSubmenu(HELP_MENU_NAME).getItem(SHOW_HELP_NAME)));
+
 		Iterator<AcideMenuObjectConfiguration> it = _insertedObjects.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			AcideMenuObjectConfiguration ob = it.next();
-			if (ob.isSubmenu()){
-				_insertedMenus.get(ob.getName()).addMouseListener(new AcideMenuBarMouseClickListener());
-				_insertedMenus.get(ob.getName()).setListeners();
-			}else{
+			if (ob.isSubmenu()) {
+				
+				  _insertedMenus.get(ob.getName()).addMouseListener(new
+				  AcideMenuBarMouseClickListener());
+				  _insertedMenus.get(ob.getName()).setListeners();
+				
+			} else {
 				AcideInsertedItem aux = _insertedItems.get(ob.getName());
-				aux.addActionListener((new AcideInsertedItemListener(aux)));
+				aux.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						try {
+							Desktop.getDesktop().open(new File(DES_MANUAL_URL));
+						} catch (Exception e1) {
+							// Updates the log
+							AcideLog.getLog().error(e1.getMessage());
+
+							// Displays an error message
+							JOptionPane.showMessageDialog(null, AcideLanguageManager
+									.getInstance().getLabels().getString("s969")
+									+ DES_MANUAL_URL, AcideLanguageManager.getInstance().getLabels()
+									.getString("s945"), JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
 			}
 		}
 	}
@@ -429,8 +435,8 @@ public class AcideHelpMenu extends JMenu {
 	public JMenuItem getShowHelpMenuItem() {
 		return _showHelpMenuItem;
 	}
-	
-	public void setEnabled(boolean enabled){
+
+	public void setEnabled(boolean enabled) {
 		_showAboutUsMenuItem.setEnabled(enabled);
 		_showHelpMenuItem.setEnabled(enabled);
 	}

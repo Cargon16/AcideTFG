@@ -365,12 +365,13 @@ public class AcideShowDetailsMenu extends JMenu{
 		}
 		
 		// Sets the console menu to visible or not visible
-		_showDetailsSubmenuConfiguration.setVisible(_nameMenuItem.isVisible()
+		Boolean b = (AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME))
+				.getSubmenu(AcideDatabasePanelMenu.DATABASE_MENU_NAME).getSubmenu(SHOW_DETAILS_NAME).isVisible();
+		_showDetailsSubmenuConfiguration.setVisible((_nameMenuItem.isVisible()
 				|| _nameFieldsMenuItem.isVisible()
-				|| _nameFieldsTypesMenuItem.isVisible());
+				|| _nameFieldsTypesMenuItem.isVisible()) && b);
 		_showDetailsSubmenuConfiguration.setErasable(false);
-		
-						
+					
 				try{			
 					//Save the configuration for the menu that could have been modified
 					AcideMenuConfiguration.getInstance()

@@ -880,10 +880,10 @@ public class AcideFileEditorPanel extends JPanel {
 		_previousGrammarConfiguration = previousGrammarConfiguration;
 	}
 
-	public void changeColor(Color background, Color foreground) {
+	public void changeColor(Color background, Color foreground, Color darker) {
 		Component[] men = this._popupMenu.getComponents();
 		for (Component c : men) {
-			c.getClass().cast(c).setBackground(background.darker());
+			c.getClass().cast(c).setBackground(darker);
 			c.getClass().cast(c).setForeground(foreground);
 			((JComponent) c.getClass().cast(c)).setOpaque(true);
 		}

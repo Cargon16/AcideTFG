@@ -628,10 +628,12 @@ public class AcideConsoleMenu extends JMenu {
 		}
 		
 		// Sets the console menu to visible or not visible
-		_consoleSubmenuConfiguration.setVisible(_configureMenuItem.isVisible()
+		Boolean b = AcideMenuItemsConfiguration.getInstance()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getSubmenu(CONSOLE_MENU_NAME).isVisible();
+		_consoleSubmenuConfiguration.setVisible((_configureMenuItem.isVisible()
 				|| _externalCommandMenuItem.isVisible()
 				|| _consoleDisplayOptionsMenuItem.isVisible()
-				|| _consoleLineWrappingCheckBoxMenuItem.isVisible());
+				|| _consoleLineWrappingCheckBoxMenuItem.isVisible()) && b);
 		_consoleSubmenuConfiguration.setErasable(false);
 		
 						

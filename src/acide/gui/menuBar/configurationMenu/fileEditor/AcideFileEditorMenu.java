@@ -489,12 +489,14 @@ public class AcideFileEditorMenu extends JMenu {
 		}
 		
 		// Sets the file editor menu to visible or not visible
-		_fileEditorSubmenuConfiguration.setVisible(_automaticIndentCheckBoxMenuItem.isVisible()
+		Boolean b =  AcideMenuItemsConfiguration.getInstance()
+				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getSubmenu(FILE_EDITOR_MENU_NAME).isVisible();
+		_fileEditorSubmenuConfiguration.setVisible((_automaticIndentCheckBoxMenuItem.isVisible()
 						|| _preferencesMenuItem.isVisible()
 						|| _fileEditorDisplayOptionsMenuItem.isVisible()
 						|| _lineWrappingCheckBoxMenuItem.isVisible()
 						|| _maximumLinesToConsoleMenuItem.isVisible()
-						|| _sendToConsoleConfirmationMenuItem.isVisible());
+						|| _sendToConsoleConfirmationMenuItem.isVisible()) && b);
 
 		_fileEditorSubmenuConfiguration.setErasable(false);
 		
