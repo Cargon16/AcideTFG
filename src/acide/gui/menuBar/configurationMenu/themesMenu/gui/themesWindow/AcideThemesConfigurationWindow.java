@@ -77,14 +77,18 @@ import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 
+import acide.configuration.lexicon.AcideLexiconConfiguration;
 import acide.configuration.project.AcideProjectConfiguration;
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
+import acide.configuration.workbench.fileEditor.AcideFileEditorConfiguration;
+import acide.configuration.workbench.fileEditor.AcideFileEditorPanelConfiguration;
 import acide.gui.graphPanel.AcideGraphUtil;
 import acide.gui.listeners.AcideWindowClosingListener;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
 import acide.gui.menuBar.configurationMenu.menuMenu.gui.configurationPanel.AcideConfigurationMenuPanel;
 import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemesMenu;
+import acide.gui.toolBarPanel.consolePanelToolBar.AcideConsolePanelToolBar;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
 import acide.resources.AcideResourceManager;
@@ -909,7 +913,7 @@ public class AcideThemesConfigurationWindow extends JFrame {
 				File file = new File("./configuration/themes/" + _themeName.getText() + ".properties");
 
 				Properties prop = new Properties();
-
+				
 				// set the properties value
 				prop.setProperty("backgroundColor", String.valueOf(_displayArea.getBackground().getRGB()));
 				prop.setProperty("foregroundColor", String.valueOf(_displayArea.getForeground().getRGB()));
@@ -930,6 +934,9 @@ public class AcideThemesConfigurationWindow extends JFrame {
 							.getActiveTextEditionArea().getForeground().getRGB()));
 				}
 				
+				prop.setProperty("lexiconFileConfig", AcideMainWindow.getInstance()
+						.getFileEditorManager().getSelectedFileEditorPanel().getLexiconConfiguration().getPath());
+				prop.setProperty("lexiconConsoleConfig", AcideMainWindow.getInstance().getConsolePanel().getLexiconConfiguration().getPath());
 
 				// save properties to project root folder
 				FileOutputStream in = new FileOutputStream(file.getPath());

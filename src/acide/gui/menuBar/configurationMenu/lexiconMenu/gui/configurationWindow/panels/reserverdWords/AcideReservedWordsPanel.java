@@ -249,6 +249,7 @@ public class AcideReservedWordsPanel extends JPanel {
 		_previewTextField = new JTextField();
 
 		// Sets the preview text field tool tip text
+		_previewTextField.setBackground(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor());
 		_previewTextField.setToolTipText(AcideLanguageManager.getInstance()
 				.getLabels().getString("s393"));
 

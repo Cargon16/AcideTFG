@@ -94,18 +94,18 @@ icon =
 parameterType = NONE
 isExecutedInSytemShell = false
 
-// buttonConfiguration verbose
-name = verbose
-action = /verbose on
-hintText = Enables verbose output
+// buttonConfiguration autosave
+name = autosave
+action = /autosave toggle
+hintText = Toggles autosave mode
 icon = 
 parameterType = NONE
 isExecutedInSytemShell = false
 
-// buttonConfiguration noverbose
-name = noverbose
-action = /verbose off
-hintText = Disables verbose output
+// buttonConfiguration verbose
+name = verbose
+action = /verbose toggle
+hintText = Toggles verbose output
 icon = 
 parameterType = NONE
 isExecutedInSytemShell = false
@@ -126,15 +126,8 @@ icon =
 parameterType = NONE
 isExecutedInSytemShell = false
 
-// buttonConfiguration autosave
-name = autosave
-action = /autosave toggle
-hintText = Toggles autosave mode
-icon = 
-parameterType = NONE
-isExecutedInSytemShell = false
-
 // End Of Console Panel Tool Bar Button Configuration
+playButton = true
 
 // Command Acrobat Reader
 name = Acrobat Reader

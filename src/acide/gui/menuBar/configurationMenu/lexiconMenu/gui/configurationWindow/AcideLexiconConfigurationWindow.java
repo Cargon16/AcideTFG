@@ -40,6 +40,7 @@
 package acide.gui.menuBar.configurationMenu.lexiconMenu.gui.configurationWindow;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -59,6 +60,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
+import acide.configuration.lexicon.AcideLexiconConfiguration;
 import acide.files.AcideFileExtensionFilterManager;
 import acide.files.AcideFileManager;
 import acide.files.utils.AcideFileOperation;
@@ -628,6 +630,7 @@ public class AcideLexiconConfigurationWindow extends JFrame {
 
 			// Closes the window
 			closeWindow();
+			
 
 			// Updates the lexicon message in the status bar
 			AcideMainWindow
@@ -760,7 +763,6 @@ public class AcideLexiconConfigurationWindow extends JFrame {
 
 				// If it could save it
 				if (isSaved) {
-
 					// Displays a success message
 					JOptionPane.showMessageDialog(null, AcideLanguageManager
 							.getInstance().getLabels().getString("s451"),

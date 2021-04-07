@@ -575,6 +575,9 @@ public class AcideLexiconMenu extends JMenu {
 		// Resets the selected file editor text edition area
 		AcideMainWindow.getInstance().getFileEditorManager()
 				.getSelectedFileEditorPanel().resetStyledDocument();
+		
+		/*AcideMainWindow.getInstance().getConsolePanel().getLexiconConfiguration().load(absolutePath);
+		AcideMainWindow.getInstance().getConsolePanel().resetStyledDocument();*/
 
 		// Updates the lexicon message status bar
 		AcideMainWindow
@@ -588,6 +591,14 @@ public class AcideLexiconMenu extends JMenu {
 										.getFileEditorManager()
 										.getSelectedFileEditorPanel()
 										.getLexiconConfiguration().getName());
+	}
+	/*
+	 * Updates console lexicon configuration 
+	 * */
+	public void consoleLexicon(String absolutePath) {
+		AcideMainWindow.getInstance().getConsolePanel().getLexiconConfiguration().load(absolutePath);
+		AcideMainWindow.getInstance().getConsolePanel().resetStyledDocument();
+		
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <acide.configuration.lexicon.AcideLexiconConfiguration>
   <__name>des</__name>
-  <__path>C:\fernan\research\BDDEDUC\DES\DESDevel\Executables\ACIDEBundle\acide_conf\des\configuration\lexicon\des.xml</__path>
+  <__path>./configuration/lexicon/des.xml</__path>
   <__isCompiledOrInterpreted>false</__isCompiledOrInterpreted>
   <__tokenTypeManager>
     <__list>
@@ -31,7 +31,6 @@
               <string>,</string>
               <string>\</string>
               <string>$</string>
-/silent /list_lex_fnops acide
               <string>*</string>
               <string>**</string>
               <string>+</string>
@@ -115,7 +114,6 @@
               <string>xor</string>
               <string>year</string>
               <string>||</string>
-/silent /nolog
             </__list>
           </__tokenList>
         </acide.configuration.lexicon.tokens.AcideLexiconTokenGroup>
@@ -131,10 +129,8 @@
           <__isCaseSensitive>false</__isCaseSensitive>
           <__tokenList>
             <__list>
-/silent /list_lex_cmds acide
               <string>/[</string>
               <string>/[+</string>
-              <string>/abolish</string>
               <string>/apropos</string>
               <string>/ashell</string>
               <string>/assert</string>
@@ -345,7 +341,7 @@
               <string>/write_to_file</string>
               <string>/writeln</string>
               <string>/writeln_to_file</string>
-/silent /nolog
+              <string>/abolish</string>
             </__list>
           </__tokenList>
         </acide.configuration.lexicon.tokens.AcideLexiconTokenGroup>
@@ -360,7 +356,8 @@
           <__fontStyle>0</__fontStyle>
           <__isCaseSensitive>true</__isCaseSensitive>
           <__tokenList>
-            <__list>              <string>pk</string>
+            <__list>
+              <string>pk</string>
               <string>ck</string>
               <string>fk</string>
               <string>fd</string>
@@ -421,7 +418,6 @@
               <string>$current_date</string>
               <string>$current_time</string>
               <string>$current_timestamp</string>
-/silent /list_lex_cmd_opts acide
               <string>a1</string>
               <string>a3</string>
               <string>add</string>
@@ -463,7 +459,6 @@
               <string>valid</string>
               <string>write</string>
               <string>yes</string>
-/silent /nolog
             </__list>
           </__tokenList>
         </acide.configuration.lexicon.tokens.AcideLexiconTokenGroup>
@@ -519,7 +514,7 @@
         <string>=&lt;</string>
         <string>(</string>
         <string>)</string>
-        <string>'</string>
+        <string>&apos;</string>
         <string>.</string>
         <string>,</string>
         <string>;</string>

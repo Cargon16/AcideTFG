@@ -73,6 +73,11 @@ public class AcideConsolePanelToolBarConfiguration {
 	 * temporal list.
 	 */
 	private ArrayList<AcideConsolePanelToolBarButtonConf> _temporalList;
+	
+	/**
+	 * ACIDE - A Configurable IDE tool bar console panel play button configuration.
+	 */
+	private Boolean playButtonConf;
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE tool bar console panel tool bar
@@ -183,6 +188,9 @@ public class AcideConsolePanelToolBarConfiguration {
 					// If it is the end of the console panel tool bar button
 					// configuration
 					if (line.startsWith(END_MARK)){
+						line = bufferedReader.readLine();
+						int lastIndexOfEqual = line.lastIndexOf("=");
+						playButtonConf = (line.substring(lastIndexOfEqual + 2, line.length()).equals("true")? true:false);
 						bufferedReader.close();
 						return list;
 					}
@@ -320,9 +328,12 @@ public class AcideConsolePanelToolBarConfiguration {
 			// Adds a blank line
 			fileContent += "\n";
 		}
+		
 
 		// Adds the end mark
-		fileContent += END_MARK + "\n\n";
+		fileContent += END_MARK + "\n";
+		fileContent += "playButton = " + (playButtonConf ? "true":"false") + "\n\n";
+		
 		return fileContent;
 	}
 
@@ -503,4 +514,19 @@ public class AcideConsolePanelToolBarConfiguration {
 	public ArrayList<AcideConsolePanelToolBarButtonConf> getTemporalList() {
 		return _temporalList;
 	}
+	
+	/**
+	 * Returns the ACIDE - A Configurable IDE tool bar console panel tool bar
+	 * configuration play button status.
+	 * 
+	 * @return the ACIDE - A Configurable IDE tool bar console panel tool bar
+	 * configuration play button status.
+	 */
+	public Boolean getPlayButtonStatus() {
+		return this.playButtonConf;
+	}
+	public void setPlayButtonStatus(Boolean status) {
+		this.playButtonConf = status;
+	}
+	
 }

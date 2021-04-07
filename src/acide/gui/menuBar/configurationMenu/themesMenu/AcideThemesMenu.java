@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /*
@@ -36,6 +37,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.text.html.HTML;
+
+import com.jidesoft.utils.HtmlUtils;
 
 import acide.configuration.menu.AcideInsertedItem;
 import acide.configuration.menu.AcideInsertedItemListener;
@@ -52,6 +56,7 @@ import acide.gui.menuBar.configurationMenu.AcideConfigurationMenu;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
 import acide.resources.AcideResourceManager;
+import acide.resources.exception.MissedPropertyException;
 import acide.utils.IconsUtils;
 import javafx.util.Pair;
 
@@ -100,6 +105,8 @@ public class AcideThemesMenu extends JMenu {
 	 * ACIDE - A Configurable IDE array list of inserted objects.
 	 */
 	private ArrayList<AcideMenuObjectConfiguration> _insertedObjects;
+	
+	public static String activeTheme;
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE tool bar menu.
@@ -133,13 +140,26 @@ public class AcideThemesMenu extends JMenu {
 		Properties prop = new Properties();
 		if (themesFiles.length != 0) {
 			for (File arch : themesFiles) {
-				JMenu sub = new JMenu(arch.getName().replaceFirst("[.][^.]+$", ""));
-				JMenuItem openMenuItem = new JMenuItem(AcideLanguageManager.getInstance().getLabels().getString("s335"), null);
+				String menName = arch.getName().replaceFirst("[.][^.]+$", "");
+				JMenu sub= new JMenu();
+				try {
+					String x = AcideResourceManager.getInstance().getProperty("themeApplied");
+					if(x.equals(menName)) {
+						sub.setLabel("\u2713" + " " + x);
+					}
+					else
+						sub.setLabel(menName);
+				} catch (MissedPropertyException e2) {
+					e2.printStackTrace();
+				}
+				//repaint();
+				JMenuItem openMenuItem = new JMenuItem(AcideLanguageManager.getInstance().getLabels().getString("s335"),
+						null);
 				openMenuItem.setHorizontalAlignment(SwingConstants.CENTER);
 				openMenuItem.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						try {
-							FileInputStream in= new FileInputStream(arch.getPath());
+							FileInputStream in = new FileInputStream(arch.getPath());
 							prop.load(in);
 
 							String colorB = prop.getProperty("backgroundColor");
@@ -154,7 +174,13 @@ public class AcideThemesMenu extends JMenu {
 							colorF = prop.getProperty("FileEditorforegroundColor");
 							Pair<Color, Color> colorFileEditor = new Pair<Color, Color>(
 									new Color(Integer.parseInt(colorB)), new Color(Integer.parseInt(colorF)));
-							changeTheme(colorGeneral, colorConsole, colorFileEditor);
+							String filePath = prop.getProperty("lexiconFileConfig");
+							String consolePath = prop.getProperty("lexiconConsoleConfig");
+							if(sub.getLabel().startsWith("\u2713")) activeTheme = sub.getLabel().substring(2);
+							activeTheme = sub.getLabel();
+							changeTheme(colorGeneral, colorConsole, colorFileEditor, filePath, consolePath);
+							sub.setLabel("\u2713" + " " + sub.getLabel());
+							
 							in.close();
 						} catch (IOException e1) {
 						}
@@ -168,6 +194,7 @@ public class AcideThemesMenu extends JMenu {
 						public void actionPerformed(ActionEvent e) {
 							Object[] options1 = { AcideLanguageManager.getInstance().getLabels().getString("s2051"),
 									AcideLanguageManager.getInstance().getLabels().getString("s2387"),
+									AcideLanguageManager.getInstance().getLabels().getString("s40"),
 									AcideLanguageManager.getInstance().getLabels().getString("s42") };
 
 							JPanel panel = new JPanel();
@@ -176,46 +203,58 @@ public class AcideThemesMenu extends JMenu {
 							textField.setText(arch.getName().replaceFirst("[.][^.]+$", ""));
 							panel.add(textField);
 							boolean opcionesValidas = false;
-							while(!opcionesValidas) {
-							int result = JOptionPane.showOptionDialog(null, panel, AcideLanguageManager.getInstance().getLabels().getString("s2386"),
-									JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
-							if (result == JOptionPane.YES_OPTION) {
-								File folder = new File("./configuration/themes");
-								File[] themesFiles = folder.listFiles();
-								int i = 0;
-								boolean enUso = false;
-								while (i < themesFiles.length && !enUso) {
-									String name = themesFiles[i].getName();
-									String newTheme = textField.getText() + ".properties";
-									if (name.equalsIgnoreCase(newTheme))
-										enUso = true;
-									i++;
+							while (!opcionesValidas) {
+								int result = JOptionPane.showOptionDialog(null, panel,
+										AcideLanguageManager.getInstance().getLabels().getString("s2386"),
+										JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1,
+										options1[0]);
+								if (result == 0) {
+									File folder = new File("./configuration/themes");
+									File[] themesFiles = folder.listFiles();
+									int i = 0;
+									boolean enUso = false;
+									while (i < themesFiles.length && !enUso) {
+										String name = themesFiles[i].getName();
+										String newTheme = textField.getText() + ".properties";
+										if (name.equalsIgnoreCase(newTheme))
+											enUso = true;
+										i++;
+									}
+									if (enUso) {
+										JOptionPane.showMessageDialog(null,
+												AcideLanguageManager.getInstance().getLabels().getString("s2384"));
+									} else {
+										File file = new File(
+												"./configuration/themes/" + textField.getText() + ".properties");
+										String ren = arch.getName().replaceFirst("[.][^.]+$", "");
+										if(AcideThemesMenu.activeTheme.equals(ren)) {
+											AcideThemesMenu.activeTheme = textField.getText();
+											AcideResourceManager.getInstance().setProperty("themeApplied", AcideThemesMenu.activeTheme);
+										}
+										arch.renameTo(file);
+										opcionesValidas = true;
+									}
 								}
-								if (enUso) {
-									JOptionPane.showMessageDialog(null,
-											AcideLanguageManager.getInstance().getLabels().getString("s2384"));
-								} else {
-									File file = new File(
-											"./configuration/themes/" + textField.getText() + ".properties");
-									arch.renameTo(file);
+								else
+								if (result == 1) {
+									arch.delete();
 									opcionesValidas = true;
-
+								}
+								else
+								if (result == 2) {
+									String []nomFile = arch.getName().split("\\.");
+									saveChangesOnTheme(nomFile[0]);
+									opcionesValidas = true;
+								}
+								else{
+									opcionesValidas = true;
 								}
 							}
-							if (result == JOptionPane.NO_OPTION) {
-								arch.delete();
-								opcionesValidas = true;
-							}
-							if(result == JOptionPane.CANCEL_OPTION)
-								opcionesValidas = true;
-							if(result == JOptionPane.CLOSED_OPTION) {
-								opcionesValidas = true;
-							}
-							}
-							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().removeAll();
+							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
+									.removeAll();
 							_insertedItems.clear();
 							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem()
-							.addComponents();
+									.addComponents();
 							AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
 							// Apply changes to menuBar
 							AcideMainWindow.getInstance().getMenu().paintMenuBar(
@@ -228,6 +267,7 @@ public class AcideThemesMenu extends JMenu {
 					add(sub);
 					_insertedItems.put(arch.getName().replaceFirst("[.][^.]+$", ""), null);
 				}
+				
 			}
 		}
 
@@ -376,8 +416,8 @@ public class AcideThemesMenu extends JMenu {
 		}
 
 		// Sets the tool bar menu to visible or not visible
-		Boolean b = AcideMenuItemsConfiguration.getInstance()
-				.getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME).getSubmenu(THEME_MENU_NAME).isVisible();
+		Boolean b = AcideMenuItemsConfiguration.getInstance().getSubmenu(AcideConfigurationMenu.CONFIGURATION_MENU_NAME)
+				.getSubmenu(THEME_MENU_NAME).isVisible();
 		_themeSubmenuConfiguration.setVisible(themesConfiguration.isVisible() && b);
 
 		_themeSubmenuConfiguration.setErasable(false);
@@ -424,7 +464,7 @@ public class AcideThemesMenu extends JMenu {
 	}
 
 	private void changeTheme(Pair<Color, Color> colorGeneral, Pair<Color, Color> colorConsole,
-			Pair<Color, Color> colorFileEditor) {
+			Pair<Color, Color> colorFileEditor, String pathFile, String pathConsole) {
 		// Updates the log
 		AcideLog.getLog().info("1043");
 
@@ -438,7 +478,8 @@ public class AcideThemesMenu extends JMenu {
 		Color fileFore = colorFileEditor.getValue();
 
 		// Apply the changes to the opened file editor panels
-		Color darker = new Color((int) (fileBack.getRed() *0.9), (int) (fileBack.getGreen() *0.9), (int) (fileBack.getBlue() *0.9));
+		Color darker = new Color((int) (backgroundColor.getRed() * 0.9), (int) (backgroundColor.getGreen() * 0.9),
+				(int) (backgroundColor.getBlue() * 0.9));
 		AcideMainWindow.getInstance().getFileEditorManager().setBackground(backgroundColor);
 		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setOpaque(true);
 		AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setBackground(darker);
@@ -453,7 +494,8 @@ public class AcideThemesMenu extends JMenu {
 			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).getActiveTextEditionArea()
 					.setForeground(fileFore);
 			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).changeColor(fileBack,
-					fileFore, darker);
+					foregroundColor, darker);
+			AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).setEditable(true);
 		}
 
 		// Apply changes to toolbar
@@ -483,12 +525,57 @@ public class AcideThemesMenu extends JMenu {
 		AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",
 				Integer.toString(consoleFore.getRGB()));
 
+		AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getLexiconMenu().documentLexicon(pathFile);
+		AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getLexiconMenu().consoleLexicon(pathConsole);
 		// Notify that main configuration has been changed
 		AcideProjectConfiguration.getInstance().setIsModified(true);
 	}
-	
-	public HashMap<String, AcideInsertedItem> getInsertedItem(){
+
+	public HashMap<String, AcideInsertedItem> getInsertedItem() {
 		return this._insertedItems;
 	}
 
+	public void saveChangesOnTheme(String themeFile) {
+		try {
+			File file = new File("./configuration/themes/" + themeFile + ".properties");
+
+			Properties prop = new Properties();
+
+			// set the properties value
+			prop.setProperty("backgroundColor",
+					String.valueOf(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor().getRGB()));
+			prop.setProperty("foregroundColor",
+					String.valueOf(AcideMainWindow.getInstance().getExplorerPanel().getForegroundColor().getRGB()));
+			prop.setProperty("ConsolebackgroundColor", String.valueOf(
+					AcideMainWindow.getInstance().getConsolePanel().getTextPane().getBackground().getRGB()));
+			prop.setProperty("ConsoleforegroundColor", String.valueOf(
+					AcideMainWindow.getInstance().getConsolePanel().getTextPane().getForeground().getRGB()));
+			prop.setProperty("FileEditorbackgroundColor",
+					String.valueOf(AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(0)
+							.getActiveTextEditionArea().getBackground().getRGB()));
+			prop.setProperty("FileEditorforegroundColor",
+					String.valueOf(AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(0)
+							.getActiveTextEditionArea().getForeground().getRGB()));
+
+			prop.setProperty("lexiconFileConfig", AcideMainWindow.getInstance().getFileEditorManager()
+					.getSelectedFileEditorPanel().getLexiconConfiguration().getPath());
+			prop.setProperty("lexiconConsoleConfig",
+					AcideMainWindow.getInstance().getConsolePanel().getLexiconConfiguration().getPath());
+
+			// save properties to project root folder
+			FileOutputStream in = new FileOutputStream(file.getPath());
+			prop.store(in, null);
+			in.close();
+			AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().removeAll();
+			AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().getInsertedItem().clear();
+			AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getThemeMenuItem().addComponents();
+			AcideMainWindow.getInstance().getMenu().getConfigurationMenu().repaint();
+			// Apply changes to menuBar
+			AcideMainWindow.getInstance().getMenu().paintMenuBar(
+					AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getBackground().darker(),
+					AcideMainWindow.getInstance().getMenu().getConfigurationMenu().getForeground());
+		} catch (Exception io) {
+
+		}
+	}
 }

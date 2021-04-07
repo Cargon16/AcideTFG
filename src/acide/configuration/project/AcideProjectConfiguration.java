@@ -43,6 +43,7 @@ import acide.configuration.workbench.AcideWorkbenchConfiguration;
 import acide.files.AcideFileManager;
 import acide.files.project.AcideProjectFile;
 import acide.gui.mainWindow.AcideMainWindow;
+import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemesMenu;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -1038,6 +1039,7 @@ public class AcideProjectConfiguration {
 		AcideResourceManager.getInstance().setProperty("databasePanel.foregroundColor",Integer.toString(AcideMainWindow.getInstance().getDataBasePanel().getForegroundColor().getRGB()));
 		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setBackgroundColor(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor());
 		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setForegroundColor(AcideMainWindow.getInstance().getExplorerPanel().getForegroundColor());
+		AcideResourceManager.getInstance().setProperty("themeApplied", AcideThemesMenu.activeTheme);
 	}
 	/**
 	 * Returns the ACIDE - A Configurable IDE project configuration project

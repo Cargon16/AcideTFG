@@ -135,6 +135,7 @@ parameterType = NONE
 isExecutedInSytemShell = false
 
 // End Of Console Panel Tool Bar Button Configuration
+playButton = true
 
 // buttonConfiguration Acrobat Reader
 name = Acrobat Reader

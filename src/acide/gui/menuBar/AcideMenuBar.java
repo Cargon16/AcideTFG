@@ -77,6 +77,7 @@ import acide.gui.menuBar.configurationMenu.graphPanelMenu.AcideGraphPanelNodeSha
 import acide.gui.menuBar.configurationMenu.languageMenu.AcideLanguageMenu;
 import acide.gui.menuBar.configurationMenu.lexiconMenu.AcideLexiconMenu;
 import acide.gui.menuBar.configurationMenu.menuMenu.AcideMenuMenu;
+import acide.gui.menuBar.configurationMenu.themesMenu.AcideThemesMenu;
 import acide.gui.menuBar.configurationMenu.toolBarMenu.AcideToolBarMenu;
 import acide.gui.menuBar.editMenu.AcideEditMenu;
 import acide.gui.menuBar.fileMenu.AcideFileMenu;
@@ -3326,6 +3327,8 @@ public class AcideMenuBar extends JMenuBar {
 		JMenu menu = (JMenu) menuElement.getComponent();
 		menu.setBackground(background);
 		menu.setForeground(foreground);
+		if(menu.getLabel().startsWith("\u2713") && !AcideThemesMenu.activeTheme.equals(menu.getLabel().substring(2)))
+			menu.setLabel(menu.getLabel().substring(2));
 		menu.setOpaque(true);
 		JMenu men = (JMenu) menuElement;
 		Component[] comp = men.getMenuComponents();

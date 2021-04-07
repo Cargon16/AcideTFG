@@ -39,6 +39,7 @@
  */
 package acide.gui.menuBar.projectMenu.recentProjectsMenu;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -168,6 +169,8 @@ public class AcideRecentProjectsMenu extends JMenu {
 			AcideMainWindow.getInstance().setCursor(
 					Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 */
+			AcideMainWindow.getInstance().getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			AcideMainWindow.getInstance().getGlassPane().setVisible(true);
 			// Asks for saving the project configuration
 			if (AcideProjectConfiguration.getInstance()
 					.askForSavingProjectConfiguration()) {
@@ -229,6 +232,9 @@ public class AcideRecentProjectsMenu extends JMenu {
 			AcideMainWindow.getInstance().setCursor(
 					Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		*/
+			/*AcideMainWindow.getInstance().getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			AcideMainWindow.getInstance().getGlassPane().removeMouseListener(mouseAdapter);
+			AcideMainWindow.getInstance().getGlassPane().setVisible(false);*/
 		}
 	}
 

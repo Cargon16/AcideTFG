@@ -77,10 +77,10 @@ import acide.log.AcideLog;
 public class AcideConsolePanelToolBar extends ArrayList<Component> {
 
 	/**
-	 * ACIDE - A Configurable IDE console panel tool bar class serial version
-	 * UID.
+	 * ACIDE - A Configurable IDE console panel tool bar class serial version UID.
 	 */
 	private static final long serialVersionUID = 1L;
+	private JButton send;
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE console panel tool bar.
@@ -90,52 +90,48 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 	}
 
 	/**
-	 * Builds the ACIDE - A Configurable IDE console panel tool bar with the
-	 * tool bar project configuration.
+	 * Builds the ACIDE - A Configurable IDE console panel tool bar with the tool
+	 * bar project configuration.
 	 * 
 	 * @return the ACIDE - A Configurable IDE console panel tool bar.
 	 */
 	public AcideConsolePanelToolBar build() {
 
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s130"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s130"));
 
 		// Removes all the buttons
 		clear();
 
 		// Adds a separator
 		add(Box.createRigidArea(new Dimension(10, 10)));
-		
-		JButton send = new JButton (new ImageIcon("./resources/icons/editor/compilable.png"));
+
+		send = new JButton(new ImageIcon("./resources/icons/editor/compilable.png"));
 		send.setToolTipText(AcideLanguageManager.getInstance().getLabels().getString("s2005"));
+		send.setVisible(
+				AcideToolBarConfiguration.getInstance().getConsolePanelToolBarConfiguration().getPlayButtonStatus());
 		add(send);
 		send.addMouseListener(new AcideSendFileToConsoleButtonAction());
-		/*send.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_F10) {
-					new AcideSendFileToConsoleButtonAction();
-				}
-			}
-		});*/
-		
+		/*
+		 * send.addKeyListener(new KeyAdapter() { public void keyPressed(KeyEvent e) {
+		 * if (e.getKeyCode() == KeyEvent.VK_F10) { new
+		 * AcideSendFileToConsoleButtonAction(); } } });
+		 */
+
 		// Adds all the buttons
 		JButton button;
-		for (int index = 0; index < AcideToolBarConfiguration.getInstance()
-				.getConsolePanelToolBarConfiguration().getSize(); index++) {
+		for (int index = 0; index < AcideToolBarConfiguration.getInstance().getConsolePanelToolBarConfiguration()
+				.getSize(); index++) {
 
 			// Creates the new button configuration to add to the tool bar panel
-			AcideConsolePanelToolBarButtonConf newButtonConfiguration = AcideToolBarConfiguration
-					.getInstance().getConsolePanelToolBarConfiguration()
-					.getButtonConfigurationAt(index);
+			AcideConsolePanelToolBarButtonConf newButtonConfiguration = AcideToolBarConfiguration.getInstance()
+					.getConsolePanelToolBarConfiguration().getButtonConfigurationAt(index);
 
 			// If it has icon
 			if (newButtonConfiguration.getHasIcon())
 
 				// Creates the button with the icon
-				button = new JButton(new ImageIcon(
-						newButtonConfiguration.getIcon()));
+				button = new JButton(new ImageIcon(newButtonConfiguration.getIcon()));
 			else {
 
 				// If the new button configuration has name
@@ -162,21 +158,22 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 			// Adds a separator
 			add(Box.createRigidArea(new Dimension(5, 5)));
 		}
-		
+
 		// Updates the log
-		AcideLog.getLog().info(
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s131"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s131"));
 
 		return this;
+	}
+
+	public void enablePlayButton(Boolean status) {
+		send.setVisible(status);
 	}
 
 	/**
 	 * Parses the ACIDE - A Configurable IDE variables to real paths in order to
 	 * send them properly to the Operative System shell for its execution.
 	 * 
-	 * @param buttonAction
-	 *            button action to execute from the Tool Bar configuration.
+	 * @param buttonAction button action to execute from the Tool Bar configuration.
 	 * 
 	 * @return the parsed string that contains to command to execute in the
 	 *         Operative System shell.
@@ -187,58 +184,46 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 		String command = buttonAction;
 
 		// If there are opened file editors
-		if (AcideMainWindow.getInstance().getFileEditorManager()
-				.getNumberOfFileEditorPanels() > 0) {
+		if (AcideMainWindow.getInstance().getFileEditorManager().getNumberOfFileEditorPanels() > 0) {
 
 			// Replaces the active file variable for its real value
-			command = command.replace("$activeFile$", AcideMainWindow
-					.getInstance().getFileEditorManager()
+			command = command.replace("$activeFile$", AcideMainWindow.getInstance().getFileEditorManager()
 					.getSelectedFileEditorPanel().getAbsolutePath());
 
 			// Replaces the active file path variable for its real value
-			command = command.replace("$activeFilePath$", AcideMainWindow
-					.getInstance().getFileEditorManager()
-					.getSelectedFileEditorPanel().getFilePath());
+			command = command.replace("$activeFilePath$",
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().getFilePath());
 
 			// Replaces the active files extension for its real value
-			command = command.replace("$activeFileExt$", AcideMainWindow
-					.getInstance().getFileEditorManager()
+			command = command.replace("$activeFileExt$", AcideMainWindow.getInstance().getFileEditorManager()
 					.getSelectedFileEditorPanel().getFileExtension());
 
 			// Replaces the active files name for its real value
-			command = command
-					.replace("$activeFileName$", AcideMainWindow.getInstance()
-							.getFileEditorManager()
-							.getSelectedFileEditorPanel()
-							.getFileNameWithoutExtension());
+			command = command.replace("$activeFileName$", AcideMainWindow.getInstance().getFileEditorManager()
+					.getSelectedFileEditorPanel().getFileNameWithoutExtension());
 		}
 
 		// If it is the default project
 		if (AcideProjectConfiguration.getInstance().isDefaultProject()) {
 
 			// Gets the main file editor panel
-			AcideFileEditorPanel mainFileEditorPanel = AcideMainWindow
-					.getInstance().getFileEditorManager()
+			AcideFileEditorPanel mainFileEditorPanel = AcideMainWindow.getInstance().getFileEditorManager()
 					.getMainFileEditorPanel();
 
 			// If exists
 			if (mainFileEditorPanel != null) {
 
 				// Replaces the $mainFile$ variable for its real value
-				command = command.replace("$mainFile$",
-						mainFileEditorPanel.getAbsolutePath());
+				command = command.replace("$mainFile$", mainFileEditorPanel.getAbsolutePath());
 
 				// Replaces the $mainFilePath$ variable for its real value
-				command = command.replace("$mainFilePath$",
-						mainFileEditorPanel.getFilePath());
+				command = command.replace("$mainFilePath$", mainFileEditorPanel.getFilePath());
 
 				// Replaces the $mainFileExt$ variable for its real value
-				command = command.replace("$mainFileExt$",
-						mainFileEditorPanel.getFileExtension());
+				command = command.replace("$mainFileExt$", mainFileEditorPanel.getFileExtension());
 
 				// Replaces the $mainFileName$ variable for its real value
-				command = command.replace("$mainFileName$",
-						mainFileEditorPanel.getFileNameWithoutExtension());
+				command = command.replace("$mainFileName$", mainFileEditorPanel.getFileNameWithoutExtension());
 			}
 		} else {
 
@@ -247,10 +232,8 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 			// Searches for the MAIN file into the ACIDE - A Configurable IDE
 			// project configuration
 			int mainFileEditorPanelIndex = -1;
-			for (int index = 0; index < AcideProjectConfiguration.getInstance()
-					.getNumberOfFilesFromList(); index++) {
-				if (AcideProjectConfiguration.getInstance().getFileAt(index)
-						.isMainFile())
+			for (int index = 0; index < AcideProjectConfiguration.getInstance().getNumberOfFilesFromList(); index++) {
+				if (AcideProjectConfiguration.getInstance().getFileAt(index).isMainFile())
 					mainFileEditorPanelIndex = index;
 			}
 
@@ -258,57 +241,40 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 			if (mainFileEditorPanelIndex != -1) {
 
 				// Replaces the $mainFile$ variable for its real value
-				command = command.replace(
-						"$mainFile$",
-						AcideProjectConfiguration.getInstance()
-								.getFileAt(mainFileEditorPanelIndex)
-								.getAbsolutePath());
+				command = command.replace("$mainFile$",
+						AcideProjectConfiguration.getInstance().getFileAt(mainFileEditorPanelIndex).getAbsolutePath());
 
 				// Replaces the $mainFilePath$ variable for its real value
-				command = command.replace(
-						"$mainFilePath$",
-						AcideProjectConfiguration.getInstance()
-								.getFileAt(mainFileEditorPanelIndex)
-								.getRelativePath());
+				command = command.replace("$mainFilePath$",
+						AcideProjectConfiguration.getInstance().getFileAt(mainFileEditorPanelIndex).getRelativePath());
 
 				// Replaces the $mainFileExt$ variable for its real value
-				command = command.replace(
-						"$mainFileExt$",
-						AcideProjectConfiguration.getInstance()
-								.getFileAt(mainFileEditorPanelIndex)
-								.getFileExtension());
+				command = command.replace("$mainFileExt$",
+						AcideProjectConfiguration.getInstance().getFileAt(mainFileEditorPanelIndex).getFileExtension());
 
 				// Replaces the $mainFileName$ variable for its real value
-				command = command.replace(
-						"$mainFileName$",
-						AcideProjectConfiguration.getInstance()
-								.getFileAt(mainFileEditorPanelIndex)
-								.getFileName());
+				command = command.replace("$mainFileName$",
+						AcideProjectConfiguration.getInstance().getFileAt(mainFileEditorPanelIndex).getFileName());
 			} else {
 
 				// Gets the main file editor panel
-				AcideFileEditorPanel mainFileEditorPanel = AcideMainWindow
-						.getInstance().getFileEditorManager()
+				AcideFileEditorPanel mainFileEditorPanel = AcideMainWindow.getInstance().getFileEditorManager()
 						.getMainFileEditorPanel();
 
 				// If exists
 				if (mainFileEditorPanel != null) {
 
 					// Replaces the $mainFile$ variable for its real value
-					command = command.replace("$mainFile$",
-							mainFileEditorPanel.getAbsolutePath());
+					command = command.replace("$mainFile$", mainFileEditorPanel.getAbsolutePath());
 
 					// Replaces the $mainFilePath$ variable for its real value
-					command = command.replace("$mainFilePath$",
-							mainFileEditorPanel.getFilePath());
+					command = command.replace("$mainFilePath$", mainFileEditorPanel.getFilePath());
 
 					// Replaces the $mainFileExt$ variable for its real value
-					command = command.replace("$mainFileExt$",
-							mainFileEditorPanel.getFileExtension());
+					command = command.replace("$mainFileExt$", mainFileEditorPanel.getFileExtension());
 
 					// Replaces the $mainFileName$ variable for its real value
-					command = command.replace("$mainFileName$",
-							mainFileEditorPanel.getFileNameWithoutExtension());
+					command = command.replace("$mainFileName$", mainFileEditorPanel.getFileNameWithoutExtension());
 				}
 			}
 		}
@@ -332,11 +298,9 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 		/**
 		 * Creates a new button action listener.
 		 * 
-		 * @param newButtonConfiguration
-		 *            new button configuration.
+		 * @param newButtonConfiguration new button configuration.
 		 */
-		public ButtonAction(
-				AcideConsolePanelToolBarButtonConf newButtonConfiguration) {
+		public ButtonAction(AcideConsolePanelToolBarButtonConf newButtonConfiguration) {
 
 			// Stores the new button configuration
 			_newButtonConfiguration = newButtonConfiguration;
@@ -378,21 +342,18 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 
 			// Sets the focus in the last element on focus in ACIDE - A
 			// Configurable IDE
-			AcideLastElementOnFocus
-					.setFocusOnLastElementOnFocus(AcideMainWindow.getInstance()
-							.getLastElementOnFocus());
+			AcideLastElementOnFocus.setFocusOnLastElementOnFocus(AcideMainWindow.getInstance().getLastElementOnFocus());
 		}
 
 		/**
-		 * Asks to the user about the extra parameter type directory to execute
-		 * the command in the ACIDE - A Configurable IDE console panel.
+		 * Asks to the user about the extra parameter type directory to execute the
+		 * command in the ACIDE - A Configurable IDE console panel.
 		 */
 		private void directoryAction() {
 
 			// Ask the path to the user
-			String absolutePath = AcideFileManager.getInstance().askForFile(
-					AcideFileOperation.OPEN, AcideFileTarget.FILES,
-					AcideFileType.DIRECTORY, "", null);
+			String absolutePath = AcideFileManager.getInstance().askForFile(AcideFileOperation.OPEN,
+					AcideFileTarget.FILES, AcideFileType.DIRECTORY, "", null);
 
 			if (absolutePath != null) {
 
@@ -402,9 +363,8 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 					try {
 
 						// Executes the command in the OS shell
-						Process process = Runtime.getRuntime().exec(
-								parseAcideVariables(_newButtonConfiguration
-										.getAction() + " " + absolutePath));
+						Process process = Runtime.getRuntime()
+								.exec(parseAcideVariables(_newButtonConfiguration.getAction() + " " + absolutePath));
 
 						// Waits for the process to end
 						process.waitFor();
@@ -416,26 +376,21 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 					}
 				} else {
 					// Executes the command that corresponds
-					AcideMainWindow
-							.getInstance()
-							.getConsolePanel()
-							.executeCommand(
-									_newButtonConfiguration.getAction(),
-									absolutePath);
+					AcideMainWindow.getInstance().getConsolePanel().executeCommand(_newButtonConfiguration.getAction(),
+							absolutePath);
 				}
 			}
 		}
 
 		/**
-		 * Asks to the user about the extra parameter type file to execute the
-		 * command in the ACIDE - A Configurable IDE console panel.
+		 * Asks to the user about the extra parameter type file to execute the command
+		 * in the ACIDE - A Configurable IDE console panel.
 		 */
 		private void fileAction() {
 
 			// Ask the path to the user
-			String absolutePath = AcideFileManager.getInstance().askForFile(
-					AcideFileOperation.OPEN, AcideFileTarget.FILES,
-					AcideFileType.FILE, "", null);
+			String absolutePath = AcideFileManager.getInstance().askForFile(AcideFileOperation.OPEN,
+					AcideFileTarget.FILES, AcideFileType.FILE, "", null);
 
 			if (absolutePath != null) {
 
@@ -445,9 +400,8 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 					try {
 
 						// Executes the command in the OS shell
-						Process process = Runtime.getRuntime().exec(
-								parseAcideVariables(_newButtonConfiguration
-										.getAction() + " " + absolutePath));
+						Process process = Runtime.getRuntime()
+								.exec(parseAcideVariables(_newButtonConfiguration.getAction() + " " + absolutePath));
 
 						// Waits for the process to end
 						process.waitFor();
@@ -459,27 +413,21 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 					}
 				} else {
 					// Executes the command that corresponds
-					AcideMainWindow
-							.getInstance()
-							.getConsolePanel()
-							.executeCommand(
-									_newButtonConfiguration.getAction(),
-									absolutePath);
+					AcideMainWindow.getInstance().getConsolePanel().executeCommand(_newButtonConfiguration.getAction(),
+							absolutePath);
 				}
 			}
 		}
 
 		/**
-		 * Asks to the user about the extra parameter type text to execute the
-		 * command in the ACIDE - A Configurable IDE console panel.
+		 * Asks to the user about the extra parameter type text to execute the command
+		 * in the ACIDE - A Configurable IDE console panel.
 		 */
 		private void textAction() {
 
 			// Ask to the user for the text
-			String text = JOptionPane.showInputDialog(
-					null,
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s1009"));
+			String text = JOptionPane.showInputDialog(null,
+					AcideLanguageManager.getInstance().getLabels().getString("s1009"));
 
 			if (text != null && !text.equals("null")) {
 
@@ -489,9 +437,8 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 					try {
 
 						// Executes the command in the OS shell
-						Process process = Runtime.getRuntime().exec(
-								parseAcideVariables(_newButtonConfiguration
-										.getAction() + " " + text));
+						Process process = Runtime.getRuntime()
+								.exec(parseAcideVariables(_newButtonConfiguration.getAction() + " " + text));
 
 						// Waits for the process to end
 						process.waitFor();
@@ -503,18 +450,15 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 					}
 				} else {
 					// Executes the command that corresponds
-					AcideMainWindow
-							.getInstance()
-							.getConsolePanel()
-							.executeCommand(
-									_newButtonConfiguration.getAction(), text);
+					AcideMainWindow.getInstance().getConsolePanel().executeCommand(_newButtonConfiguration.getAction(),
+							text);
 				}
 			}
 		}
 
 		/**
-		 * Executes the command in the ACIDE - A Configurable IDE console panel
-		 * without any kind of extra parameter.
+		 * Executes the command in the ACIDE - A Configurable IDE console panel without
+		 * any kind of extra parameter.
 		 */
 		private void noneAction() {
 
@@ -524,9 +468,8 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 				try {
 
 					// Executes the parsed command in the OS shell
-					Process process = Runtime.getRuntime().exec(
-							parseAcideVariables(_newButtonConfiguration
-									.getAction()));
+					Process process = Runtime.getRuntime()
+							.exec(parseAcideVariables(_newButtonConfiguration.getAction()));
 
 					// Waits for the process to end
 					process.waitFor();
@@ -538,10 +481,7 @@ public class AcideConsolePanelToolBar extends ArrayList<Component> {
 				}
 			} else {
 				// Executes the command that corresponds
-				AcideMainWindow
-						.getInstance()
-						.getConsolePanel()
-						.executeCommand(_newButtonConfiguration.getAction(), "");
+				AcideMainWindow.getInstance().getConsolePanel().executeCommand(_newButtonConfiguration.getAction(), "");
 			}
 		}
 	}

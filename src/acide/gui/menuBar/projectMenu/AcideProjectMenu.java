@@ -1464,30 +1464,30 @@ public class AcideProjectMenu extends JMenu {
 	 */
 	public void openProject(final String filePath) {
 
-		Thread thread = new Thread() {
+		//Thread thread = new Thread() {
 			/*
 			 * (non-Javadoc)
 			 * 
 			 * @see java.lang.Thread#run()
 			 */
-			@Override
-			public synchronized void run() {
+			//@Override
+			//public synchronized void run() {
 
 				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
+					//SwingUtilities.invokeAndWait(new Runnable() {
 
 						/*
 						 * (non-Javadoc)
 						 * 
 						 * @see java.lang.Runnable#run()
 						 */
-						@Override
-						public void run() {
+						//@Override
+						//public void run() {
 							// Sets the wait cursor
-							AcideMainWindow
+							/*AcideMainWindow
 									.getInstance()
 									.setCursor(
-											Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+											Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));*/
 
 							// Updates the status message in the status bar
 							AcideMainWindow.getInstance().getStatusBar()
@@ -1559,25 +1559,29 @@ public class AcideProjectMenu extends JMenu {
 									new File(filePath).getParent());
 
 							// Sets the default cursor
-							AcideMainWindow.getInstance().setCursor(
-									Cursor.getDefaultCursor());
-						}
-					});
-				} catch (InterruptedException exception) {
+							/*AcideMainWindow.getInstance().setCursor(
+									Cursor.getDefaultCursor());*/
+						//}
+					//});
+				//} catch (InterruptedException exception) {
 
 					// Updates the log
-					AcideLog.getLog().info(exception.getMessage());
-					exception.printStackTrace();
-				} catch (InvocationTargetException exception) {
+					//AcideLog.getLog().info(exception.getMessage());
+					//exception.printStackTrace();
+				} catch (Exception exception) {
 
 					// Updates the log
 					AcideLog.getLog().info(exception.getMessage());
 					exception.printStackTrace();
 				}
-			}
-		};
+				finally {
+					AcideMainWindow.getInstance().getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					AcideMainWindow.getInstance().getGlassPane().setVisible(false);
+				}
+			//}
+		//};
 
-		thread.start();
+		//thread.start();
 	}
 
 	/**

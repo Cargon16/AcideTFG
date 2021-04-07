@@ -39,6 +39,7 @@
  */
 package acide.gui.menuBar.projectMenu.listeners;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -58,7 +59,6 @@ import acide.language.AcideLanguageManager;
  * @see ActionListener
  */
 public class AcideOpenProjectMenuItemListener implements ActionListener {
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -73,6 +73,9 @@ public class AcideOpenProjectMenuItemListener implements ActionListener {
 	
 	public static void action(ActionEvent actionEvent){
 
+		AcideMainWindow.getInstance().getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		//AcideMainWindow.getInstance().getGlassPane().addMouseListener(mouseAdapter);
+		AcideMainWindow.getInstance().getGlassPane().setVisible(true);
 		/*AcideMainWindow.getInstance().setCursor(
 				Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		*/
@@ -125,9 +128,6 @@ public class AcideOpenProjectMenuItemListener implements ActionListener {
 				}
 			}
 		}
-		/*
-		AcideMainWindow.getInstance().setCursor(
-				Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-	*/
+	
 	}
 }
