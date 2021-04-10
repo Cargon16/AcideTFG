@@ -26,11 +26,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ba1a32ba-e127-4e7f-a837-8434e318ca72" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/configuration.properties" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/configuration.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/console/default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/console/default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration/workbench/configuration.xml" beforeDir="false" afterPath="$PROJECT_DIR$/configuration/workbench/configuration.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/acide/gui/consolePanel/AcideConsolePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/acide/gui/consolePanel/AcideConsolePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/acide/gui/menuBar/configurationMenu/consoleMenu/gui/AcideConsoleConfigurationWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/acide/gui/menuBar/configurationMenu/consoleMenu/gui/AcideConsoleConfigurationWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/acide/gui/debugPanel/debugCanvas/listeners/AcideDebugCanvasMouseMotionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/acide/gui/debugPanel/debugCanvas/listeners/AcideDebugCanvasMouseMotionListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +163,8 @@
       <workItem from="1615631952357" duration="1978000" />
       <workItem from="1615706700212" duration="1210000" />
       <workItem from="1615926955182" duration="145000" />
-      <workItem from="1616000296492" duration="222000" />
+      <workItem from="1616000296492" duration="389000" />
+      <workItem from="1618024677116" duration="436000" />
     </task>
     <task id="LOCAL-00001" summary="wrong and missing options first version">
       <created>1590405880925</created>
@@ -365,7 +362,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615706913927</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Corrección envío de comandos DES cuando ACIDE usa otra consola.">
+      <created>1616000636608</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1616000636608</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -451,7 +455,8 @@
     <MESSAGE value="Corregida versión en archivos de idiomas con la última versión que deben tener." />
     <MESSAGE value="Implementada tarea 15 SQL" />
     <MESSAGE value="Optimización de código." />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimización de código." />
+    <MESSAGE value="Corrección envío de comandos DES cuando ACIDE usa otra consola." />
+    <option name="LAST_COMMIT_MESSAGE" value="Corrección envío de comandos DES cuando ACIDE usa otra consola." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
