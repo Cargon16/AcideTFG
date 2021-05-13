@@ -203,24 +203,22 @@ public class AcideDebugCanvasMouseMotionListener implements MouseMotionListener 
 								status=AcideLanguageManager.getInstance().getLabels().getString("s2398");
 						}
 					}
-					
+
+					item=new JMenuItem("<html><div>"+status+"</div></html>",NODE_INFO);
+
 					LinkedList<String> errors=AcideDebugSQLDebugWindow.getInstance().getErrors();
 					Iterator<String> it=errors.iterator();
 					String error="";
-					boolean find=false;
-					
-					while(!find && it.hasNext()){
+
+					while(it.hasNext()){
 						error=it.next();
 						if(error.substring(error.lastIndexOf(" ")+1).equals(n.getLabel()
 								.substring(0,n.getLabel().indexOf("/")))){
-							find=true;
+							item=new JMenuItem("<html><div>"+status+"</div><div>"+error.substring(0,error.indexOf(")")+1)
+									+"</div></html>",NODE_INFO);
+							break;
 						}
 					}
-					if(find)
-						item=new JMenuItem("<html><div>"+status+"</div><div>"+error.substring(0,error.indexOf(")")+1)
-							+"</div></html>",NODE_INFO);
-					else 
-						item=new JMenuItem("<html><div>"+status+"</div></html>",NODE_INFO);
 					
 					_nodeToolTip.add(item);
 					_nodeToolTip.setBorder(new BevelBorder(BevelBorder.RAISED));
