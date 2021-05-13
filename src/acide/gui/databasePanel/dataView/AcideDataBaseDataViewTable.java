@@ -66,6 +66,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
+
+import acide.configuration.project.AcideProjectConfiguration;
 import acide.gui.databasePanel.utils.DataViewTableSelection;
 import acide.language.AcideLanguageManager;
 

@@ -7,18 +7,18 @@
           <acide.configuration.workbench.fileEditor.AcideFileEditorPanelConfiguration>
             <__path>.\examples\aggregates.sql</__path>
             <__type>Normal</__type>
-            <__caretPosition>2086</__caretPosition>
-            <__splitPaneDividerLocation>1</__splitPaneDividerLocation>
+            <__caretPosition>0</__caretPosition>
+            <__splitPaneDividerLocation>0</__splitPaneDividerLocation>
             <__activeTextEditionArea>1</__activeTextEditionArea>
-            <__lexiconConfiguration>./configuration/lexicon/des.xml</__lexiconConfiguration>
+            <__lexiconConfiguration>./configuration/lexicon/sql.xml</__lexiconConfiguration>
             <__previousGrammarConfiguration>./configuration/grammars/bytes.jar</__previousGrammarConfiguration>
             <__currentGrammarConfiguration>./configuration/grammars/bytes.jar</__currentGrammarConfiguration>
           </acide.configuration.workbench.fileEditor.AcideFileEditorPanelConfiguration>
           <acide.configuration.workbench.fileEditor.AcideFileEditorPanelConfiguration>
             <__path>.\examples\bom.dl</__path>
             <__type>Normal</__type>
-            <__caretPosition>979</__caretPosition>
-            <__splitPaneDividerLocation>1</__splitPaneDividerLocation>
+            <__caretPosition>0</__caretPosition>
+            <__splitPaneDividerLocation>0</__splitPaneDividerLocation>
             <__activeTextEditionArea>1</__activeTextEditionArea>
             <__lexiconConfiguration>./configuration/lexicon/des.xml</__lexiconConfiguration>
             <__previousGrammarConfiguration>./configuration/grammars/bytes.jar</__previousGrammarConfiguration>
@@ -27,8 +27,8 @@
           <acide.configuration.workbench.fileEditor.AcideFileEditorPanelConfiguration>
             <__path>.\examples\family.dl</__path>
             <__type>Normal</__type>
-            <__caretPosition>364</__caretPosition>
-            <__splitPaneDividerLocation>1</__splitPaneDividerLocation>
+            <__caretPosition>0</__caretPosition>
+            <__splitPaneDividerLocation>0</__splitPaneDividerLocation>
             <__activeTextEditionArea>1</__activeTextEditionArea>
             <__lexiconConfiguration>./configuration/lexicon/des.xml</__lexiconConfiguration>
             <__previousGrammarConfiguration>./configuration/grammars/bytes.jar</__previousGrammarConfiguration>
@@ -38,7 +38,7 @@
             <__path>.\examples\family.ra</__path>
             <__type>Normal</__type>
             <__caretPosition>0</__caretPosition>
-            <__splitPaneDividerLocation>1</__splitPaneDividerLocation>
+            <__splitPaneDividerLocation>0</__splitPaneDividerLocation>
             <__activeTextEditionArea>1</__activeTextEditionArea>
             <__lexiconConfiguration>./configuration/lexicon/ra.xml</__lexiconConfiguration>
             <__previousGrammarConfiguration>./configuration/grammars/bytes.jar</__previousGrammarConfiguration>
@@ -48,7 +48,7 @@
             <__path>.\examples\family.sql</__path>
             <__type>Normal</__type>
             <__caretPosition>0</__caretPosition>
-            <__splitPaneDividerLocation>1</__splitPaneDividerLocation>
+            <__splitPaneDividerLocation>0</__splitPaneDividerLocation>
             <__activeTextEditionArea>1</__activeTextEditionArea>
             <__lexiconConfiguration>./configuration/lexicon/sql.xml</__lexiconConfiguration>
             <__previousGrammarConfiguration>./configuration/grammars/bytes.jar</__previousGrammarConfiguration>
@@ -60,7 +60,7 @@
             <__caretPosition>389</__caretPosition>
             <__splitPaneDividerLocation>1</__splitPaneDividerLocation>
             <__activeTextEditionArea>1</__activeTextEditionArea>
-            <__lexiconConfiguration>./configuration/lexicon/desBlack.xml</__lexiconConfiguration>
+            <__lexiconConfiguration>./configuration/lexicon/des.xml</__lexiconConfiguration>
             <__previousGrammarConfiguration>./configuration/grammars/bytes.jar</__previousGrammarConfiguration>
             <__currentGrammarConfiguration>./configuration/grammars/bytes.jar</__currentGrammarConfiguration>
           </acide.configuration.workbench.fileEditor.AcideFileEditorPanelConfiguration>
@@ -72,15 +72,15 @@
     <__fontStyle>0</__fontStyle>
     <__fontSize>12</__fontSize>
     <__foregroundColor>
-      <red>255</red>
-      <green>255</green>
-      <blue>255</blue>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <alpha>255</alpha>
     </__foregroundColor>
     <__backgroundColor>
-      <red>38</red>
-      <green>38</green>
-      <blue>38</blue>
+      <red>255</red>
+      <green>255</green>
+      <blue>255</blue>
       <alpha>255</alpha>
     </__backgroundColor>
     <__editionMode>false</__editionMode>
@@ -92,7 +92,7 @@
     <__spaceSelected>false</__spaceSelected>
   </__fileEditorConfiguration>
   <__consolePanelConfiguration>
-    <__lexiconConfiguration>./configuration/lexicon/consoleBlack.xml</__lexiconConfiguration>
+    <__lexiconConfiguration>./configuration/lexicon/console.xml</__lexiconConfiguration>
     <__commandsConfiguration>./configuration/console/default.xml</__commandsConfiguration>
     <__lineWrapping>true</__lineWrapping>
   </__consolePanelConfiguration>
