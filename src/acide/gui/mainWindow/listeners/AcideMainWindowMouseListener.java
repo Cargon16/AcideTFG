@@ -134,6 +134,8 @@ public class AcideMainWindowMouseListener extends MouseAdapter {
 		this.acideWindow = acideWindow;
 	}
 	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
@@ -171,7 +173,7 @@ public class AcideMainWindowMouseListener extends MouseAdapter {
 		if (!dragged) {
 			
 			//If the dragged motion has not started yet
-			if (((x < firstX + 10) && (y < firstY + 10)) || ((x > firstX + 10) || (y > firstY + 10))) {
+			if (((x < firstX + 10) && (y < firstY + 20)) || ((x > firstX + 10) || (y > firstY + 10)) || ((x != firstX))) {
 				// Waits for a minimum movement
 				dragged = true;
 				// Changes the cursor
@@ -237,16 +239,12 @@ public class AcideMainWindowMouseListener extends MouseAdapter {
 	 */
 	@Override 
 	public void mouseMoved(MouseEvent mouseEvent) {
-	/*	// Gets the location coordinates
+		// Gets the location coordinates
 		double x = mouseEvent.getLocationOnScreen().getX();
 		double y = mouseEvent.getLocationOnScreen().getY();
 	
 		// only display a hand if the cursor is over the items
-		if (((x < firstX + 10) && (y < firstY + 10)) || ((x > firstX + 10) || (y > firstY + 10))) {
-			acideWindow.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	        } else {
-	        	acideWindow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-	        }*/
+		acideWindow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 	
 	/**

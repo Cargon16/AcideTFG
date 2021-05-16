@@ -88,6 +88,14 @@ public class AcideStatusBar extends JPanel {
 	 */
 	private JPanel _statusMessagePanel;
 	/**
+	 * ACIDE - A Configurable IDE status bar status message label.
+	 */
+	private JLabel _encodingMessageLabel;
+	/**
+	 * ACIDE - A Configurable IDE status bar status message panel.
+	 */
+	private JPanel _encodigMessagePanel;
+	/**
 	 * ACIDE - A Configurable IDE status bar line and column message label.
 	 */
 	private JLabel _lineAndColumnMessageLabel;
@@ -254,6 +262,9 @@ public class AcideStatusBar extends JPanel {
 
 		// Builds the popup menu
 		buildPopupMenu();
+
+		// Builds encoding message panel
+		buildEncodeMessagePanel();
 	}
 
 	/**
@@ -330,6 +341,30 @@ public class AcideStatusBar extends JPanel {
 
 		// Adds the edition mode message label to the edition mode message panel
 		_editionModeMessagePanel.add(_editionModeMessageLabel);
+	}
+
+	private void buildEncodeMessagePanel() {
+
+		// Creates the edition mode message panel
+		_encodigMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		// Sets the edition mode message panel border
+		_encodigMessagePanel.setBorder(BorderFactory.createEtchedBorder());
+
+		// Creates the edition mode message label
+		_encodingMessageLabel = new JLabel();
+
+		// Updates the edition mode message label text
+		_encodingMessageLabel.setText("windows-1252");
+
+		// Sets the edition mode message label tool tip text
+		_encodingMessageLabel.setToolTipText("Encoding format");
+
+		// Sets the edition mode message label foreground color
+		_encodingMessageLabel.setForeground(Color.BLACK);
+
+		// Adds the edition mode message label to the edition mode message panel
+		_encodigMessagePanel.add(_encodingMessageLabel);
 	}
 
 	/**
@@ -598,6 +633,11 @@ public class AcideStatusBar extends JPanel {
 
 		constraints.gridx = 8;
 
+		// Adds the SCROLL LOCK message panel to the status bar
+		add(_encodigMessagePanel, constraints);
+
+		constraints.gridx = 9;
+
 		// Adds the edition mode message panel to the status bar
 		add(_editionModeMessagePanel, constraints);
 
@@ -647,6 +687,10 @@ public class AcideStatusBar extends JPanel {
 	 */
 	public String getStatusMessageContent() {
 		return _statusMessageLabel.getText();
+	}
+	
+	public void setEncodeMessage(String encodeFormat) {
+		this._encodingMessageLabel.setText(encodeFormat);
 	}
 
 	/**
@@ -868,8 +912,8 @@ public class AcideStatusBar extends JPanel {
 		Component[] c = this.getComponents();
 		for (int i = 0; i < c.length; ++i) {
 			c[i].getClass().cast(c[i]).setBackground(background);
-			Component []c1 = ((JPanel)c[i]).getComponents();
-			for(int j = 0; j < c1.length; ++j) {
+			Component[] c1 = ((JPanel) c[i]).getComponents();
+			for (int j = 0; j < c1.length; ++j) {
 				c1[j].getClass().cast(c1[j]).setBackground(background);
 				c1[j].getClass().cast(c1[j]).setForeground(foreground);
 			}

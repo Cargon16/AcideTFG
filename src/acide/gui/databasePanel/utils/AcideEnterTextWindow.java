@@ -165,14 +165,15 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 		
 		_text = new JTextArea();
 		
+		this.setPreferredSize(new Dimension(500, 600));
 		//Datalog window is not editable
-		if (_title.contains("Datalog"))_text.setEditable(false);
-		else _text.setEditable(true);
+		/*if (_title.contains("Datalog"))_text.setEditable(false);
+		else _text.setEditable(true);*/
 		
 		_text.setText(_prompt);
 		_text.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
-		if (!_title.contains("Datalog")) {
+		//if (!_title.contains("Datalog")) {
 
 			// builds the word wrap check box
 			_wordWrapMenuItem = new JCheckBox();
@@ -202,7 +203,8 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 			
 			_buttonPanel.add(_applyButton);
 			_buttonPanel.add(_cancelButton);
-		}
+	
+		//}
 
 		_panel = new JPanel();
 		
@@ -214,10 +216,10 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 	private void setLookAndFeel(){
 		_panel.add(_scrollPane, BorderLayout.CENTER);
 
-		if (!_title.contains("Datalog")){
+		//if (!_title.contains("Datalog")){
 			_panel.add(_optionPanel, BorderLayout.NORTH);
 			_panel.add(_buttonPanel, BorderLayout.SOUTH);
-		}
+		//}
 
 		getContentPane().add(_panel,BorderLayout.CENTER);
 		setLocationRelativeTo(null);
@@ -229,7 +231,7 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 	
 	private void addListeners() {
 
-		if (!_title.contains("Datalog")){
+		//if (!_title.contains("Datalog")){
 			_wordWrapMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if(_text.getLineWrap()){
@@ -275,7 +277,7 @@ public AcideEnterTextWindow(String prompt, String title, boolean editable, Strin
 
 			});
 		
-		}
+		//}
 		
 	}
 	

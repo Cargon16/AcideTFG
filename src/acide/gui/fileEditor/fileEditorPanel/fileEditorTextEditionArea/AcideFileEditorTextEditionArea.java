@@ -130,6 +130,7 @@ public class AcideFileEditorTextEditionArea {
 
 		// Builds the scroll pane
 		buildScrollPane();
+		
 	}
 
 	/**

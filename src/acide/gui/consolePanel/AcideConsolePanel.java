@@ -1992,5 +1992,9 @@ public class AcideConsolePanel extends JPanel {
 
 		}
 	}
+	
+	/*public JScrollPane getScrollPane() {
+		return this._scrollPane;
+	}*/
 
 }

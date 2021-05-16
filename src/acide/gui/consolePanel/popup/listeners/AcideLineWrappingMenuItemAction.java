@@ -42,6 +42,8 @@ package acide.gui.consolePanel.popup.listeners;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JScrollBar;
+
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.log.AcideLog;
@@ -103,6 +105,8 @@ public class AcideLineWrappingMenuItemAction implements ActionListener {
 									.getSplitContainer())
 					.setDividerLocation(div);
 			
+			AcideMainWindow.getInstance().getConsolePanel().getTextPane().setCaretPosition(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getDocument().getLength()-1);
+			AcideMainWindow.getInstance().getConsolePanel().getTextPane().setCaretPosition(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getDocument().getLength());
 				
 //		} catch (BadLocationException exception) {
 		} catch (Exception exception) {

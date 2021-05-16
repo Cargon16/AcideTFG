@@ -44,7 +44,6 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,7 +54,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -2450,8 +2448,8 @@ public class AcideProjectMenu extends JMenu {
 							"projectConfiguration"));
 
 			// Closes the console panel
-			AcideMainWindow.getInstance().getMenu().getConfigurationMenu()
-					.getConsoleMenu().getCloseConsoleMenuItem().doClick();
+			/*AcideMainWindow.getInstance().getMenu().getConfigurationMenu()
+					.getConsoleMenu().getCloseConsoleMenuItem().doClick();*/
 
 			// The project has not been modified yet
 			AcideProjectConfiguration.getInstance().setIsModified(false);
