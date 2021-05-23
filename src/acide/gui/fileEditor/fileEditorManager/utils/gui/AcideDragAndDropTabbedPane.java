@@ -70,7 +70,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
+import acide.gui.mainWindow.AcideMainWindow;
 import acide.log.AcideLog;
+import javafx.scene.Cursor;
 
 /**
  * ACIDE - A Configurable IDE drag and drop tabbed pane.
@@ -290,6 +292,7 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 				try {
 					dragGestureEvent.startDrag(DragSource.DefaultMoveDrop, t,
 							dragSourceListener);
+					AcideMainWindow.getInstance().setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
 				} catch (InvalidDnDOperationException exception) {
 
 					// Updates the log

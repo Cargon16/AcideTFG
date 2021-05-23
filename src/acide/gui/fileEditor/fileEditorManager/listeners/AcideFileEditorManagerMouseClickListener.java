@@ -42,6 +42,7 @@ package acide.gui.fileEditor.fileEditorManager.listeners;
 import acide.files.AcideFileManager;
 import acide.gui.mainWindow.AcideMainWindow;
 
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -94,7 +95,7 @@ public class AcideFileEditorManagerMouseClickListener extends MouseAdapter {
 			String selectedEditorPath = AcideMainWindow.getInstance()
 					.getFileEditorManager().getSelectedFileEditorPanel()
 					.getAbsolutePath();
-
+			AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().getEncode());
 			// If has path
 			if (selectedEditorPath != null) {
 

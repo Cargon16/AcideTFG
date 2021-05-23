@@ -43,11 +43,23 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import acide.configuration.project.AcideProjectConfiguration;
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
@@ -84,8 +96,7 @@ public class AcideMainWindow extends JFrame {
 	/**
 	 * ACIDE - A Configurable IDE main window image icon.
 	 */
-	private static final ImageIcon ICON = new ImageIcon(
-			"./resources/images/icon.png");
+	private static final ImageIcon ICON = new ImageIcon("./resources/images/icon.png");
 	/**
 	 * ACIDE - A Configurable IDE main window unique class instance.
 	 */
@@ -173,7 +184,6 @@ public class AcideMainWindow extends JFrame {
 	 */
 	private int _verticalSize = 0;
 
-	
 	/**
 	 * Returns the unique ACIDE - A Configurable IDE main window class instance.
 	 * 
@@ -201,7 +211,7 @@ public class AcideMainWindow extends JFrame {
 
 		// Sets the window configuration
 		setWindowConfiguration();
-		
+
 	}
 
 	/**
@@ -225,10 +235,8 @@ public class AcideMainWindow extends JFrame {
 	private void buildComponents() {
 
 		// Updates the log
-		AcideLog.getLog()
-				.info(AcideLanguageManager.getInstance().getLabels()
-						.getString("s67"));
-
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s67"));
+		
 		// Builds the menu
 		_menu = AcideGUIFactory.getInstance().buildAcideMenu();
 
@@ -236,46 +244,49 @@ public class AcideMainWindow extends JFrame {
 		setMenuListeners();
 
 		// Builds the explorer panel
-		_explorerPanel = AcideGUIFactory.getInstance()
-				.buildAcideExplorerPanel();
-		
-		
-		//Builds the DataBase panel
-		_dataBasePanel = AcideGUIFactory.getInstance()
-				.buildAcideDataBasePanel();
-			
+		_explorerPanel = AcideGUIFactory.getInstance().buildAcideExplorerPanel();
+
+		// Builds the DataBase panel
+		_dataBasePanel = AcideGUIFactory.getInstance().buildAcideDataBasePanel();
 
 		// Builds the file editor manager
-		_fileEditorManager = AcideGUIFactory.getInstance()
-				.buildAcideFileEditorManager();
+		_fileEditorManager = AcideGUIFactory.getInstance().buildAcideFileEditorManager();
 
 		// Builds the console panel
-		_consolePanel = AcideGUIFactory.getInstance()
-				.buildAcideConsolePanel();
-		
+		_consolePanel = AcideGUIFactory.getInstance().buildAcideConsolePanel();
+
 		// Builds the graph panel
-		_graphPanel = AcideGUIFactory.getInstance()
-				.buildAcideGraphPanel();
-		
-		//Builds the debug panel
-		_debugPanel = AcideGUIFactory.getInstance()
-				.buildAcideDebugPanel();
-		
+		_graphPanel = AcideGUIFactory.getInstance().buildAcideGraphPanel();
+
+		// Builds the debug panel
+		_debugPanel = AcideGUIFactory.getInstance().buildAcideDebugPanel();
+
 		/*--------------------------------------------------------------*/
-		
+
 		_panelList = AcideProjectConfiguration.getInstance().getPanelList();
-		
-		_verticalDataBaseSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,_dataBasePanel,_consolePanel);
-	
+
+		_verticalDataBaseSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _dataBasePanel, _consolePanel);
+		//Detect when panel is resize by clicking and drag the divider
+				SplitPaneUI spuib = _verticalDataBaseSplitPanel.getUI();
+				if (spuib instanceof BasicSplitPaneUI) {
+					((BasicSplitPaneUI) spuib).getDivider().addMouseMotionListener(new MouseAdapter() {
+						public void mouseDragged(MouseEvent evt) {
+							if (SwingUtilities.isLeftMouseButton(evt)) {
+								AcideProjectConfiguration.getInstance().setIsModified(true);
+							}
+						}
+					});
+				}
+
 		// Sets its resize weight to 0.05
 		_verticalDataBaseSplitPanel.setResizeWeight(0.05);
-		
+
 		_verticalDataBaseSplitPanel.setDividerLocation(50);
 
 		// Displays its components when the user is resizing the vertical split
 		// pane
 		_verticalDataBaseSplitPanel.setContinuousLayout(true);
-		
+
 		/*--------------------------------------------------------------*/
 
 		// Builds the status bar
@@ -286,57 +297,102 @@ public class AcideMainWindow extends JFrame {
 
 		// Creates the vertical split pane with the explorer and the file editor
 		// manager tabbed pane
-		_verticalFilesSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-				_explorerPanel, _fileEditorManager.getTabbedPane());
+		_verticalFilesSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _explorerPanel,
+				_fileEditorManager.getTabbedPane());
+
+		//Detect when panel is resize by clicking and drag the divider
+		SplitPaneUI spui = _verticalFilesSplitPanel.getUI();
+		if (spui instanceof BasicSplitPaneUI) {
+			((BasicSplitPaneUI) spui).getDivider().addMouseMotionListener(new MouseAdapter() {
+				public void mouseDragged(MouseEvent evt) {
+					if (SwingUtilities.isLeftMouseButton(evt)) {
+						AcideProjectConfiguration.getInstance().setIsModified(true);
+					}
+				}
+			});
+		}
 
 		// Sets its resize weight to 0.05
 		_verticalFilesSplitPanel.setResizeWeight(0.05);
-		
+
 		// Displays its components when the user is resizing the vertical split
 		// pane
 		_verticalFilesSplitPanel.setContinuousLayout(true);
 
 		// Creates the horizontal split pane with the vertical split panel and
 		// the console panel
-		_horizontalSplitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				_verticalFilesSplitPanel, _verticalDataBaseSplitPanel);
+		_horizontalSplitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, _verticalFilesSplitPanel,
+				_verticalDataBaseSplitPanel);
+		//Detect when panel is resize by clicking and drag the divider
+				SplitPaneUI spuih = _horizontalSplitPanel.getUI();
+				if (spuih instanceof BasicSplitPaneUI) {
+					((BasicSplitPaneUI) spuih).getDivider().addMouseMotionListener(new MouseAdapter() {
+						public void mouseDragged(MouseEvent evt) {
+							if (SwingUtilities.isLeftMouseButton(evt)) {
+								AcideProjectConfiguration.getInstance().setIsModified(true);
+							}
+						}
+					});
+				}
 
 		// Sets its resize weight to 0.9
 		_horizontalSplitPanel.setResizeWeight(0.9);
 
 		// Displays its components when the user is resizing the horizontal split pane
 		_horizontalSplitPanel.setContinuousLayout(true);
-		
+
 		_horizontalGraphSplitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, _graphPanel, _debugPanel);
-		
+		//Detect when panel is resize by clicking and drag the divider
+				SplitPaneUI spuihg = _horizontalGraphSplitPanel.getUI();
+				if (spuihg instanceof BasicSplitPaneUI) {
+					((BasicSplitPaneUI) spuihg).getDivider().addMouseMotionListener(new MouseAdapter() {
+						public void mouseDragged(MouseEvent evt) {
+							if (SwingUtilities.isLeftMouseButton(evt)) {
+								AcideProjectConfiguration.getInstance().setIsModified(true);
+							}
+						}
+					});
+				}
+
 		_horizontalGraphSplitPanel.setResizeWeight(0.5);
-		
+
 		// Displays its components when the user is resizing the horizontal split pane
 		_horizontalGraphSplitPanel.setContinuousLayout(true);
-	
-		_verticalSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _horizontalSplitPanel, _horizontalGraphSplitPanel);
+
+		_verticalSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, _horizontalSplitPanel,
+				_horizontalGraphSplitPanel);
+		//Detect when panel is resize by clicking and drag the divider
+		SplitPaneUI spuiv = _verticalSplitPanel.getUI();
+		if (spuiv instanceof BasicSplitPaneUI) {
+			((BasicSplitPaneUI) spuiv).getDivider().addMouseMotionListener(new MouseAdapter() {
+				public void mouseDragged(MouseEvent evt) {
+					if (SwingUtilities.isLeftMouseButton(evt)) {
+						AcideProjectConfiguration.getInstance().setIsModified(true);
+					}
+				}
+			});
+		}
 
 		// Sets the minimum size of the graph panel
 		_debugPanel.setMinimumSize(new Dimension(120, 50));
-		_graphPanel.setMinimumSize(new Dimension(120,50));
+		_graphPanel.setMinimumSize(new Dimension(120, 50));
 		_dataBasePanel.setMinimumSize(new Dimension(50, 10));
 		_fileEditorManager.getTabbedPane().setMinimumSize(new Dimension(200, 100));
-		
+
 		// Sets its resize weight to 0.9
 		_verticalSplitPanel.setResizeWeight(0.9);
-			
+
 		// Displays its components when the user is resizing the horizontal split pane
 		_verticalSplitPanel.setContinuousLayout(true);
-		
+
 		updateVisibility();
-		
+
 		// Sets the Split pane containers of the components
 		setSplitContainers();
-		
+
 		// Sets the Split pane positions
 		setPanelPositions();
-		
-		
+
 	}
 
 	/**
@@ -345,8 +401,7 @@ public class AcideMainWindow extends JFrame {
 	private void setWindowConfiguration() {
 
 		// Sets the title
-		setTitle(AcideLanguageManager.getInstance().getLabels()
-				.getString("s425"));
+		setTitle(AcideLanguageManager.getInstance().getLabels().getString("s425"));
 
 		// Sets the window icon
 		setIconImage(ICON.getImage());
@@ -355,42 +410,46 @@ public class AcideMainWindow extends JFrame {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 		// Updates the log
-		AcideLog.getLog()
-				.info(AcideLanguageManager.getInstance().getLabels()
-						.getString("s66"));
+		AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s66"));
 	}
 
 	/**
 	 * Sets the listeners for the ACIDE - A Configurable IDE main window.
 	 */
 	private void setListeners() {
-
+		this.addComponentListener(new ComponentAdapter() {
+			@Override
+            public void componentResized(ComponentEvent e) {
+				if(AcideProjectConfiguration.getInstance().getWindowHeight() != getHeight() || AcideProjectConfiguration.getInstance().getWindowWidth() != getWidth())
+            	AcideProjectConfiguration.getInstance().setIsModified(true);
+            }
+        });
+		
 		// Adds the window listener to the ACIDE - A Configurable IDE main
 		// window
 		addWindowListener(new AcideMainWindowWindowListener());
-		
-		//Creates the mouse listener for the Drag and Drop action between panels
+
+		// Creates the mouse listener for the Drag and Drop action between panels
 		AcideMainWindowMouseListener mouse = new AcideMainWindowMouseListener(this);
-		
-		//Adds the mouse listener to the menu bars of the panels
+
+		// Adds the mouse listener to the menu bars of the panels
 		_explorerPanel.getMenuBar().addMouseListener(mouse);
 		_explorerPanel.getMenuBar().addMouseMotionListener(mouse);
-		
+
 		_dataBasePanel.getMenuBar().addMouseListener(mouse);
 		_dataBasePanel.getMenuBar().addMouseMotionListener(mouse);
-		
+
 		_fileEditorManager.getTabbedPane().addMouseListener(mouse);
 		_fileEditorManager.getTabbedPane().addMouseMotionListener(mouse);
-		
+
 		_consolePanel.getMenuBar().addMouseListener(mouse);
 		_consolePanel.getMenuBar().addMouseMotionListener(mouse);
-		
+
 		_graphPanel.getMenuBar().addMouseListener(mouse);
 		_graphPanel.getMenuBar().addMouseMotionListener(mouse);
-		
+
 		_debugPanel.getMenuBar().addMouseListener(mouse);
 		_debugPanel.getMenuBar().addMouseMotionListener(mouse);
-		
 
 	}
 
@@ -431,9 +490,9 @@ public class AcideMainWindow extends JFrame {
 	 * Performs the ACIDE - A Configurable IDE closing operation.
 	 * </p>
 	 * <p>
-	 * Asks for saving the changes, if any, in the project configuration.
-	 * Besides if there are any modified file editor opened, asks for saving
-	 * them to the user as well.
+	 * Asks for saving the changes, if any, in the project configuration. Besides if
+	 * there are any modified file editor opened, asks for saving them to the user
+	 * as well.
 	 * </p>
 	 * <p>
 	 * Once the two previous processes are done, the workbench manager saves its
@@ -441,28 +500,25 @@ public class AcideMainWindow extends JFrame {
 	 * </p>
 	 */
 	public void closeAcideMainWindow() {
-		
+
 		// If it is the default project
 		if (AcideProjectConfiguration.getInstance().isDefaultProject()) {
 
 			// Saves the file editor configuration
-			if (AcideMainWindow.getInstance().getFileEditorManager()
-					.askForSavingModifiedFiles()) {
+			if (AcideMainWindow.getInstance().getFileEditorManager().askForSavingModifiedFiles()) {
 
 				// Saves the default configuration
-				AcideWorkbenchConfiguration.getInstance()
-						.saveDefaultConfiguration();
+				AcideWorkbenchConfiguration.getInstance().saveDefaultConfiguration();
 
 				// Save the rest of the workbench configuration
-				AcideWorkbenchConfiguration.getInstance()
-						.saveComponentsConfiguration();
+				AcideWorkbenchConfiguration.getInstance().saveComponentsConfiguration();
 
 				// Saves the workbench configuration into its configuration
 				// file
 				AcideWorkbenchConfiguration.getInstance().save();
 
 				// Closes the main window
-				//System.exit(0);
+				// System.exit(0);
 				saveDatabasePanelMenuConfiguration();
 				System.exit(0);
 			}
@@ -470,49 +526,47 @@ public class AcideMainWindow extends JFrame {
 		} else {
 
 			// Asks for saving the project configuration
-			if (AcideProjectConfiguration.getInstance()
-					.askForSavingProjectConfiguration()) {
+			if (AcideProjectConfiguration.getInstance().askForSavingProjectConfiguration()) {
 
 				// Saves the file editor configuration
-				if (AcideMainWindow.getInstance().getFileEditorManager()
-						.askForSavingModifiedFiles()) {
+				if (AcideMainWindow.getInstance().getFileEditorManager().askForSavingModifiedFiles()) {
 
 					// Save the rest of the workbench configuration
-					AcideWorkbenchConfiguration.getInstance()
-							.saveComponentsConfiguration();
+					AcideWorkbenchConfiguration.getInstance().saveComponentsConfiguration();
 
 					// Saves the workbench configuration into its configuration
 					// file
 					AcideWorkbenchConfiguration.getInstance().save();
 
 					// Closes the main window
-					//System.exit(0);
+					// System.exit(0);
 					saveDatabasePanelMenuConfiguration();
 					System.exit(0);
 				}
-				
-				
+
 			}
 		}
-		
+
 //		saveDatabasePanelMenuConfiguration();
 //		System.exit(0);
 	}
 
 	/**
-	 * Saves the current configuration of the show details menu for the visualization of 
-	 * table and view nodes in the database panel.
+	 * Saves the current configuration of the show details menu for the
+	 * visualization of table and view nodes in the database panel.
 	 */
 	private void saveDatabasePanelMenuConfiguration() {
-		
-		String activeMenuItem =""; 
-			if (getMenu().getConfigurationMenu().getDatabasePanelMenu().getShowDetailsMenu()
-				.getNameMenuItem().isSelected()) activeMenuItem="Name";
-			else if (getMenu().getConfigurationMenu().getDatabasePanelMenu().getShowDetailsMenu()
-					.getNameFieldsMenuItem().isSelected()) activeMenuItem="NameFields";
-			else activeMenuItem="NameFieldsTypes";
-			
-		AcideResourceManager.getInstance().setProperty("databasePanelMenuConfiguration.showDetails",activeMenuItem);
+
+		String activeMenuItem = "";
+		if (getMenu().getConfigurationMenu().getDatabasePanelMenu().getShowDetailsMenu().getNameMenuItem().isSelected())
+			activeMenuItem = "Name";
+		else if (getMenu().getConfigurationMenu().getDatabasePanelMenu().getShowDetailsMenu().getNameFieldsMenuItem()
+				.isSelected())
+			activeMenuItem = "NameFields";
+		else
+			activeMenuItem = "NameFieldsTypes";
+
+		AcideResourceManager.getInstance().setProperty("databasePanelMenuConfiguration.showDetails", activeMenuItem);
 	}
 
 	/**
@@ -523,7 +577,7 @@ public class AcideMainWindow extends JFrame {
 	public AcideConsolePanel getConsolePanel() {
 		return _consolePanel;
 	}
-	
+
 	/**
 	 * Returns the ACIDE - A Configurable IDE main window data base panel.
 	 * 
@@ -532,7 +586,7 @@ public class AcideMainWindow extends JFrame {
 	public AcideDataBasePanel getDataBasePanel() {
 		return _dataBasePanel;
 	}
-	
+
 	/**
 	 * Returns the ACIDE - A Configurable IDE main window debug panel.
 	 * 
@@ -541,39 +595,38 @@ public class AcideMainWindow extends JFrame {
 	public AcideDebugPanel getDebugPanel() {
 		return _debugPanel;
 	}
-	
+
 	/**
-	 * Get the ACIDE - A Configurable IDE asserted database panel, in case it is
-	 * not opened, it will create a new instance of it
+	 * Get the ACIDE - A Configurable IDE asserted database panel, in case it is not
+	 * opened, it will create a new instance of it
 	 * 
 	 * @return asserted database panel
 	 */
 	public AcideAssertedDatabasePanel getAssertedDatabasePanel() {
-	
-		if (_assertedDatabasePanel == null) {
-			String name = AcideLanguageManager.getInstance().getLabels()
-					.getString("s2280");
-		    _assertedDatabasePanel = new AcideAssertedDatabasePanel(name);
 
-		    _assertedDatabasePanel.setLocationRelativeTo(null);
-		    _assertedDatabasePanel.pack();
-		    _assertedDatabasePanel.setVisible(true);
+		if (_assertedDatabasePanel == null) {
+			String name = AcideLanguageManager.getInstance().getLabels().getString("s2280");
+			_assertedDatabasePanel = new AcideAssertedDatabasePanel(name);
+
+			_assertedDatabasePanel.setLocationRelativeTo(null);
+			_assertedDatabasePanel.pack();
+			_assertedDatabasePanel.setVisible(true);
 		}
 		return _assertedDatabasePanel;
 	}
-	
+
 	/**
 	 * Close the ACIDE - A Configurable IDE asserted database window
 	 * 
 	 */
 	public void closeAssertedDatabasePanel() {
-		
+
 		if (_assertedDatabasePanel != null) {
 			_assertedDatabasePanel.dispose();
 			_assertedDatabasePanel = null;
 		}
 	}
-	
+
 	/**
 	 * Check if the ACIDE - A Configurable IDE is currently open
 	 * 
@@ -603,7 +656,7 @@ public class AcideMainWindow extends JFrame {
 	public AcideFileEditorManager getFileEditorManager() {
 		return _fileEditorManager;
 	}
-	
+
 	/**
 	 * Set the ACIDE - A Configurable IDE main window listeners.
 	 */
@@ -624,17 +677,16 @@ public class AcideMainWindow extends JFrame {
 	 * Set a new value for the ACIDE - A Configurable IDE main window explorer
 	 * panel.
 	 * 
-	 * @param explorerPanel
-	 *            new value to set.
+	 * @param explorerPanel new value to set.
 	 */
 	public void setExplorerPanel(AcideExplorerPanel explorerPanel) {
 		_explorerPanel = explorerPanel;
 	}
-	
+
 	/**
 	 * Returns the ACIDE - A Configurable IDE main window graph panel.
 	 * 
-	 * @return the ACIDE - A Configurable IDE main window graph panel. 
+	 * @return the ACIDE - A Configurable IDE main window graph panel.
 	 */
 	public AcideGraphPanel getGraphPanel() {
 		return _graphPanel;
@@ -659,11 +711,10 @@ public class AcideMainWindow extends JFrame {
 	}
 
 	/**
-	 * Sets a new value for the ACIDE - A Configurable IDE main window
-	 * horizontal split pane.
+	 * Sets a new value for the ACIDE - A Configurable IDE main window horizontal
+	 * split pane.
 	 * 
-	 * @param horizontalSplitPane
-	 *            new value to set.
+	 * @param horizontalSplitPane new value to set.
 	 */
 	public void setHorizontalSplitPane(JSplitPane horizontalSplitPane) {
 		_horizontalSplitPanel = horizontalSplitPane;
@@ -673,8 +724,7 @@ public class AcideMainWindow extends JFrame {
 	 * Sets a new value for the ACIDE - A Configurable IDE main window explorer
 	 * panel size.
 	 * 
-	 * @param size
-	 *            new value to set.
+	 * @param size new value to set.
 	 */
 	public void setExplorerPanelSize(int size) {
 		_explorerPanel.setExplorerSize(size);
@@ -688,6 +738,7 @@ public class AcideMainWindow extends JFrame {
 	public JSplitPane getVerticalFilesSplitPane() {
 		return _verticalFilesSplitPanel;
 	}
+
 	/**
 	 * Returns the ACIDE - A Configurable IDE main window database split panel.
 	 * 
@@ -698,16 +749,15 @@ public class AcideMainWindow extends JFrame {
 	}
 
 	/**
-	 * Set a new value for the ACIDE - A Configurable IDE main window vertical
-	 * split panel.
+	 * Set a new value for the ACIDE - A Configurable IDE main window vertical split
+	 * panel.
 	 * 
-	 * @param verticalSplitPane
-	 *            new value to set.
+	 * @param verticalSplitPane new value to set.
 	 */
 	public void setVerticalSplitPane(JSplitPane verticalSplitPane) {
 		_verticalFilesSplitPanel = verticalSplitPane;
 	}
-	
+
 	/**
 	 * Returns the ACIDE - A Configurable IDE main window vertical split panel.
 	 * 
@@ -716,11 +766,13 @@ public class AcideMainWindow extends JFrame {
 	public JSplitPane getVerticalSplitPane() {
 		return _verticalSplitPanel;
 	}
-	
+
 	/**
-	 * Returns the ACIDE - A Configurable IDE main window horizontal graph split panel.
+	 * Returns the ACIDE - A Configurable IDE main window horizontal graph split
+	 * panel.
 	 * 
-	 * @return the ACIDE - A Configurable IDE main window horizontal graph split panel.
+	 * @return the ACIDE - A Configurable IDE main window horizontal graph split
+	 *         panel.
 	 */
 	public JSplitPane getHorizontalGraphSplitPane() {
 		return _horizontalGraphSplitPanel;
@@ -739,32 +791,29 @@ public class AcideMainWindow extends JFrame {
 	 * Sets a new value to the ACIDE - A Configurable IDE main window tool bar
 	 * panel.
 	 * 
-	 * @param toolBar
-	 *            new value to set.
+	 * @param toolBar new value to set.
 	 */
 	public void setToolBarPanel(AcideToolBarPanel toolBar) {
 		_toolBarPanel = toolBar;
 	}
 
 	/**
-	 * Sets a new value to the ACIDE - A Configurable IDE main window last
-	 * element on focus.
+	 * Sets a new value to the ACIDE - A Configurable IDE main window last element
+	 * on focus.
 	 * 
-	 * @param lastElementOnFocus
-	 *            new value to set.
+	 * @param lastElementOnFocus new value to set.
 	 */
 	public void setLastElementOnFocus(AcideLastElementOnFocus lastElementOnFocus) {
 		_lastElementOnFocus = lastElementOnFocus;
 	}
 
 	/**
-	 * Returns the ACIDE - A Configurable IDE main window last element on focus.
-	 * If the last element on focus is null then returns the console panel by
-	 * default.
+	 * Returns the ACIDE - A Configurable IDE main window last element on focus. If
+	 * the last element on focus is null then returns the console panel by default.
 	 * 
-	 * @return returns the ACIDE - A Configurable IDE main window last element
-	 *         on focus. If the last element on focus is null then returns the
-	 *         console panel by default.
+	 * @return returns the ACIDE - A Configurable IDE main window last element on
+	 *         focus. If the last element on focus is null then returns the console
+	 *         panel by default.
 	 */
 	public AcideLastElementOnFocus getLastElementOnFocus() {
 
@@ -772,9 +821,9 @@ public class AcideMainWindow extends JFrame {
 			return _lastElementOnFocus;
 		return AcideLastElementOnFocus.CONSOLE_PANEL;
 	}
-	
+
 	@Override
-	public void setCursor(Cursor cursor){
+	public void setCursor(Cursor cursor) {
 		super.setCursor(cursor);
 		_consolePanel.setCursor(cursor);
 		_dataBasePanel.setCursor(cursor);
@@ -786,29 +835,27 @@ public class AcideMainWindow extends JFrame {
 		_graphPanel.setCursor(cursor);
 		_debugPanel.setCursor(cursor);
 	}
-	
-	
+
 	/**
-	 * returns the ACIDE - A Configurable IDE split panel which name
-	 * matches with the parameter
+	 * returns the ACIDE - A Configurable IDE split panel which name matches with
+	 * the parameter
 	 * 
-	 * @param name
-	 * 		name of the split pane we want to get
+	 * @param name name of the split pane we want to get
 	 * @return the split panel that matches with the param
 	 */
 	public JSplitPane getSpecificSplitPane(String name) {
 		JSplitPane panel = null;
-		
+
 		if (name.equals("verticalFilesSplitPanel"))
 			panel = _verticalFilesSplitPanel;
 		else if (name.equals("verticalDataBaseSplitPanel"))
 			panel = _verticalDataBaseSplitPanel;
 		else if (name.equals("horizontalGraphSplitPanel"))
 			panel = _horizontalGraphSplitPanel;
-		
+
 		return panel;
 	}
-	
+
 	/**
 	 * Sets the ACIDE - A Configurable IDE name of the split panel containers
 	 * 
@@ -861,27 +908,27 @@ public class AcideMainWindow extends JFrame {
 		}
 
 	}
-	
+
 	/**
 	 * Sets the ACIDE - A Configurable IDE Panels positions
 	 * 
 	 */
 	public void setPanelPositions() {
-		
+
 		_verticalFilesSplitPanel.setLeftComponent(null);
 		_verticalFilesSplitPanel.setRightComponent(null);
 		_verticalDataBaseSplitPanel.setLeftComponent(null);
 		_verticalDataBaseSplitPanel.setRightComponent(null);
 		_horizontalGraphSplitPanel.setLeftComponent(null);
 		_horizontalGraphSplitPanel.setRightComponent(null);
-		
+
 		for (int i = 0; i < _panelList.size(); i++) {
-			switch(i) {
-			case 0: 
+			switch (i) {
+			case 0:
 				if (_panelList.get(i).equals("AcideExplorerPanel"))
 					_verticalFilesSplitPanel.setLeftComponent(_explorerPanel);
 				else if (_panelList.get(i).equals("AcideFileEditor"))
-					_verticalFilesSplitPanel.setLeftComponent(_fileEditorManager.getTabbedPane()); 
+					_verticalFilesSplitPanel.setLeftComponent(_fileEditorManager.getTabbedPane());
 				else if (_panelList.get(i).equals("AcideDataBasePanel"))
 					_verticalFilesSplitPanel.setLeftComponent(_dataBasePanel);
 				else if (_panelList.get(i).equals("AcideConsolePanel"))
@@ -895,7 +942,7 @@ public class AcideMainWindow extends JFrame {
 				if (_panelList.get(i).equals("AcideExplorerPanel"))
 					_verticalFilesSplitPanel.setRightComponent(_explorerPanel);
 				else if (_panelList.get(i).equals("AcideFileEditor"))
-					_verticalFilesSplitPanel.setRightComponent(_fileEditorManager.getTabbedPane()); 
+					_verticalFilesSplitPanel.setRightComponent(_fileEditorManager.getTabbedPane());
 				else if (_panelList.get(i).equals("AcideDataBasePanel"))
 					_verticalFilesSplitPanel.setRightComponent(_dataBasePanel);
 				else if (_panelList.get(i).equals("AcideConsolePanel"))
@@ -905,11 +952,11 @@ public class AcideMainWindow extends JFrame {
 				else if (_panelList.get(i).equals("AcideDebugPanel"))
 					_verticalFilesSplitPanel.setRightComponent(_debugPanel);
 				break;
-			case 2: 
+			case 2:
 				if (_panelList.get(i).equals("AcideExplorerPanel"))
 					_verticalDataBaseSplitPanel.setLeftComponent(_explorerPanel);
 				else if (_panelList.get(i).equals("AcideFileEditor"))
-					_verticalDataBaseSplitPanel.setLeftComponent(_fileEditorManager.getTabbedPane()); 
+					_verticalDataBaseSplitPanel.setLeftComponent(_fileEditorManager.getTabbedPane());
 				else if (_panelList.get(i).equals("AcideDataBasePanel"))
 					_verticalDataBaseSplitPanel.setLeftComponent(_dataBasePanel);
 				else if (_panelList.get(i).equals("AcideConsolePanel"))
@@ -923,7 +970,7 @@ public class AcideMainWindow extends JFrame {
 				if (_panelList.get(i).equals("AcideExplorerPanel"))
 					_verticalDataBaseSplitPanel.setRightComponent(_explorerPanel);
 				else if (_panelList.get(i).equals("AcideFileEditor"))
-					_verticalDataBaseSplitPanel.setRightComponent(_fileEditorManager.getTabbedPane()); 
+					_verticalDataBaseSplitPanel.setRightComponent(_fileEditorManager.getTabbedPane());
 				else if (_panelList.get(i).equals("AcideDataBasePanel"))
 					_verticalDataBaseSplitPanel.setRightComponent(_dataBasePanel);
 				else if (_panelList.get(i).equals("AcideConsolePanel"))
@@ -937,7 +984,7 @@ public class AcideMainWindow extends JFrame {
 				if (_panelList.get(i).equals("AcideExplorerPanel"))
 					_horizontalGraphSplitPanel.setLeftComponent(_explorerPanel);
 				else if (_panelList.get(i).equals("AcideFileEditor"))
-					_horizontalGraphSplitPanel.setLeftComponent(_fileEditorManager.getTabbedPane()); 
+					_horizontalGraphSplitPanel.setLeftComponent(_fileEditorManager.getTabbedPane());
 				else if (_panelList.get(i).equals("AcideDataBasePanel"))
 					_horizontalGraphSplitPanel.setLeftComponent(_dataBasePanel);
 				else if (_panelList.get(i).equals("AcideConsolePanel"))
@@ -951,7 +998,7 @@ public class AcideMainWindow extends JFrame {
 				if (_panelList.get(i).equals("AcideExplorerPanel"))
 					_horizontalGraphSplitPanel.setRightComponent(_explorerPanel);
 				else if (_panelList.get(i).equals("AcideFileEditor"))
-					_horizontalGraphSplitPanel.setRightComponent(_fileEditorManager.getTabbedPane()); 
+					_horizontalGraphSplitPanel.setRightComponent(_fileEditorManager.getTabbedPane());
 				else if (_panelList.get(i).equals("AcideDataBasePanel"))
 					_horizontalGraphSplitPanel.setRightComponent(_dataBasePanel);
 				else if (_panelList.get(i).equals("AcideConsolePanel"))
@@ -963,9 +1010,9 @@ public class AcideMainWindow extends JFrame {
 				break;
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Updates the ACIDE - A Configurable IDE list of panels
 	 * 
@@ -978,9 +1025,9 @@ public class AcideMainWindow extends JFrame {
 		_panelList.add(_verticalDataBaseSplitPanel.getRightComponent().getName());
 		_panelList.add(_horizontalGraphSplitPanel.getLeftComponent().getName());
 		_panelList.add(_horizontalGraphSplitPanel.getRightComponent().getName());
-		
+
 		AcideProjectConfiguration.getInstance().setPanelList(_panelList);
-		
+
 	}
 
 	/**
@@ -989,26 +1036,24 @@ public class AcideMainWindow extends JFrame {
 	 */
 	public void updateVisibility() {
 
-		//Gets the visibility of the splits panels
+		// Gets the visibility of the splits panels
 		boolean e1, e2, e3, e4;
 		e1 = _verticalFilesSplitPanel.isVisible();
 		e2 = _verticalDataBaseSplitPanel.isVisible();
 		e3 = _horizontalSplitPanel.isVisible();
 		e4 = _horizontalGraphSplitPanel.isVisible();
 
-		//Gets the divider locations
+		// Gets the divider locations
 		_horizontalSize = _horizontalSplitPanel.getDividerLocation();
 		_verticalSize = _verticalSplitPanel.getDividerLocation();
 
-		//Checks if the both components of the panels are visible
+		// Checks if the both components of the panels are visible
 		if (!e1 || !e2)
-			_horizontalSize = _horizontalSplitPanel.getHeight()
-					- _horizontalSplitPanel.getHeight() / 3;
+			_horizontalSize = _horizontalSplitPanel.getHeight() - _horizontalSplitPanel.getHeight() / 3;
 		if (!e3 || !e4)
-			_verticalSize = _verticalSplitPanel.getWidth()
-					- _verticalSplitPanel.getWidth() / 6;
+			_verticalSize = _verticalSplitPanel.getWidth() - _verticalSplitPanel.getWidth() / 6;
 
-		//Checks if the both components of the panels are visible
+		// Checks if the both components of the panels are visible
 		if (!_verticalFilesSplitPanel.getLeftComponent().isVisible()
 				&& !_verticalFilesSplitPanel.getRightComponent().isVisible()) {
 			if (_horizontalSplitPanel.getRightComponent().isVisible())
@@ -1018,8 +1063,8 @@ public class AcideMainWindow extends JFrame {
 			_horizontalSplitPanel.getLeftComponent().setVisible(true);
 			_horizontalSplitPanel.setDividerLocation(_horizontalSize);
 		}
-		
-		//Checks if the both components of the panels are visible
+
+		// Checks if the both components of the panels are visible
 		if (!_verticalDataBaseSplitPanel.getLeftComponent().isVisible()
 				&& !_verticalDataBaseSplitPanel.getRightComponent().isVisible()) {
 			if (_horizontalSplitPanel.getLeftComponent().isVisible())
@@ -1029,8 +1074,8 @@ public class AcideMainWindow extends JFrame {
 			_horizontalSplitPanel.getRightComponent().setVisible(true);
 			_horizontalSplitPanel.setDividerLocation(_horizontalSize);
 		}
-		
-		//Checks if the both components of the panels are visible
+
+		// Checks if the both components of the panels are visible
 		if (!_horizontalGraphSplitPanel.getLeftComponent().isVisible()
 				&& !_horizontalGraphSplitPanel.getRightComponent().isVisible()) {
 			if (_verticalSplitPanel.getLeftComponent().isVisible())
@@ -1040,10 +1085,9 @@ public class AcideMainWindow extends JFrame {
 			_verticalSplitPanel.getRightComponent().setVisible(true);
 			_verticalSplitPanel.setDividerLocation(_verticalSize);
 		}
-		
-		//Checks if the both components of the panels are visible
-		if (!_verticalFilesSplitPanel.isVisible()
-				&& !_verticalDataBaseSplitPanel.isVisible()) {
+
+		// Checks if the both components of the panels are visible
+		if (!_verticalFilesSplitPanel.isVisible() && !_verticalDataBaseSplitPanel.isVisible()) {
 			if (_verticalSplitPanel.getRightComponent().isVisible())
 				_verticalSize = _verticalSplitPanel.getDividerLocation();
 			_verticalSplitPanel.getLeftComponent().setVisible(false);
@@ -1051,7 +1095,7 @@ public class AcideMainWindow extends JFrame {
 			_verticalSplitPanel.getLeftComponent().setVisible(true);
 			_verticalSplitPanel.setDividerLocation(_verticalSize);
 		}
-		
+
 	}
-	
+
 }

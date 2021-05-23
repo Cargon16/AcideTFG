@@ -703,6 +703,44 @@ public class AcideFileManager {
 			return false;
 		}
 	}
+	
+	public String applyCodification(String fileName, String encode) {
+
+		try {
+
+			// Creates the buffered reader with the file
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream(fileName), encode));
+			StringBuffer stringBuffer = new StringBuffer("");
+			String string;
+
+			// Reads the file content
+			while (true) {
+				string = reader.readLine();
+				if (string == null)
+					break;
+				stringBuffer.append(string + "\n");
+			}
+			reader.close();
+
+			// Calls to the garbage collector
+			System.gc();
+
+			// Returns the file content
+			return stringBuffer.toString();
+
+		} catch (IOException exception) {
+
+			// Updates the log
+			AcideLog.getLog().error(
+					AcideLanguageManager.getInstance().getLabels()
+							.getString("s309")
+							+ fileName);
+			// exception.printStackTrace();
+
+			return null;
+		}
+	}
 
 	/**
 	 * Returns the ACIDE - A Configurable IDE file manager file chooser.

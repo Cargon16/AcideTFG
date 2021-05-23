@@ -41,7 +41,13 @@ package acide.gui.menuBar.projectMenu.listeners;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import javax.swing.JOptionPane;
+
+import acide.configuration.project.AcideProjectConfiguration;
 import acide.files.AcideFileExtensionFilterManager;
 import acide.files.AcideFileManager;
 import acide.files.utils.AcideFileOperation;
@@ -61,8 +67,7 @@ public class AcideSaveProjectAsMenuItemListener implements ActionListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
 	 * )
 	 */
 	@Override
@@ -70,29 +75,48 @@ public class AcideSaveProjectAsMenuItemListener implements ActionListener {
 
 		action(actionEvent);
 	}
-	
-	public static void action(ActionEvent actionEvent){
-		
-		AcideFileExtensionFilterManager[] extensions={new AcideFileExtensionFilterManager(
-				new String[] { "acideProject" },
-				AcideLanguageManager.getInstance().getLabels()
-						.getString("s328"))};
-		// Asks for the file path to the user
-		String filePath = AcideFileManager.getInstance().askForFileWhitFilters(
-				AcideFileOperation.SAVE,
-				AcideFileTarget.PROJECTS,
-				AcideFileType.FILE,
-				"",extensions);
 
-		if (filePath != null) {
+	public static void action(ActionEvent actionEvent) {
+
+		AcideFileExtensionFilterManager[] extensions = { new AcideFileExtensionFilterManager(
+				new String[] { "acideProject" }, AcideLanguageManager.getInstance().getLabels().getString("s328")) };
+		// Asks for the file path to the user
+		String filePath = AcideFileManager.getInstance().askForFileWhitFilters(AcideFileOperation.SAVE,
+				AcideFileTarget.PROJECTS, AcideFileType.FILE, "", extensions);
+
+		// Show message to confirm if user names project with an existing name
+		File toSave = new File(filePath);
+		if (toSave.exists()) {
+			int resp = JOptionPane.showConfirmDialog(null,
+					AcideLanguageManager.getInstance().getLabels().getString("s2401"), null, JOptionPane.YES_NO_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
+			switch (resp) {
+			case 0:
+				//toSave.delete();
+				
+				saveFile(filePath);
+				AcideProjectConfiguration.getInstance().saveThemesConfiguration();
+				break;
+			case 1:
+				break;
+			}
+		}else {
 			
+			saveFile(filePath);
+			AcideProjectConfiguration.getInstance().saveThemesConfiguration();
+		}
+
+	}
+
+	private static void saveFile(String filePath) {
+		if (filePath != null) {
+
 			// After askForFileWithFilters the filePath contains a fake
 			// extension
 			if (filePath.endsWith(".acideproject"))
 
 				// We remove the fake extension
-				filePath = filePath.substring(0, filePath.length()
-						- (".acideproject").length());
+				filePath = filePath.substring(0, filePath.length() - (".acideproject").length());
 
 			// Add the real extension if the name does not contain it
 			if (!filePath.endsWith(".acideProject"))
@@ -101,8 +125,7 @@ public class AcideSaveProjectAsMenuItemListener implements ActionListener {
 				filePath = filePath + ".acideProject";
 
 			// Saves the project as
-			AcideMainWindow.getInstance().getMenu().getProjectMenu()
-					.saveProjectAs(filePath);
+			AcideMainWindow.getInstance().getMenu().getProjectMenu().saveProjectAs(filePath);
 		}
 	}
 }

@@ -44,10 +44,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.util.Set;
 import java.util.Vector;
 
@@ -407,7 +412,8 @@ public class AcideAssertedDatabasePanel extends JFrame {
 			_numberPredicates = new JTextField(size + " " + rules);
 
 		_numberPredicates.setEditable(false);
-		_numberPredicates.setPreferredSize(new Dimension(50, 20));
+	 
+		_numberPredicates.setPreferredSize(new Dimension(_numberPredicates.getText().length() * 6, 20));
 
 		_buttonPanel.add(_numberPredicates);
 

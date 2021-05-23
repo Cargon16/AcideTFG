@@ -841,19 +841,22 @@ public class AcideProjectConfiguration {
 		fileContent = fileContent + _yCoordinate + "\n";
 
 		// Adds the vertical split pane divider location
-		fileContent = fileContent + _verticalFilesSplitPaneDividerLocation + "\n";
+		fileContent = fileContent + AcideMainWindow.getInstance().getVerticalFilesSplitPane().getDividerLocation() + "\n";
 		
 		// Adds the vertical split pane divider location
-		fileContent = fileContent + _verticalDataBaseSplitPaneDividerLocation + "\n";
+		fileContent = fileContent + AcideMainWindow.getInstance().getVerticalDataBaseSplitPane().getDividerLocation() + "\n";
 		
 		// Adds the vertical split pane divider location
-		fileContent = fileContent + _verticalGraphSplitPaneDividerLocation + "\n";
+		fileContent = fileContent + AcideMainWindow.getInstance().getVerticalSplitPane()
+				.getDividerLocation() + "\n";
 
 		// Adds the horizontal split pane divider location
-		fileContent = fileContent + _horizontalSplitPaneDividerLocation + "\n";
+		fileContent = fileContent + AcideMainWindow.getInstance().getHorizontalSplitPane()
+				.getDividerLocation() + "\n";
 		
 		// Adds the horizontal graph split pane divider location
-		fileContent = fileContent + _horizontalGraphSplitPaneDividerLocation + "\n";
+		fileContent = fileContent + AcideMainWindow.getInstance()
+		.getHorizontalGraphSplitPane().getDividerLocation() + "\n";
 
 		// Adds the language configuration
 		fileContent = fileContent + _languageConfiguration + "\n";
@@ -868,7 +871,7 @@ public class AcideProjectConfiguration {
 		fileContent = fileContent + _toolBarConfiguration + "\n";
 		
 		// Adds the panels kept in the panel list
-		for (int i = 0; i < _panelList.size(); i++) {
+		for (int i = 0; i < _panelList.size() && i < 6; i++) {
 			fileContent = fileContent + _panelList.get(i) + "\n";
 		}
 
@@ -1032,11 +1035,16 @@ public class AcideProjectConfiguration {
 
 		return true;
 	}
-	private void saveThemesConfiguration() {
+	public void saveThemesConfiguration() {
+		
+		String console = Integer.toString(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getBackground().getRGB());
+		String databse = Integer.toString(AcideMainWindow.getInstance().getDataBasePanel().getBackgroundColor().getRGB());
 		AcideResourceManager.getInstance().setProperty("explorerPanel.backgroundColor",Integer.toString(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor().getRGB()));
 		AcideResourceManager.getInstance().setProperty("explorerPanel.foregroundColor",Integer.toString(AcideMainWindow.getInstance().getExplorerPanel().getForegroundColor().getRGB()));
 		AcideResourceManager.getInstance().setProperty("databasePanel.backgroundColor",Integer.toString(AcideMainWindow.getInstance().getDataBasePanel().getBackgroundColor().getRGB()));
 		AcideResourceManager.getInstance().setProperty("databasePanel.foregroundColor",Integer.toString(AcideMainWindow.getInstance().getDataBasePanel().getForegroundColor().getRGB()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.foregroundColor",Integer.toString(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getForeground().getRGB()));
+		AcideResourceManager.getInstance().setProperty("consolePanel.backgroundColor",Integer.toString(AcideMainWindow.getInstance().getConsolePanel().getTextPane().getBackground().getRGB()));
 		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setBackgroundColor(AcideMainWindow.getInstance().getExplorerPanel().getBackgroundColor());
 		AcideWorkbenchConfiguration.getInstance().getFileEditorConfiguration().setForegroundColor(AcideMainWindow.getInstance().getExplorerPanel().getForegroundColor());
 		AcideResourceManager.getInstance().setProperty("themeApplied", AcideThemesMenu.activeTheme);

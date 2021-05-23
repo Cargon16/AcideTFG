@@ -4,25 +4,25 @@
  * 
  * Copyright (C) 2007-2014  
  * Authors:
- * 		- Fernando S·enz PÈrez (Team Director).
+ * 		- Fernando S√°enz P√©rez (Team Director).
  *      - Version from 0.1 to 0.6:
  *      	- Diego Cardiel Freire.
- *			- Juan JosÈ Ortiz S·nchez.
- *          - DelfÌn RupÈrez CaÒas.
+ *			- Juan Jos√© Ortiz S√°nchez.
+ *          - Delf√≠n Rup√©rez Ca√±as.
  *      - Version 0.7:
- *          - Miguel MartÌn L·zaro.
+ *          - Miguel Mart√≠n L√°zaro.
  *      - Version 0.8:
- *      	- Javier Salcedo GÛmez.
+ *      	- Javier Salcedo G√≥mez.
  *      - Version from 0.9 to 0.11:
- *      	- Pablo GutiÈrrez GarcÌa-Pardo.
- *      	- Elena Tejeiro PÈrez de ¡greda.
- *      	- AndrÈs Vicente del Cura.
+ *      	- Pablo Guti√©rrez Garc√≠a-Pardo.
+ *      	- Elena Tejeiro P√©rez de √Ågreda.
+ *      	- Andr√©s Vicente del Cura.
  *      - Version from 0.12 to 0.16
- *      	- SemÌramis GutiÈrrez Quintana
- *      	- Juan Jes˙s MarquÈs Ortiz
- *      	- Fernando Ord·s Lorente
+ *      	- Sem√≠ramis Guti√©rrez Quintana
+ *      	- Juan Jes√∫s Marqu√©s Ortiz
+ *      	- Fernando Ord√°s Lorente
  *      - Version 0.17
- *      	- Sergio DomÌnguez Fuentes
+ *      	- Sergio Dom√≠nguez Fuentes
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -153,7 +155,12 @@ public class AcideFileEditorPanel extends JPanel {
 	 * ACIDE - A Configurable IDE file editor panel current grammar configuration.
 	 */
 	private AcideGrammarConfiguration _currentGrammarConfiguration;
+	
+	/**
+	 * Current encode format
+	 */
 
+	private String encodeFormat = "windows-1252";
 	/**
 	 * Creates a new ACIDE - A Configurable IDE file editor panel.
 	 * 
@@ -296,7 +303,10 @@ public class AcideFileEditorPanel extends JPanel {
 			// Removes the document listener
 			_textEditionAreaList.get(index).getTextComponent().getDocument().removeDocumentListener(_documentListener);
 
-			// Sets the text content
+			//Sets the text content, codified utf8 predefined
+			//ByteBuffer buffer = StandardCharsets.UTF_8.encode(fileContent); 
+
+			//String utf8EncodedString = StandardCharsets.UTF_8.decode(buffer).toString();
 			_textEditionAreaList.get(index).getTextComponent().setText(fileContent);
 
 			// Adds the document listener
@@ -887,5 +897,13 @@ public class AcideFileEditorPanel extends JPanel {
 			c.getClass().cast(c).setForeground(foreground);
 			((JComponent) c.getClass().cast(c)).setOpaque(true);
 		}
+	}
+	
+	public void changeEncode(String encodeFormat) {
+		this.encodeFormat = encodeFormat;
+	}
+	
+	public String getEncode() {
+		return this.encodeFormat;
 	}
 }

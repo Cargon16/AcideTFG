@@ -66,4 +66,5 @@ public class AcideMainWindowWindowListener extends WindowAdapter {
 		// Closes the main window
 		AcideMainWindow.getInstance().closeAcideMainWindow();
 	}
+	
 }

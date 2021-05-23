@@ -832,9 +832,18 @@ public class AcideConsolePanelKeyboardListener implements KeyListener {
 							String text = "";
 							text = AcideMainWindow.getInstance()
 									.getConsolePanel().getTextPane().getText();
+							int pos = AcideMainWindow.getInstance().getConsolePanel().getTextPane().getCaretPosition();
+							String finalText;
+							if(text.length() >0) {
+							finalText = text.substring(0, pos-1)+commands[i]+text.substring(pos);
+							AcideMainWindow.getInstance().getConsolePanel()
+							.getTextPane().setText(finalText);
+							AcideMainWindow.getInstance().getConsolePanel().getTextPane().setCaretPosition(pos+commands[i].length()-1);
+							}else {
 							text = text.concat(commands[i]);
 							AcideMainWindow.getInstance().getConsolePanel()
 									.getTextPane().setText(text);
+							}
 						}
 
 					}
