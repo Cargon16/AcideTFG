@@ -1268,7 +1268,7 @@ public class AcideConsolePanel extends JPanel {
 		// Starts the console process
 		_consoleProcess.start();
 
-		// Runtime.getRuntime().addShutdownHook(_consoleProcess);
+		//Runtime.getRuntime().addShutdownHook(_consoleProcess);
 	}
 
 	/**

@@ -42,12 +42,19 @@ package acide.gui.menuBar.fileMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -68,6 +75,8 @@ import acide.configuration.project.AcideProjectConfiguration;
 import acide.configuration.workbench.AcideWorkbenchConfiguration;
 import acide.files.AcideFileManager;
 import acide.files.project.AcideProjectFileType;
+import acide.files.utils.CharsetDetector;
+import acide.files.utils.CharsetDetector.BOM;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.gui.menuBar.fileMenu.recentFilesMenu.AcideRecentFilesMenu;
 import acide.gui.menuBar.listeners.AcideMenuBarMouseClickListener;
@@ -140,6 +149,10 @@ public class AcideFileMenu extends JMenu {
 	 * ACIDE - A Configurable IDE file menu econding menu item name.
 	 */
 	public final static String ENCODING_NAME = "Encodings";
+	/**
+	 * ACIDE - A Configurable IDE file menu econding menu item name.
+	 */
+	public final static String FORMAT_NAME = "File Format";
 
 	/**
 	 * ACIDE - A Configurable IDE file menu new file menu item.
@@ -242,7 +255,19 @@ public class AcideFileMenu extends JMenu {
 	 * ACIDE - A Configurable IDE file menu encoding menu has been inserted.
 	 */
 	private boolean _encodingInserted;
-
+	/**
+	 * ACIDE - A Configurable IDE file menu format menu.
+	 */
+	private JMenu _formatMenuItem;
+	/**
+	 * ACIDE - A Configurable IDE file menu format menu has been inserted.
+	 */
+	private boolean _formatInserted;
+	
+	/**
+	 * ACIDE - A Configurable IDE file menu format current option.
+	 */
+	private String _currentFormat = "\r\n";
 	/**
 	 * ACIDE - A Configurable IDE file menu close all files save file separator.
 	 */
@@ -271,6 +296,10 @@ public class AcideFileMenu extends JMenu {
 	 * ACIDE - A Configurable IDE array list of inserted objects.
 	 */
 	private ArrayList<AcideMenuObjectConfiguration> _insertedObjects;
+	
+	/**
+	 * 
+	 */
 
 	/**
 	 * Creates a new ACIDE - A Configurable IDE file menu.
@@ -288,6 +317,7 @@ public class AcideFileMenu extends JMenu {
 		_printFileInserted = false;
 		_exitInserted = false;
 		_encodingInserted = false;
+		_formatInserted = false;
 
 		_insertedItems = new HashMap<String, AcideInsertedItem>();
 
@@ -363,14 +393,18 @@ public class AcideFileMenu extends JMenu {
 				// Adds the print file exit separator to the file menu
 				add(_printFileExitSeparator);
 			} else if (name.equals(EXIT_NAME)) {
+				add(_encodingMenuItem);
+				add(_formatMenuItem);
+				add(new JSeparator());
+				_encodingInserted = true;
+				_formatInserted = true;
 				// Adds the exit menu item to the file menu
 				add(_exitMenuItem);
 				_exitInserted = true;
-			} else if (name.equals(ENCODING_NAME)) {
-				// Adds the exit menu item to the file menu
-				add(_encodingMenuItem);
-				_encodingInserted = true;
-			} else {
+			} /*
+				 * else if (name.equals(ENCODING_NAME)) { // Adds the exit menu item to the file
+				 * menu add(_encodingMenuItem); _encodingInserted = true; }
+				 */ else {
 				if (ob.isSubmenu()) {
 					add(_insertedMenus.get(ob.getName()));
 				} else {
@@ -403,6 +437,8 @@ public class AcideFileMenu extends JMenu {
 			add(_exitMenuItem);
 		if (!_encodingInserted)
 			add(_encodingMenuItem);
+		if (!_formatInserted)
+			add(_formatMenuItem);
 
 	}
 
@@ -570,22 +606,80 @@ public class AcideFileMenu extends JMenu {
 
 		// Creates the encoding menu item
 		_encodingMenuItem = new JMenu(ENCODING_NAME);
-		String encodings[] = { "UTF-8", "windows-1252", "US-ASCII"};
+		String encodings[] = { "UTF-8", "windows-1252", "UTF-16BE", "UTF-16LE" };
 		for (int i = 0; i < encodings.length; ++i) {
 			JMenuItem elem = new JMenuItem(encodings[i]);
+			if (encodings[i].equals("UTF-8"))
+				elem.setText("UTF-8 BOM");
 			final String encode = encodings[i];
 			elem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-						int pos = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanelIndex();
-						String p = AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(pos).getAbsolutePath();
-						AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(pos).changeEncode(encode);
-						AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(encode);
-						String content = AcideFileManager.getInstance().applyCodification(p, encode);
-						AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().setFileContent(content);
+					int pos = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanelIndex();
+					String oldContent = AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(pos)
+							.getTextEditionAreaContent();
+					String oldEncode = AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(pos)
+							.getEncode();
+					AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(pos).changeEncode(encode);
+					AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(encode);
+
+					if (oldEncode != encode) {
+						byte[] bom = null;
+						try {
+							switch (oldEncode) {
+							case "UTF-8":
+								bom = BOM.UTF_8.getBytes();
+								break;
+							case "windows-1252":
+								bom = BOM.NONE.getBytes();
+								break;
+							case "UTF-16BE":
+								bom = BOM.UTF_16_BE.getBytes();
+								break;
+							case "UTF-16LE":
+								bom = BOM.UTF_16_LE.getBytes();
+								break;
+							}
+
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+
+						// oldContent = oldContent.replace("\uFEFF", "");
+						AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+								.setEncodeText(oldContent);
+						AcideMainWindow.getInstance().getFileEditorManager().setRedButtonAt(pos);
+						AcideMainWindow.getInstance().getToolBarPanel().getMenuBarToolBar().updateStateOfFileButtons();
+					}
 				}
 			});
-			
+
 			_encodingMenuItem.add(elem);
+		}
+
+		_formatMenuItem = new JMenu(FORMAT_NAME);
+		String format[] = { "DOS Format (CR/LF)", "Unix Format (LF only)", "Mac Format(CR only)" };
+		String formatEOL [] = {"\r\n", "\n", "\r"};
+		for (int i = 0; i < format.length; ++i) {
+			JCheckBoxMenuItem elem = new JCheckBoxMenuItem(format[i]);
+			if(format[i] == "DOS Format (CR/LF)") elem.setSelected(true);
+			elem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					for(int i =0; i < _formatMenuItem.getItemCount(); ++i) {
+						if(elem != _formatMenuItem.getItem(i)) {
+							_formatMenuItem.getItem(i).setSelected(false);
+						}
+						else _currentFormat = formatEOL[i];
+					}
+					
+					elem.setSelected(true);
+					int pos = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanelIndex();
+					AcideMainWindow.getInstance().getFileEditorManager().setRedButtonAt(pos);
+					AcideMainWindow.getInstance().getToolBarPanel().getMenuBarToolBar().updateStateOfFileButtons();
+					AcideMainWindow.getInstance().getStatusBar().setFormatMessage(elem.getText());
+				}
+			});
+
+			_formatMenuItem.add(elem);
 		}
 	}
 
@@ -661,6 +755,8 @@ public class AcideFileMenu extends JMenu {
 		_exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.ALT_MASK));
 
 		_encodingMenuItem.setText(AcideLanguageManager.getInstance().getLabels().getString("s2402"));
+		
+		_formatMenuItem.setText(AcideLanguageManager.getInstance().getLabels().getString("s2403"));
 
 		// Disables the open all files menu item
 		_openAllFilesMenuItem.setEnabled(false);
@@ -959,10 +1055,18 @@ public class AcideFileMenu extends JMenu {
 	 * @param filePath path of the file to be opened
 	 */
 	public void openFile(final String filePath) {
-
 		// Loads the file content
 		String fileContent = null;
-		fileContent = AcideFileManager.getInstance().load(filePath);
+		FileInputStream fis;
+		CharsetDetector ubis = null;
+		try {
+			fis = new FileInputStream(filePath);
+			ubis = new CharsetDetector(fis);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		fileContent = AcideFileManager.getInstance().applyCodification(filePath, ubis.getBOM().toString());
 
 		// If the file content is not empty
 		if (fileContent != null) {
@@ -1010,6 +1114,10 @@ public class AcideFileMenu extends JMenu {
 			AcideMainWindow.getInstance().getFileEditorManager().updateTabbedPane(filePath, fileContent, true, fileType,
 					0, 0, 1, lexiconConfiguration, currentGrammarConfiguration, previousGrammarConfiguration);
 
+			// Set encoding for each file
+			AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+					.changeEncode(ubis.getBOM().toString());
+			AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(ubis.getBOM().toString());
 			// Updates the log
 			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s84") + filePath);
 
@@ -1113,6 +1221,11 @@ public class AcideFileMenu extends JMenu {
 			// Updates the selected file editor index
 			AcideMainWindow.getInstance().getFileEditorManager().updateRelatedComponentsAt(
 					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanelIndex());
+			String s = AcideMainWindow.getInstance().getFileEditorManager()
+					.getFileEditorPanelAt(
+							AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanelIndex())
+					.getEncode();
+			AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(s);
 		}
 
 		return true;
@@ -1352,5 +1465,89 @@ public class AcideFileMenu extends JMenu {
 	 */
 	public JMenuItem getOpenAllFilesMenuItem() {
 		return _openAllFilesMenuItem;
+	}
+
+	public void openFileWithEncode(final String filePath, String encode) {
+		// Loads the file content
+		String fileContent = null;
+		InputStream in;
+		/*
+		 * String [] ch = {}; try { in = new FileInputStream(filePath); ch = new
+		 * CharsetDetector().detectAllCharset(in); } catch (Exception e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
+		// String aux = ch[0];
+		fileContent = AcideFileManager.getInstance().applyCodification(filePath, encode);
+
+		// If the file content is not empty
+		if (fileContent != null) {
+
+			// Gets the file project index
+			int fileProjectIndex = AcideProjectConfiguration.getInstance().getIndexOfFile(filePath);
+
+			// Gets the predefined lexicon configuration
+			AcideLexiconConfiguration lexiconConfiguration = AcideWorkbenchConfiguration.getInstance()
+					.getLexiconAssignerConfiguration().getPredifinedLexiconConfiguration(filePath);
+
+			// Creates the current grammar configuration
+			AcideGrammarConfiguration currentGrammarConfiguration = new AcideGrammarConfiguration();
+
+			// Sets the current grammar configuration path
+			currentGrammarConfiguration.setPath(AcideGrammarConfiguration.DEFAULT_FILE);
+
+			// Creates the previous grammar configuration
+			AcideGrammarConfiguration previousGrammarConfiguration = new AcideGrammarConfiguration();
+
+			// Sets the previous grammar configuration path
+			previousGrammarConfiguration.setPath(AcideGrammarConfiguration.DEFAULT_FILE);
+
+			// It is a normal file
+			AcideProjectFileType fileType = AcideProjectFileType.NORMAL;
+
+			// If belongs to the project
+			if (fileProjectIndex != -1) {
+
+				// Gets its type
+				fileType = AcideProjectConfiguration.getInstance().getFileAt(fileProjectIndex).getType();
+
+				// Sets the new file state to opened in the project
+				// configuration
+				AcideProjectConfiguration.getInstance().getFileAt(fileProjectIndex).setIsOpened(true);
+
+				// If it is not the default project
+				if (!AcideProjectConfiguration.getInstance().isDefaultProject())
+
+					// The project has been modified
+					AcideProjectConfiguration.getInstance().setIsModified(true);
+			}
+
+			// Updates the tabbed pane in the file editor manager
+			AcideMainWindow.getInstance().getFileEditorManager().updateTabbedPane(filePath, fileContent, true, fileType,
+					0, 0, 1, lexiconConfiguration, currentGrammarConfiguration, previousGrammarConfiguration);
+
+			// Set encoding for each file
+			AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().changeEncode(encode);
+			AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(encode);
+			// Updates the log
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s84") + filePath);
+
+			// Updates the log
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s85") + filePath
+					+ AcideLanguageManager.getInstance().getLabels().getString("s86"));
+
+		} else {
+
+			// EMPTY FILE
+
+			// Updates the log
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s88"));
+		}
+
+		// Adds the file to the recent files list
+		AcideWorkbenchConfiguration.getInstance().getRecentFilesConfiguration().addRecentFileToList(filePath);
+	}
+	
+	public String getFileFormat() {
+		return _currentFormat;
 	}
 }

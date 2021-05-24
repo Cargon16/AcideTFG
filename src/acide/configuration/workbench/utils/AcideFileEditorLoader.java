@@ -40,6 +40,12 @@
 package acide.configuration.workbench.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -51,9 +57,11 @@ import acide.configuration.workbench.AcideWorkbenchConfiguration;
 import acide.configuration.workbench.fileEditor.AcideFileEditorConfiguration;
 import acide.files.AcideFileManager;
 import acide.files.project.AcideProjectFile;
+import acide.files.utils.CharsetDetector;
 import acide.gui.fileEditor.fileEditorPanel.AcideFileEditorPanel;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
+import sun.nio.cs.StandardCharsets;
 
 /**
  * <p>
@@ -182,8 +190,29 @@ public class AcideFileEditorLoader {
 
 					// Gets its content
 					String fileContent = null;
-					fileContent = AcideFileManager.getInstance().load(
-							projectFile.getAbsolutePath());
+					/*try {
+						in = new FileInputStream(projectFile.getAbsolutePath());
+						ch = new CharsetDetector().detectAllCharset(in);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}*/
+					FileInputStream fis;
+					CharsetDetector ubis = null;
+					try {
+						fis = new FileInputStream(projectFile.getAbsolutePath());
+						ubis = new CharsetDetector(fis);
+					} catch (NullPointerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					fileContent = AcideFileManager.getInstance().applyCodification(
+							projectFile.getAbsolutePath(), ubis.getBOM().toString());
+					
 
 					// Gets the predefined lexicon configuration
 					AcideLexiconConfiguration lexiconConfiguration = AcideWorkbenchConfiguration
@@ -215,6 +244,10 @@ public class AcideFileEditorLoader {
 									0, 0, 1, lexiconConfiguration,
 									currentGrammarConfiguration,
 									previousGrammarConfiguration);
+					
+					//Set encoding for each file
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().changeEncode(ubis.getBOM().toString());
+					AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(ubis.getBOM().toString());
 
 					// Updates the lexicon message status bar
 					AcideMainWindow
@@ -268,8 +301,21 @@ public class AcideFileEditorLoader {
 
 					// Gets its content
 					String fileContent = null;
-					fileContent = AcideFileManager.getInstance().load(
-							fileEditorConfiguration.getFileAt(index).getPath());
+					FileInputStream fis;
+					CharsetDetector ubis = null;
+					try {
+						fis = new FileInputStream(fileEditorConfiguration.getFileAt(index).getPath());
+						ubis = new CharsetDetector(fis);
+					} catch (NullPointerException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					fileContent = AcideFileManager.getInstance().applyCodification(
+							fileEditorConfiguration.getFileAt(index).getPath(), ubis.getBOM().toString());
 
 					// Creates the lexicon configuration
 					AcideLexiconConfiguration lexiconConfiguration = new AcideLexiconConfiguration();
@@ -313,6 +359,10 @@ public class AcideFileEditorLoader {
 									lexiconConfiguration,
 									currentGrammarConfiguration,
 									previousGrammarConfiguration);
+					
+					//Set encoding for each file
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().changeEncode(ubis.getBOM().toString());
+					AcideMainWindow.getInstance().getStatusBar().setEncodeMessage(ubis.getBOM().toString());
 
 					// Updates the lexicon message status bar
 					AcideMainWindow

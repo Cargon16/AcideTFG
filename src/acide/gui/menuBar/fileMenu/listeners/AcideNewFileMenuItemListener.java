@@ -161,6 +161,10 @@ public class AcideNewFileMenuItemListener implements ActionListener {
 				AcideProjectFileType.NORMAL, 0, 0, 1,
 				lexiconConfiguration, currentGrammarConfiguration,
 				previousGrammarConfiguration);
+	
+	//Set encoding for each file
+	AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().changeEncode("windows-1252");
+	AcideMainWindow.getInstance().getStatusBar().setEncodeMessage("windows-1252");
 			
 	}
 }

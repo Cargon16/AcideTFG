@@ -160,7 +160,7 @@ public class AcideFileEditorPanel extends JPanel {
 	 * Current encode format
 	 */
 
-	private String encodeFormat = "windows-1252";
+	private String encodeFormat = "UTF-8";
 	/**
 	 * Creates a new ACIDE - A Configurable IDE file editor panel.
 	 * 
@@ -315,6 +315,28 @@ public class AcideFileEditorPanel extends JPanel {
 
 		// Updates the file disk copy with the new content
 		setFileDiskCopy(fileContent);
+
+		// Validates the changes in the file editor panel
+		revalidate();
+	}
+	public void setEncodeText(final String fileContent) {
+		// Updates the file disk copy with the new content
+		setFileDiskCopy(fileContent);
+		for (int index = 0; index < NUM_TEXT_EDITORS; index++) {
+
+			// Removes the document listener
+			_textEditionAreaList.get(index).getTextComponent().getDocument().removeDocumentListener(_documentListener);
+
+			//Sets the text content, codified utf8 predefined
+			//ByteBuffer buffer = StandardCharsets.UTF_8.encode(fileContent); 
+
+			//String utf8EncodedString = StandardCharsets.UTF_8.decode(buffer).toString();
+			_textEditionAreaList.get(index).getTextComponent().setText(fileContent);
+
+			// Adds the document listener
+			_textEditionAreaList.get(index).getTextComponent().getDocument().addDocumentListener(_documentListener);
+		}
+
 
 		// Validates the changes in the file editor panel
 		revalidate();

@@ -189,6 +189,7 @@ public class AcideConsoleProcess extends Thread {
 							.getInstance().getLabels().getString("s2038")); 		
 					AcideMainWindow.getInstance().getConsolePanel().resetConsole();
 				}
+
 			} else {
 				// Sets the console default configuration
 				setDefaultConfiguration();

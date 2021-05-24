@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/xom-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/xpp3_min-1.1.3.4.O.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ACIDE"/>
+	<classpathentry kind="lib" path="lib/chardet.jar"/>
 	<classpathentry kind="output" path="out/production/Acide"/>
 </classpath>

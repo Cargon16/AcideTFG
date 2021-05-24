@@ -70,9 +70,10 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
+import acide.configuration.project.AcideProjectConfiguration;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.log.AcideLog;
-import javafx.scene.Cursor;
+import java.awt.Cursor;
 
 /**
  * ACIDE - A Configurable IDE drag and drop tabbed pane.
@@ -148,7 +149,7 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 			@Override
 			public void dragEnter(DragSourceDragEvent dragSourceDragEvent) {
 				dragSourceDragEvent.getDragSourceContext().setCursor(
-						DragSource.DefaultMoveDrop);
+						new Cursor(Cursor.MOVE_CURSOR));
 			}
 
 			/*
@@ -161,7 +162,7 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 			@Override
 			public void dragExit(DragSourceEvent dragSourceEvent) {
 				dragSourceEvent.getDragSourceContext().setCursor(
-						DragSource.DefaultMoveNoDrop);
+						new Cursor(Cursor.DEFAULT_CURSOR));
 				_lineRectangle.setRect(0, 0, 0, 0);
 				_ghostGlassPane.setLocation(new Point(-1000, -1000));
 				_ghostGlassPane.repaint();
@@ -186,9 +187,9 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 				int targetIdx = getTargetTabIndex(glassPt);
 				if (getTabAreaBound().contains(tabPt) && targetIdx >= 0
 						&& targetIdx != _dragTabIndex
-						&& targetIdx != _dragTabIndex + 1) {
+						/*&& targetIdx != _dragTabIndex + 1*/) {
 					dragSourceDragEvent.getDragSourceContext().setCursor(
-							DragSource.DefaultMoveDrop);
+							new Cursor(Cursor.MOVE_CURSOR));
 				} else {
 					dragSourceDragEvent.getDragSourceContext().setCursor(
 							DragSource.DefaultMoveNoDrop);
@@ -290,9 +291,9 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 				initGlassPane(dragGestureEvent.getComponent(),
 						dragGestureEvent.getDragOrigin());
 				try {
-					dragGestureEvent.startDrag(DragSource.DefaultMoveDrop, t,
+					dragGestureEvent.startDrag(new Cursor(Cursor.MOVE_CURSOR), t,
 							dragSourceListener);
-					AcideMainWindow.getInstance().setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+					//AcideMainWindow.getInstance().setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
 				} catch (InvalidDnDOperationException exception) {
 
 					// Updates the log
@@ -558,12 +559,13 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 			remove(previousIndex);
 			
 			// Inserts the tab
-			insertTab(previousTitle, _icon, component, null, nextIndex - 1);
+			insertTab(previousTitle, _icon, component, null, nextIndex -1);
 			
 			// Sets the selected index
 			setSelectedIndex(nextIndex - 1);
 		}
 		
+		AcideProjectConfiguration.getInstance().setIsModified(true);
 		// Repaints the component
 		component.repaint();
 	}
@@ -581,7 +583,7 @@ public class AcideDragAndDropTabbedPane extends JTabbedPane {
 					rect.y, LINE_WIDTH, rect.height);
 		} else if (next == 0) {
 			Rectangle rect = getBoundsAt(0);
-			_lineRectangle.setRect(-LINE_WIDTH / 2, rect.y, LINE_WIDTH,
+			_lineRectangle.setRect(-10 / 2, rect.y, 10,
 					rect.height);
 		} else {
 			Rectangle rect = getBoundsAt(next - 1);

@@ -88,9 +88,17 @@ public class AcideStatusBar extends JPanel {
 	 */
 	private JPanel _statusMessagePanel;
 	/**
-	 * ACIDE - A Configurable IDE status bar status message label.
+	 * ACIDE - A Configurable IDE status bar encoding message label.
 	 */
 	private JLabel _encodingMessageLabel;
+	/**
+	 * ACIDE - A Configurable IDE status bar format message label.
+	 */
+	private JLabel _formatMessageLabel;
+	/**
+	 * ACIDE - A Configurable IDE status bar format message panel.
+	 */
+	private JPanel _formatMessagePanel;
 	/**
 	 * ACIDE - A Configurable IDE status bar status message panel.
 	 */
@@ -265,6 +273,9 @@ public class AcideStatusBar extends JPanel {
 
 		// Builds encoding message panel
 		buildEncodeMessagePanel();
+		
+		// Builds format message panel
+		buildFormatMessagePanel();
 	}
 
 	/**
@@ -365,6 +376,30 @@ public class AcideStatusBar extends JPanel {
 
 		// Adds the edition mode message label to the edition mode message panel
 		_encodigMessagePanel.add(_encodingMessageLabel);
+	}
+	
+	private void buildFormatMessagePanel() {
+
+		// Creates the edition mode message panel
+		_formatMessagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		// Sets the edition mode message panel border
+		_formatMessagePanel.setBorder(BorderFactory.createEtchedBorder());
+
+		// Creates the edition mode message label
+		_formatMessageLabel = new JLabel();
+
+		// Updates the edition mode message label text
+		_formatMessageLabel.setText("DOS Format (CR/LF)");
+
+		// Sets the edition mode message label tool tip text
+		_formatMessageLabel.setToolTipText("Files format");
+
+		// Sets the edition mode message label foreground color
+		_formatMessageLabel.setForeground(Color.BLACK);
+
+		// Adds the edition mode message label to the edition mode message panel
+		_formatMessagePanel.add(_formatMessageLabel);
 	}
 
 	/**
@@ -637,6 +672,11 @@ public class AcideStatusBar extends JPanel {
 		add(_encodigMessagePanel, constraints);
 
 		constraints.gridx = 9;
+		
+		// Adds the SCROLL LOCK message panel to the status bar
+		add(_formatMessagePanel, constraints);
+		
+		constraints.gridx = 10;
 
 		// Adds the edition mode message panel to the status bar
 		add(_editionModeMessagePanel, constraints);
@@ -691,6 +731,10 @@ public class AcideStatusBar extends JPanel {
 	
 	public void setEncodeMessage(String encodeFormat) {
 		this._encodingMessageLabel.setText(encodeFormat);
+	}
+	
+	public void setFormatMessage(String fileFormat) {
+		this._formatMessageLabel.setText(fileFormat);
 	}
 
 	/**

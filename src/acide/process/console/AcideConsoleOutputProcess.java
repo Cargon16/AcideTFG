@@ -156,7 +156,7 @@ public class AcideConsoleOutputProcess extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	@Override
-	public  void run() {
+	public void run() {
 		_taskDone = false;
 		try {
 			// Creates the input stream reader
@@ -173,7 +173,7 @@ public class AcideConsoleOutputProcess extends Thread {
 			int character = 0;
 
 			boolean hasNewText = false;
-
+			
 			while ((character = bufferedReader.read()) != -1) {
 				// If it is not the carriage return
 				if (character != 13){
@@ -183,12 +183,18 @@ public class AcideConsoleOutputProcess extends Thread {
 				// When the buffer reader is empty
 				if (!bufferedReader.ready() && hasNewText) {
 					if(_sendToConsole){
-						// Adds the text to the console panel
 						_consolePanel.addText(_stringBuffer.toString());
-						//System.out.println(_stringBuffer.toString());
 					}
 					else{
 						_text=_stringBuffer.toString();
+						try {
+							if(_text.contains("$success"))
+						_text= _text.substring(0, _text.length()-9);
+						}catch(Exception e) {
+							if(_text.contains("$des"))
+							_text= _text.substring(0, _text.length()-5);
+						}
+						
 						newTextReady();
 					}
 					// Clears the buffer
@@ -196,6 +202,7 @@ public class AcideConsoleOutputProcess extends Thread {
 					hasNewText = false;
 				}
 			}
+
 		} catch (Exception exception) {
 			// Updates the log
 			AcideLog.getLog().error(exception.getMessage());

@@ -60,8 +60,7 @@ public class AcideSaveFileMenuItemListener implements ActionListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent
 	 * )
 	 */
 	@Override
@@ -69,157 +68,99 @@ public class AcideSaveFileMenuItemListener implements ActionListener {
 
 		action(actionEvent);
 	}
-	
-	public static void action(ActionEvent actionEvent){
+
+	public static void action(ActionEvent actionEvent) {
 		// If there are opened files
-		if (AcideMainWindow.getInstance().getFileEditorManager()
-				.getNumberOfFileEditorPanels() != 0) {
+		if (AcideMainWindow.getInstance().getFileEditorManager().getNumberOfFileEditorPanels() != 0) {
 
 			// If it is the NEW FILE
-			if (AcideMainWindow
-					.getInstance()
-					.getFileEditorManager()
-					.getSelectedFileEditorPanel()
-					.getAbsolutePath()
-					.equals(AcideLanguageManager.getInstance().getLabels()
-							.getString("s79"))) {
+			if (AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().getAbsolutePath()
+					.equals(AcideLanguageManager.getInstance().getLabels().getString("s79"))) {
 
 				// Saves the new file
-				AcideMainWindow.getInstance().getMenu().getFileMenu()
-						.getSaveFileAsMenuItem().doClick();
+				AcideMainWindow.getInstance().getMenu().getFileMenu().getSaveFileAsMenuItem().doClick();
 
 			} else {
 
 				// Try to save the file content
-				boolean savingResult = AcideFileManager
-						.getInstance()
-						.write(AcideMainWindow.getInstance()
-								.getFileEditorManager()
-								.getSelectedFileEditorPanel().getAbsolutePath(),
-								AcideMainWindow.getInstance()
-										.getFileEditorManager()
-										.getSelectedFileEditorPanel()
-										.getTextEditionAreaContent());
+				String encode = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+						.getEncode();
+				boolean savingResult = AcideFileManager.getInstance().writeEncodeFormat(
+						AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+								.getAbsolutePath(),
+						AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+								.getTextEditionAreaContent(),
+						encode);
 
 				// If it could save it
 				if (savingResult) {
 
 					// Updates the log
-					AcideLog.getLog().info(
-							AcideLanguageManager.getInstance().getLabels()
-									.getString("s93")
-									+ AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
+					AcideLog.getLog()
+							.info(AcideLanguageManager.getInstance().getLabels().getString("s93")
+									+ AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
 											.getAbsolutePath()
-									+ AcideLanguageManager.getInstance()
-											.getLabels().getString("s94"));
+									+ AcideLanguageManager.getInstance().getLabels().getString("s94"));
 
 					// Sets the green button
-					AcideMainWindow.getInstance().getFileEditorManager()
-							.setGreenButton();
+					AcideMainWindow.getInstance().getFileEditorManager().setGreenButton();
 
 					// Gets the file name
-					int lastIndexOfSlash = AcideMainWindow.getInstance()
-							.getFileEditorManager()
-							.getSelectedFileEditorPanel().getAbsolutePath()
-							.lastIndexOf("\\");
+					int lastIndexOfSlash = AcideMainWindow.getInstance().getFileEditorManager()
+							.getSelectedFileEditorPanel().getAbsolutePath().lastIndexOf("\\");
 					if (lastIndexOfSlash == -1)
-						lastIndexOfSlash = AcideMainWindow.getInstance()
-								.getFileEditorManager()
-								.getSelectedFileEditorPanel().getAbsolutePath()
-								.lastIndexOf("/");
+						lastIndexOfSlash = AcideMainWindow.getInstance().getFileEditorManager()
+								.getSelectedFileEditorPanel().getAbsolutePath().lastIndexOf("/");
 					lastIndexOfSlash++;
-					String fileName = AcideMainWindow
-							.getInstance()
-							.getFileEditorManager()
-							.getSelectedFileEditorPanel()
-							.getAbsolutePath()
-							.substring(
-									lastIndexOfSlash,
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
-											.getAbsolutePath().length());
+					String fileName = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+							.getAbsolutePath().substring(lastIndexOfSlash, AcideMainWindow.getInstance()
+									.getFileEditorManager().getSelectedFileEditorPanel().getAbsolutePath().length());
 
 					// Updates the name property
-					AcideMainWindow.getInstance().getFileEditorManager()
-							.getSelectedFileEditorPanel().getStyledDocument()
-							.putProperty("name", fileName);
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+							.getStyledDocument().putProperty("name", fileName);
 
 					// Sets the title
-					AcideMainWindow
-							.getInstance()
-							.getFileEditorManager()
-							.getTabbedPane()
-							.setTitleAt(
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getTabbedPane().getSelectedIndex(),
-									fileName);
+					AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setTitleAt(
+							AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().getSelectedIndex(),
+							fileName);
 
 					// Sets the file path
-					AcideMainWindow
-							.getInstance()
-							.getFileEditorManager()
-							.getSelectedFileEditorPanel()
-							.setAbsolutePath(
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
-											.getAbsolutePath());
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+							.setAbsolutePath(AcideMainWindow.getInstance().getFileEditorManager()
+									.getSelectedFileEditorPanel().getAbsolutePath());
 
 					// Sets the tool tip text
-					AcideMainWindow
-							.getInstance()
-							.getFileEditorManager()
-							.getTabbedPane()
-							.setToolTipText(
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
-											.getAbsolutePath());
+					AcideMainWindow.getInstance().getFileEditorManager().getTabbedPane().setToolTipText(AcideMainWindow
+							.getInstance().getFileEditorManager().getSelectedFileEditorPanel().getAbsolutePath());
 
 					// Saves the original file
-					File projectFile = new File(AcideMainWindow.getInstance()
-							.getFileEditorManager()
+					File projectFile = new File(AcideMainWindow.getInstance().getFileEditorManager()
 							.getSelectedFileEditorPanel().getAbsolutePath());
 
 					// Sets the last change
-					AcideMainWindow.getInstance().getFileEditorManager()
-							.getSelectedFileEditorPanel()
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
 							.setLastChange(projectFile.lastModified());
 
 					// Sets the last size
-					AcideMainWindow.getInstance().getFileEditorManager()
-							.getSelectedFileEditorPanel()
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
 							.setLastSize(projectFile.length());
 
 					// Updates the file disk copy
-					AcideMainWindow
-							.getInstance()
-							.getFileEditorManager()
-							.getSelectedFileEditorPanel()
-							.setFileDiskCopy(
-									AcideMainWindow.getInstance()
-											.getFileEditorManager()
-											.getSelectedFileEditorPanel()
-											.getTextEditionAreaContent());
+					AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel()
+							.setFileDiskCopy(AcideMainWindow.getInstance().getFileEditorManager()
+									.getSelectedFileEditorPanel().getTextEditionAreaContent());
 
 					// Updates the save project in the menu bar tool bar
-					AcideMainWindow.getInstance().getToolBarPanel()
-							.getMenuBarToolBar().updateStateOfFileButtons();
+					AcideMainWindow.getInstance().getToolBarPanel().getMenuBarToolBar().updateStateOfFileButtons();
 
 					// Adds the new file to the recent files list
-					AcideWorkbenchConfiguration.getInstance()
-							.getRecentFilesConfiguration()
+					AcideWorkbenchConfiguration.getInstance().getRecentFilesConfiguration()
 							.addRecentFileToList(fileName);
 				}
 			}
 		} else
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s89"));
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s89"));
 	}
 }

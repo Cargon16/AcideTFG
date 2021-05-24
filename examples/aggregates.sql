@@ -1,4 +1,4 @@
---
+﻿﻿﻿--
 -- Aggregates
 --
 -- SQL Formulation

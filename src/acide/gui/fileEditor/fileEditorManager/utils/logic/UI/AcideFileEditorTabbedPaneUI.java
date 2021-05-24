@@ -185,6 +185,6 @@ public class AcideFileEditorTabbedPaneUI extends BasicTabbedPaneUI {
 		 */
 		public ArrayList<AcideFileEditorCloseButton> getCloseButtonList() {
 			return _closeButtonList;
-		}	
+		}
 	}
 }

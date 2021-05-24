@@ -64,7 +64,7 @@ public class AcideMain {
 	 * Executes ACIDE - A Configurable IDE.
 	 */
 	private static void executeApplication() {
-		
+
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				/*
@@ -75,9 +75,8 @@ public class AcideMain {
 				public void run() {
 
 					// Shows the splash screen
-					AcideSplashScreenWindow.getInstance()
-							.showSplashScreenWindow();	
-					
+					AcideSplashScreenWindow.getInstance().showSplashScreenWindow();
+
 				}
 			});
 		} catch (InterruptedException exception) {
@@ -101,23 +100,16 @@ public class AcideMain {
 			 */
 			public void run() {
 
-				
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s555"));
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s555"));
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s1027"));
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s1027"));
 
 				// Loads the ACIDE - A Configurable IDE workbench configuration
 				AcideWorkbenchConfiguration.getInstance().load();
 
-				
-				
-			// Closes the splash screen
+				// Closes the splash screen
 				AcideSplashScreenWindow.getInstance().closeSplashScreenWindow();
 
 				// Stars the system keys observer thread
@@ -125,13 +117,13 @@ public class AcideMain {
 
 				// Shows the main window
 				AcideMainWindow.getInstance().showAcideMainWindow();
-
+				
 				// Creates the keyboard event dispatcher
-				KeyboardFocusManager manager = KeyboardFocusManager
-						.getCurrentKeyboardFocusManager();
+				KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
 				manager.addKeyEventDispatcher(new AcideKeyEventDispatcher());
 			}
 		});
+		
 	}
 
 	/**
@@ -145,48 +137,30 @@ public class AcideMain {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s549"));
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s549"));
 		} catch (ClassNotFoundException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s550")
-							+ exception.getMessage()
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s551"));
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s550")
+					+ exception.getMessage() + AcideLanguageManager.getInstance().getLabels().getString("s551"));
 			exception.printStackTrace();
 		} catch (InstantiationException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s552")
-							+ exception.getMessage()
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s551"));
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s552")
+					+ exception.getMessage() + AcideLanguageManager.getInstance().getLabels().getString("s551"));
 			exception.printStackTrace();
 		} catch (IllegalAccessException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s553")
-							+ exception.getMessage()
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s551"));
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s553")
+					+ exception.getMessage() + AcideLanguageManager.getInstance().getLabels().getString("s551"));
 			exception.printStackTrace();
 		} catch (UnsupportedLookAndFeelException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s554")
-							+ exception.getMessage()
-							+ AcideLanguageManager.getInstance().getLabels()
-									.getString("s551"));
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s554")
+					+ exception.getMessage() + AcideLanguageManager.getInstance().getLabels().getString("s551"));
 			exception.printStackTrace();
 		}
 	}
@@ -196,16 +170,15 @@ public class AcideMain {
 	 * Main method of the application.
 	 * </p>
 	 * <p>
-	 * Creates and configures the application log, load the project
-	 * configuration and builds the main window of the application.
+	 * Creates and configures the application log, load the project configuration
+	 * and builds the main window of the application.
 	 * </p>
 	 * <p>
-	 * Runs the application in the event dispatching thread to make the access
-	 * to the swing components thread safe.
+	 * Runs the application in the event dispatching thread to make the access to
+	 * the swing components thread safe.
 	 * </p>
 	 * 
-	 * @param args
-	 *            entry arguments for the application.
+	 * @param args entry arguments for the application.
 	 */
 	public static void main(String[] args) {
 
@@ -215,8 +188,7 @@ public class AcideMain {
 		try {
 
 			// Sets the ACIDE - A Configurable IDE language
-			AcideLanguageManager.getInstance().setLanguage(
-					AcideResourceManager.getInstance().getProperty("language"));
+			AcideLanguageManager.getInstance().setLanguage(AcideResourceManager.getInstance().getProperty("language"));
 		} catch (Exception exception) {
 
 			// Updates the log
@@ -229,5 +201,22 @@ public class AcideMain {
 
 		// Executes the application
 		executeApplication();
+		
+		/*
+		 * An attempt has been made to fix the problem that causes the word $success to
+		 * be displayed when starting the ACIDE console for the first time. This is
+		 * probably a thread execution order problem. As a workaround, the console is
+		 * checked to see if it displays the word $success on startup, and if so, it is
+		 * restarted to load with the correct configuration. 
+		 * You have to check the behaviour of threads 5 and 6, depending on their order you get one result or
+		 * another.
+		 * 
+		 */
+		
+		/*String s = AcideMainWindow.getInstance().getConsolePanel().getContent();
+		if (!s.contains("*****")) {
+			AcideMainWindow.getInstance().getConsolePanel().resetConsole();
+		}*/
+	
 	}
 }

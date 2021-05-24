@@ -59,8 +59,9 @@ public class AchideGraphCanvasMouseListener extends MouseAdapter {
                         String view;
                         if(n.getLabel().contains("/")) {
                             view = n.getLabel().split("/")[0];
-                            AcideDatabaseDataView panelDv = AcideMainWindow.getInstance().getDataBasePanel().getDataView("$des", view);
-                            LinkedList<String> info = AcideDatabaseManager.getInstance().getSelectAll("$des", view);
+    
+                            AcideDatabaseDataView panelDv = AcideMainWindow.getInstance().getDataBasePanel().getDataView(AcideDatabaseManager.getInstance().currentDB(), view);
+                            LinkedList<String> info = AcideDatabaseManager.getInstance().getSelectAll(AcideDatabaseManager.getInstance().currentDB(), view);
                             if(!info.isEmpty())
                                 panelDv.build(info);
                             panelDv.setAlwaysOnTop(true);

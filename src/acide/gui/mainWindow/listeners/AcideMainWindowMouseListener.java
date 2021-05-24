@@ -40,6 +40,7 @@
 package acide.gui.mainWindow.listeners;
 
 import java.awt.Color;
+
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
@@ -178,6 +179,7 @@ public class AcideMainWindowMouseListener extends MouseAdapter {
 				dragged = true;
 				// Changes the cursor
 				acideWindow.setCursor(new Cursor(Cursor.MOVE_CURSOR));
+				//acideWindow.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				oldModified = AcideProjectConfiguration.getInstance().isModified();
 			}
 		} else {

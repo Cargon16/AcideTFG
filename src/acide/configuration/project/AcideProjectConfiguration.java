@@ -877,8 +877,27 @@ public class AcideProjectConfiguration {
 
 		// Adds the number of files associated
 		fileContent = fileContent + _fileList.size() + "\n";
+		
+		int tam = AcideMainWindow.getInstance().getFileEditorManager().getNumberOfFileEditorPanels();
+		for (int index = 0; index < tam; index++) {
+			String tab = AcideMainWindow.getInstance().getFileEditorManager().getFileEditorPanelAt(index).getAbsolutePath();
+			// Gets the ACIDE - A Configurable file from the list
+			int i =0;
+			try {
+			AcideProjectFile file = (AcideProjectFile) _fileList.get(i);
+			while(file.getAbsolutePath() != tab && i < _fileList.size()) {
+				file = (AcideProjectFile) _fileList.get(++i);
+			}
+			//AcideProjectFile file = (AcideProjectFile) _fileList.get(index);
 
-		for (int index = 0; index < _fileList.size(); index++) {
+			// Adds its information
+			fileContent = fileContent + file.getAbsolutePath() + "\n"
+					+ file.getName() + "\n" + file.getParent() + "\n"
+					+ file.isDirectory() + "\n" + file.isCompilableFile()
+					+ "\n" + file.isMainFile() + "\n" + file.isOpened() + "\n";
+			}catch(Exception e) {}
+		}
+		/*for (int index = 0; index < _fileList.size(); index++) {
 
 			// Gets the ACIDE - A Configurable file from the list
 			AcideProjectFile file = (AcideProjectFile) _fileList.get(index);
@@ -888,7 +907,7 @@ public class AcideProjectConfiguration {
 					+ file.getName() + "\n" + file.getParent() + "\n"
 					+ file.isDirectory() + "\n" + file.isCompilableFile()
 					+ "\n" + file.isMainFile() + "\n" + file.isOpened() + "\n";
-		}
+		}*/
 
 		// Returns the file content
 		return fileContent;

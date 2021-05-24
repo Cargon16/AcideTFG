@@ -42,6 +42,9 @@ package acide.gui.menuBar.fileMenu.listeners;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -54,6 +57,7 @@ import acide.files.AcideFileManager;
 import acide.files.utils.AcideFileOperation;
 import acide.files.utils.AcideFileTarget;
 import acide.files.utils.AcideFileType;
+import acide.files.utils.CharsetDetector;
 import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
@@ -156,13 +160,15 @@ public class AcideSaveFileAsMenuItemListener implements ActionListener {
 	 *            file to save.
 	 */
 	private static void saveFile(String absoluteFilePath) {
-
 		// Saves the file
-		boolean result = AcideFileManager.getInstance().write(
+		String s = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().getTextEditionAreaContent();
+		String encode = AcideMainWindow.getInstance().getFileEditorManager().getSelectedFileEditorPanel().getEncode();
+	
+		boolean result = AcideFileManager.getInstance().writeEncodeFormat(
 				absoluteFilePath,
-				AcideMainWindow.getInstance().getFileEditorManager()
+				s, AcideMainWindow.getInstance().getFileEditorManager()
 						.getSelectedFileEditorPanel()
-						.getTextEditionAreaContent());
+						.getEncode());
 
 		// If it could save it
 		if (result) {
@@ -240,7 +246,8 @@ public class AcideSaveFileAsMenuItemListener implements ActionListener {
 			
 			// Opens the document to set the parameters of the document
 			AcideMainWindow.getInstance().getMenu().getFileMenu()
-					.openFile(absoluteFilePath);
+					.openFileWithEncode(absoluteFilePath, encode);
+			
 			
 		} else {
 

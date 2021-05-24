@@ -1,5 +1,5 @@
 DES6.6
-D:\Documentos\Proyectos Eclipse\AcideTFG\DES6.6.acideProject
+.\DES6.6.acideProject
 
 
 false
@@ -12,8 +12,8 @@ false
 /q
 true
 
+-16777216
 -1
--14277082
 Monospaced
 0
 12
@@ -30,12 +30,12 @@ true
 306
 320
 1577
-711
-688
+727
+696
 English
 .\configuration\menu\lastModified.menuConfig
 ./configuration/menu/defaultAllOn.xml
-.\configuration\toolbar\des.toolbarConfig
+D:\Documentos\Proyectos Eclipse\AcideTFG\configuration\toolbar\des.toolbarConfig
 AcideExplorerPanel
 AcideFileEditor
 AcideDataBasePanel

@@ -40,21 +40,32 @@
 package acide.files;
 
 import java.beans.PropertyChangeEvent;
+
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
 
 import acide.files.utils.AcideFileOperation;
 import acide.files.utils.AcideFileTarget;
 import acide.files.utils.AcideFileType;
+import acide.files.utils.CharsetDetector.BOM;
+import acide.gui.mainWindow.AcideMainWindow;
 import acide.language.AcideLanguageManager;
 import acide.log.AcideLog;
 import acide.resources.AcideResourceManager;
@@ -96,31 +107,31 @@ public class AcideFileManager {
 	 * Creates a new ACIDE - A Configurable IDE file manager.
 	 */
 	public AcideFileManager() {
-		
+
 		// Creates the file chooser
 		_fileChooser = new JFileChooser();
 		_fileChooser.setCurrentDirectory(new File(".\\"));
 		_fileChooser.addPropertyChangeListener(JFileChooser.FILE_FILTER_CHANGED_PROPERTY, new PropertyChangeListener() {
-			
+
 			public void propertyChange(PropertyChangeEvent evt) {
-				
-				//check that the old value and the new one are not null and the both are instances of AcideFileExtensionFilterManager
-				if(evt.getNewValue() != null && evt.getOldValue() != null &&
-						evt.getNewValue() instanceof AcideFileExtensionFilterManager &&
-						evt.getOldValue() instanceof AcideFileExtensionFilterManager){
+
+				// check that the old value and the new one are not null and the both are
+				// instances of AcideFileExtensionFilterManager
+				if (evt.getNewValue() != null && evt.getOldValue() != null
+						&& evt.getNewValue() instanceof AcideFileExtensionFilterManager
+						&& evt.getOldValue() instanceof AcideFileExtensionFilterManager) {
 					AcideFileExtensionFilterManager oldExtension = (AcideFileExtensionFilterManager) evt.getOldValue();
 					AcideFileExtensionFilterManager newExtension = (AcideFileExtensionFilterManager) evt.getNewValue();
 					JFileChooser chooser = (JFileChooser) evt.getSource();
 					chooser.toString();
-				}else
-					if(evt.getNewValue() != null && evt.getNewValue() instanceof AcideFileExtensionFilterManager){
-						JFileChooser chooser = (JFileChooser) evt.getSource();
-					}
-				
-				/*Object o1 = evt.getNewValue();
-				Object o2 = evt.getOldValue();
-				Object o3 = evt.getSource();
-				System.out.println(evt.getPropertyName());*/
+				} else if (evt.getNewValue() != null && evt.getNewValue() instanceof AcideFileExtensionFilterManager) {
+					JFileChooser chooser = (JFileChooser) evt.getSource();
+				}
+
+				/*
+				 * Object o1 = evt.getNewValue(); Object o2 = evt.getOldValue(); Object o3 =
+				 * evt.getSource(); System.out.println(evt.getPropertyName());
+				 */
 			}
 		});
 	}
@@ -128,25 +139,20 @@ public class AcideFileManager {
 	/**
 	 * Asks to the user for some files with the options that corresponds.
 	 * 
-	 * @param fileOperation
-	 *            file operation for an opening or saving dialog.
-	 * @param fileTarget
-	 *            file target to get the current directory and for updating the
-	 *            two global variables that store the last file or project
-	 *            directory opened in ACIDE - A Configurable IDE.
-	 * @param fileType
-	 *            file type of the file to be selected, it means, a file or a
-	 *            directory.
-	 * @param currentDirectory
-	 *            if it is "" indicates that the current directory has to be
-	 *            taken from the global variables.
-	 * @param filter
-	 *            filter to apply.
+	 * @param fileOperation    file operation for an opening or saving dialog.
+	 * @param fileTarget       file target to get the current directory and for
+	 *                         updating the two global variables that store the last
+	 *                         file or project directory opened in ACIDE - A
+	 *                         Configurable IDE.
+	 * @param fileType         file type of the file to be selected, it means, a
+	 *                         file or a directory.
+	 * @param currentDirectory if it is "" indicates that the current directory has
+	 *                         to be taken from the global variables.
+	 * @param filter           filter to apply.
 	 * 
 	 * @return the absolute paths of the selected files.
 	 */
-	public String[] askForFiles(AcideFileOperation fileOperation,
-			AcideFileTarget fileTarget, AcideFileType fileType,
+	public String[] askForFiles(AcideFileOperation fileOperation, AcideFileTarget fileTarget, AcideFileType fileType,
 			String currentDirectory, AcideFileExtensionFilterManager filter) {
 
 		// Removes the previous filter
@@ -172,14 +178,12 @@ public class AcideFileManager {
 
 					// Gets the ACIDE - A Configurable IDE last opened file
 					// directory
-					currentDirectory = AcideResourceManager.getInstance()
-							.getProperty("lastOpenedFileDirectory");
+					currentDirectory = AcideResourceManager.getInstance().getProperty("lastOpenedFileDirectory");
 					break;
 				case PROJECTS:
 					// Gets the ACIDE - A Configurable IDE last opened project
 					// directory
-					currentDirectory = AcideResourceManager.getInstance()
-							.getProperty("lastOpenedProjectDirectory");
+					currentDirectory = AcideResourceManager.getInstance().getProperty("lastOpenedProjectDirectory");
 					break;
 				}
 			}
@@ -202,8 +206,7 @@ public class AcideFileManager {
 
 			case DIRECTORY:
 				// Sets only directories
-				_fileChooser
-						.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				break;
 			}
 
@@ -235,14 +238,11 @@ public class AcideFileManager {
 				for (int index = 0; index < selectedFiles.length; index++) {
 
 					// Gets the absolute path
-					absolutePaths[index] = selectedFiles[index]
-							.getAbsolutePath();
+					absolutePaths[index] = selectedFiles[index].getAbsolutePath();
 
 					// Updates the log
 					AcideLog.getLog().info(
-							AcideLanguageManager.getInstance().getLabels()
-									.getString("s300")
-									+ absolutePaths[index]);
+							AcideLanguageManager.getInstance().getLabels().getString("s300") + absolutePaths[index]);
 
 					switch (fileTarget) {
 
@@ -251,17 +251,14 @@ public class AcideFileManager {
 						// Updates the ACIDE - A Configurable IDE last opened
 						// file
 						// directory
-						AcideResourceManager.getInstance()
-								.setProperty("lastOpenedFileDirectory",
-										absolutePaths[index]);
+						AcideResourceManager.getInstance().setProperty("lastOpenedFileDirectory", absolutePaths[index]);
 						break;
 					case PROJECTS:
 
 						// Updates the ACIDE - A Configurable IDE last opened
 						// project
 						// directory
-						AcideResourceManager.getInstance().setProperty(
-								"lastOpenedProjectDirectory",
+						AcideResourceManager.getInstance().setProperty("lastOpenedProjectDirectory",
 								absolutePaths[index]);
 						break;
 					}
@@ -273,9 +270,7 @@ public class AcideFileManager {
 				_fileChooser.cancelSelection();
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s302"));
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s302"));
 			}
 
 		} catch (Exception exception) {
@@ -291,24 +286,19 @@ public class AcideFileManager {
 	/**
 	 * Asks to the user for one file with the options that corresponds.
 	 * 
-	 * @param fileOperation
-	 *            file operation for an opening or saving dialog.
-	 * @param fileTarget
-	 *            file target to get the current directory and for updating the
-	 *            two global variables that store the last file or project
-	 *            directory opened in ACIDE - A Configurable IDE.
-	 * @param fileType
-	 *            file type of the file to be selected, it means, a file or a
-	 *            directory.
-	 * @param currentDirectory
-	 *            if it is "" indicates that the current directory has to be
-	 *            taken from the global variables.
-	 * @param filter
-	 *            filter to apply.
+	 * @param fileOperation    file operation for an opening or saving dialog.
+	 * @param fileTarget       file target to get the current directory and for
+	 *                         updating the two global variables that store the last
+	 *                         file or project directory opened in ACIDE - A
+	 *                         Configurable IDE.
+	 * @param fileType         file type of the file to be selected, it means, a
+	 *                         file or a directory.
+	 * @param currentDirectory if it is "" indicates that the current directory has
+	 *                         to be taken from the global variables.
+	 * @param filter           filter to apply.
 	 * @return the absolute path of the selected file.
 	 */
-	public String askForFile(AcideFileOperation fileOperation,
-			AcideFileTarget fileTarget, AcideFileType fileType,
+	public String askForFile(AcideFileOperation fileOperation, AcideFileTarget fileTarget, AcideFileType fileType,
 			String currentDirectory, AcideFileExtensionFilterManager filter) {
 
 		// Removes the previous filter
@@ -319,7 +309,7 @@ public class AcideFileManager {
 
 			// Sets the filter
 			_fileChooser.addChoosableFileFilter(filter);
-		
+
 		String absolutePath = null;
 
 		try {
@@ -333,18 +323,15 @@ public class AcideFileManager {
 
 					// Gets the ACIDE - A Configurable IDE last opened file
 					// directory
-					currentDirectory = AcideResourceManager.getInstance()
-							.getProperty("lastOpenedFileDirectory");
+					currentDirectory = AcideResourceManager.getInstance().getProperty("lastOpenedFileDirectory");
 					break;
 				case PROJECTS:
 					// Gets the ACIDE - A Configurable IDE last opened project
 					// directory
-					currentDirectory = AcideResourceManager.getInstance()
-							.getProperty("lastOpenedProjectDirectory");
+					currentDirectory = AcideResourceManager.getInstance().getProperty("lastOpenedProjectDirectory");
 					break;
 				}
 			}
-			
 
 			if (currentDirectory == null || currentDirectory.equals(""))
 				currentDirectory = ClassLoader.getSystemClassLoader().getResource(".").getPath().substring(1);
@@ -367,8 +354,7 @@ public class AcideFileManager {
 
 			case DIRECTORY:
 				// Sets only directories
-				_fileChooser
-						.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				break;
 			}
 
@@ -390,26 +376,20 @@ public class AcideFileManager {
 			// If it is ok
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 
-	
-			/*	File miDir = new File ("."); 		
-				String myPath = miDir.getCanonicalPath(); 		
-				absolutePath = _fileChooser.getSelectedFile().getPath(); 		
-				absolutePath ="."+ absolutePath.substring(myPath.length()); 
-				if(	System.getProperty("os.name").indexOf("nix")>=0)
-				{
-					absolutePath = absolutePath.replace("\\","/");
-				}
-				else
-					absolutePath = absolutePath.replace("/","\\");*/
+				/*
+				 * File miDir = new File ("."); String myPath = miDir.getCanonicalPath();
+				 * absolutePath = _fileChooser.getSelectedFile().getPath(); absolutePath ="."+
+				 * absolutePath.substring(myPath.length()); if(
+				 * System.getProperty("os.name").indexOf("nix")>=0) { absolutePath =
+				 * absolutePath.replace("\\","/"); } else absolutePath =
+				 * absolutePath.replace("/","\\");
+				 */
 
 				// Gets the selected file absolute path
 				absolutePath = _fileChooser.getSelectedFile().getAbsolutePath();
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s300")
-								+ absolutePath);
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s300") + absolutePath);
 
 				switch (fileTarget) {
 
@@ -418,16 +398,14 @@ public class AcideFileManager {
 					// Updates the ACIDE - A Configurable IDE last opened
 					// file
 					// directory
-					AcideResourceManager.getInstance().setProperty(
-							"lastOpenedFileDirectory", absolutePath);
+					AcideResourceManager.getInstance().setProperty("lastOpenedFileDirectory", absolutePath);
 					break;
 				case PROJECTS:
 
 					// Updates the ACIDE - A Configurable IDE last opened
 					// file
 					// directory
-					AcideResourceManager.getInstance().setProperty(
-							"lastOpenedProjectDirectory", absolutePath);
+					AcideResourceManager.getInstance().setProperty("lastOpenedProjectDirectory", absolutePath);
 					break;
 				}
 
@@ -437,9 +415,7 @@ public class AcideFileManager {
 				_fileChooser.cancelSelection();
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s302"));
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s302"));
 			}
 
 		} catch (Exception exception) {
@@ -451,44 +427,39 @@ public class AcideFileManager {
 
 		return absolutePath;
 	}
-	
+
 	/**
 	 * Asks to the user for one file with the options that corresponds.
 	 * 
-	 * @param fileOperation
-	 *            file operation for an opening or saving dialog.
-	 * @param fileTarget
-	 *            file target to get the current directory and for updating the
-	 *            two global variables that store the last file or project
-	 *            directory opened in ACIDE - A Configurable IDE.
-	 * @param fileType
-	 *            file type of the file to be selected, it means, a file or a
-	 *            directory.
-	 * @param currentDirectory
-	 *            if it is "" indicates that the current directory has to be
-	 *            taken from the global variables.
-	 * @param filter
-	 *            array of filters to apply.
+	 * @param fileOperation    file operation for an opening or saving dialog.
+	 * @param fileTarget       file target to get the current directory and for
+	 *                         updating the two global variables that store the last
+	 *                         file or project directory opened in ACIDE - A
+	 *                         Configurable IDE.
+	 * @param fileType         file type of the file to be selected, it means, a
+	 *                         file or a directory.
+	 * @param currentDirectory if it is "" indicates that the current directory has
+	 *                         to be taken from the global variables.
+	 * @param filter           array of filters to apply.
 	 * @return the absolute path of the selected file.
 	 */
-	public String askForFileWhitFilters(AcideFileOperation fileOperation,
-			AcideFileTarget fileTarget, AcideFileType fileType,
-			String currentDirectory, AcideFileExtensionFilterManager []filter) {
-		
+	public String askForFileWhitFilters(AcideFileOperation fileOperation, AcideFileTarget fileTarget,
+			AcideFileType fileType, String currentDirectory, AcideFileExtensionFilterManager[] filter) {
+
 		// Reset the list of file filters and set the default instead
 		_fileChooser.resetChoosableFileFilters();
-		
+
 		// Removes the previous filter
-		while(_fileChooser.getFileFilter()!=null)
+		while (_fileChooser.getFileFilter() != null)
 			_fileChooser.removeChoosableFileFilter(_fileChooser.getFileFilter());
-			
+
 		// If there is a defined filter
 		if (filter != null)
 
 			// Sets the filters
-			for(int i=0;i<filter.length;i++)
-			_fileChooser.addChoosableFileFilter(filter[i]);
-		
+			for (int i = 0; i < filter.length; i++)
+				_fileChooser.addChoosableFileFilter(filter[i]);
+
 		String absolutePath = null;
 
 		try {
@@ -502,14 +473,12 @@ public class AcideFileManager {
 
 					// Gets the ACIDE - A Configurable IDE last opened file
 					// directory
-					currentDirectory = AcideResourceManager.getInstance()
-							.getProperty("lastOpenedFileDirectory");
+					currentDirectory = AcideResourceManager.getInstance().getProperty("lastOpenedFileDirectory");
 					break;
 				case PROJECTS:
 					// Gets the ACIDE - A Configurable IDE last opened project
 					// directory
-					currentDirectory = AcideResourceManager.getInstance()
-							.getProperty("lastOpenedProjectDirectory");
+					currentDirectory = AcideResourceManager.getInstance().getProperty("lastOpenedProjectDirectory");
 					break;
 				}
 			}
@@ -531,8 +500,7 @@ public class AcideFileManager {
 
 			case DIRECTORY:
 				// Sets only directories
-				_fileChooser
-						.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				_fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				break;
 			}
 
@@ -545,12 +513,14 @@ public class AcideFileManager {
 				returnValue = _fileChooser.showOpenDialog(null);
 				break;
 			case SAVE:
-				
+
 				// Ask for the file to save to the user
 				returnValue = _fileChooser.showSaveDialog(null);
 				// check the extension of the file and set the default one its not setted.
-				if(returnValue == JFileChooser.APPROVE_OPTION && _fileChooser.getFileFilter() instanceof AcideFileExtensionFilterManager){
-					AcideFileExtensionFilterManager extManager = (AcideFileExtensionFilterManager) _fileChooser.getFileFilter();
+				if (returnValue == JFileChooser.APPROVE_OPTION
+						&& _fileChooser.getFileFilter() instanceof AcideFileExtensionFilterManager) {
+					AcideFileExtensionFilterManager extManager = (AcideFileExtensionFilterManager) _fileChooser
+							.getFileFilter();
 					absolutePath = _fileChooser.getSelectedFile().getAbsolutePath();
 //					boolean endsWith = false;
 					String[] extensions = extManager.getExtensions();
@@ -566,12 +536,9 @@ public class AcideFileManager {
 
 			// If it is ok
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				
+
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s300")
-								+ absolutePath);
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s300") + absolutePath);
 
 				switch (fileTarget) {
 
@@ -580,16 +547,14 @@ public class AcideFileManager {
 					// Updates the ACIDE - A Configurable IDE last opened
 					// file
 					// directory
-					AcideResourceManager.getInstance().setProperty(
-							"lastOpenedFileDirectory", absolutePath);
+					AcideResourceManager.getInstance().setProperty("lastOpenedFileDirectory", absolutePath);
 					break;
 				case PROJECTS:
 
 					// Updates the ACIDE - A Configurable IDE last opened
 					// file
 					// directory
-					AcideResourceManager.getInstance().setProperty(
-							"lastOpenedProjectDirectory", absolutePath);
+					AcideResourceManager.getInstance().setProperty("lastOpenedProjectDirectory", absolutePath);
 					break;
 				}
 
@@ -599,9 +564,7 @@ public class AcideFileManager {
 				_fileChooser.cancelSelection();
 
 				// Updates the log
-				AcideLog.getLog().info(
-						AcideLanguageManager.getInstance().getLabels()
-								.getString("s302"));
+				AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s302"));
 			}
 
 		} catch (Exception exception) {
@@ -626,8 +589,7 @@ public class AcideFileManager {
 		try {
 
 			// Creates the buffered reader with the file
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(fileName)));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName)));
 			StringBuffer stringBuffer = new StringBuffer("");
 			String string;
 
@@ -649,10 +611,7 @@ public class AcideFileManager {
 		} catch (IOException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s309")
-							+ fileName);
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s309") + fileName);
 			// exception.printStackTrace();
 
 			return null;
@@ -660,13 +619,11 @@ public class AcideFileManager {
 	}
 
 	/**
-	 * Saves the file content given as a parameter into a file given as a
-	 * parameter as well.
+	 * Saves the file content given as a parameter into a file given as a parameter
+	 * as well.
 	 * 
-	 * @param file
-	 *            file to save in.
-	 * @param fileContent
-	 *            file content to store into the file.
+	 * @param file        file to save in.
+	 * @param fileContent file content to store into the file.
 	 * 
 	 * @return true if the operation was succeed and false in other case.
 	 */
@@ -675,8 +632,7 @@ public class AcideFileManager {
 		try {
 
 			// Creates the print writer with the file
-			PrintWriter printerWriter = new PrintWriter(new BufferedWriter(
-					new FileWriter(file)));
+			PrintWriter printerWriter = new PrintWriter(new BufferedWriter(new FileWriter(file)));
 
 			// Prints the file content into it
 			printerWriter.print(fileContent);
@@ -685,32 +641,76 @@ public class AcideFileManager {
 			printerWriter.close();
 
 			// Updates the log
-			AcideLog.getLog().info(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s310")
-							+ file);
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s310") + file);
 
 			return true;
 		} catch (IOException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s311")
-							+ file);
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s311") + file);
 			exception.printStackTrace();
 
 			return false;
 		}
 	}
+
+	public boolean writeEncodeFormat(String file, String fileContent, String encode) {
+		BOM b = null;
+
+		String fileFormat = AcideMainWindow.getInstance().getMenu().getFileMenu().getFileFormat();
 	
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			switch (encode) {
+			case "UTF-8":
+				b = BOM.UTF_8;
+				break;
+			case "windows-1252":
+				b = BOM.NONE;
+				break;
+			case "UTF-16BE":
+				b = BOM.UTF_16_BE;
+				break;
+			case "UTF-16LE":
+				b = BOM.UTF_16_LE;
+				break;
+			}
+			byte[] BOM = b.getBytes();
+			fos.write(BOM);
+			fileContent = fileContent.replace("\n", fileFormat);
+			fos.write(fileContent.getBytes(encode));
+			fos.close();
+			AcideLog.getLog().info(AcideLanguageManager.getInstance().getLabels().getString("s310") + file);
+			return true;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			// Updates the log
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s311") + file);
+			return false;
+		}
+	}
+
 	public String applyCodification(String fileName, String encode) {
 
 		try {
 
+			/*boolean result = false;
+
+		      byte[] bom = new byte[3];
+		      try (InputStream is = new FileInputStream(fileName)) {
+
+		          // read 3 bytes of a file.
+		          is.read(bom);
+
+		          // BOM encoded as ef bb bf
+		          String content = new String(bom);
+		          if ("efbbbf".equalsIgnoreCase(content)) {
+		              result = true;
+		          }
+		          is.close();
+		      }*/
 			// Creates the buffered reader with the file
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(fileName), encode));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), encode));
 			StringBuffer stringBuffer = new StringBuffer("");
 			String string;
 
@@ -732,10 +732,7 @@ public class AcideFileManager {
 		} catch (IOException exception) {
 
 			// Updates the log
-			AcideLog.getLog().error(
-					AcideLanguageManager.getInstance().getLabels()
-							.getString("s309")
-							+ fileName);
+			AcideLog.getLog().error(AcideLanguageManager.getInstance().getLabels().getString("s309") + fileName);
 			// exception.printStackTrace();
 
 			return null;
