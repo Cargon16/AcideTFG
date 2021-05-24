@@ -511,7 +511,7 @@ public class AcideConsolePanel extends JPanel {
 					String lastLine=finalText.substring(finalText.lastIndexOf("\n"),finalText.length()).trim();
 
 					// Enable debug panel components
-					if(lastLine.startsWith("DES") && lastLine.endsWith(">")){
+					if((lastLine.startsWith("DES") || lastLine.startsWith("FDES")) && lastLine.endsWith(">")){
 						AcideMainWindow.getInstance().getDebugPanel()
 								.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 						AcideMainWindow.getInstance().getDebugPanel().enableComponents();
