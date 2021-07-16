@@ -26,7 +26,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ba1a32ba-e127-4e7f-a837-8434e318ca72" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/acide/gui/consolePanel/AcideConsolePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/acide/gui/consolePanel/AcideConsolePanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +169,9 @@
       <workItem from="1619149417926" duration="118000" />
       <workItem from="1621803102242" duration="353000" />
       <workItem from="1621803592467" duration="54000" />
-      <workItem from="1621866463122" duration="550000" />
+      <workItem from="1621866463122" duration="817000" />
+      <workItem from="1622209572700" duration="39000" />
+      <workItem from="1626413879008" duration="1249000" />
     </task>
     <task id="LOCAL-00001" summary="wrong and missing options first version">
       <created>1590405880925</created>
@@ -389,7 +390,14 @@
       <option name="project" value="LOCAL" />
       <updated>1621803296558</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Optimización en bloqueo panel de depuración.">
+      <created>1621867092268</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1621867092268</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -451,8 +459,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="último commit xd" />
-    <MESSAGE value="último commit JAJAJAJAJAJAJA me quiero morir" />
     <MESSAGE value="último commit JAJAJAJAJAJAJA me quiero morir v2" />
     <MESSAGE value="último commit JAJAJAJAJAJAJA me quiero morir v3" />
     <MESSAGE value="ejemplo teorico" />
@@ -476,7 +482,9 @@
     <MESSAGE value="Corrección envío de comandos DES cuando ACIDE usa otra consola." />
     <MESSAGE value="Optimización código tooltip nodo." />
     <MESSAGE value="Commit requerido para poder hacer pull en mi local." />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit requerido para poder hacer pull en mi local." />
+    <MESSAGE value="Optimización en bloqueo panel DE depuración." />
+    <MESSAGE value="Optimización en bloqueo panel de depuración." />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimización en bloqueo panel de depuración." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
